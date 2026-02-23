@@ -8,13 +8,13 @@ interface AboutSectionProps {
 
 export function AboutSection({ sectionRef }: AboutSectionProps) {
   return (
-    <section ref={sectionRef} id="about" className="px-10 py-[90px] max-w-[1000px] mx-auto">
+    <section ref={sectionRef} id="about" className="px-10 py-22.5 max-w-250 mx-auto">
       <SectionReveal>
         <Pill>About Codnexia</Pill>
         <h2 className="text-[40px] font-bold text-main mt-4 mb-3.5 -tracking-[1.5px]">
           Transforming ideas into<br /><span className="text-accent">reliable software</span>
         </h2>
-        <p className="text-base text-secondary leading-[1.8] max-w-[640px] mb-11">
+        <p className="text-base text-secondary leading-[1.8] max-w-160 mb-11">
           Codnexia Software is a global software development company delivering modern, scalable, and intelligent digital solutions. Built on African excellence and driven by innovation, we partner with startups, enterprises, and organizations worldwide to design, build, and scale impactful technology products.
         </p>
       </SectionReveal>

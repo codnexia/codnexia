@@ -50,7 +50,7 @@ export function AdminMedia() {
 
       <div className="grid grid-cols-4 gap-3.5">
         {files.map(f => (
-          <Card key={f.id} hoverable className="!p-[18px] text-center relative">
+          <Card key={f.id} hoverable className="!p-4.5 text-center relative">
             <button onClick={() => deleteFile(f.id)} className="absolute top-2 right-2 w-6 h-6 rounded-md bg-surface border border-border text-muted text-xs cursor-pointer flex items-center justify-center opacity-60 transition-opacity duration-200 hover:opacity-100">
               {"\u2715"}
             </button>

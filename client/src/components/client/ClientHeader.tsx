@@ -20,7 +20,7 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo, onSwitchT
       }}
     >
       <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => scrollTo("hero")}>
-        <div className="w-[34px] h-[34px] rounded-lg bg-grad flex items-center justify-center text-[13px] font-extrabold text-main shadow-[0_0_20px_var(--color-primary-glow)]">{"</>"}</div>
+        <div className="w-8.5 h-8.5 rounded-lg bg-grad flex items-center justify-center text-[13px] font-extrabold text-main shadow-[0_0_20px_var(--color-primary-glow)]">{"</>"}</div>
         <span className="text-[17px] font-bold text-main -tracking-[0.5px]">
           Codnexia<span className="text-accent font-normal ml-1">Software</span>
         </span>
@@ -36,7 +36,7 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo, onSwitchT
       </nav>
 
       <div className="flex gap-2.5 items-center">
-        <button onClick={onSwitchToAdmin} className="px-3.5 py-[7px] rounded-lg bg-transparent border border-border text-secondary text-xs font-semibold cursor-pointer font-sans transition-all duration-200 hover:border-border-light">
+        <button onClick={onSwitchToAdmin} className="px-3.5 py-1.75 rounded-lg bg-transparent border border-border text-secondary text-xs font-semibold cursor-pointer font-sans transition-all duration-200 hover:border-border-light">
           Admin
         </button>
         <Btn onClick={() => scrollTo("contact")} className="!px-5 !py-2 !text-[13px]">Start a Project</Btn>

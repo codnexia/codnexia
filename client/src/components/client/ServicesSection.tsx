@@ -8,7 +8,7 @@ interface ServicesSectionProps {
 
 export function ServicesSection({ sectionRef }: ServicesSectionProps) {
   return (
-    <section ref={sectionRef} id="services" className="px-10 py-[90px] max-w-[1000px] mx-auto">
+    <section ref={sectionRef} id="services" className="px-10 py-22.5 max-w-250 mx-auto">
       <SectionReveal>
         <Pill>Services</Pill>
         <h2 className="text-[40px] font-bold text-main mt-4 mb-12 -tracking-[1.5px]">What we build</h2>

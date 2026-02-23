@@ -8,7 +8,7 @@ interface ProcessSectionProps {
 
 export function ProcessSection({ sectionRef }: ProcessSectionProps) {
   return (
-    <section ref={sectionRef} id="how" className="px-10 py-[90px] max-w-[1000px] mx-auto">
+    <section ref={sectionRef} id="how" className="px-10 py-22.5 max-w-250 mx-auto">
       <SectionReveal>
         <Pill>Our Process</Pill>
         <h2 className="text-[40px] font-bold text-main mt-4 mb-12 -tracking-[1.5px]">How we deliver results</h2>

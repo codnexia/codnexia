@@ -6,7 +6,7 @@ export function BarChart({ data, labels, color = "#2DD4A8" }: BarChartProps) {
   const [anim, setAnim] = useState(false);
   useEffect(() => { setTimeout(() => setAnim(true), 100); }, []);
   return (
-    <div className="flex items-end gap-2 h-[100px]">
+    <div className="flex items-end gap-2 h-25">
       {data.map((v, i) => (
         <div key={i} className="flex flex-col items-center flex-1">
           <div className="text-[10px] text-secondary mb-1 font-semibold">{v}</div>

@@ -21,7 +21,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-2">
         {toasts.map((t) => (
           <div key={t.id} className={clsx(
-            "px-[22px] py-[14px] rounded-xl bg-surface border text-main text-[13px] font-semibold flex items-center gap-2.5 animate-slide-in min-w-[260px]",
+            "px-5.5 py-3.5 rounded-xl bg-surface border text-main text-[13px] font-semibold flex items-center gap-2.5 animate-slide-in min-w-65",
             TOAST_BORDER[t.type],
             TOAST_SHADOW[t.type],
           )}>

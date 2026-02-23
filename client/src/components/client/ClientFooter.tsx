@@ -1,6 +1,6 @@
 export function ClientFooter() {
   return (
-    <footer className="px-10 pt-10 pb-8 border-t border-border max-w-[1000px] mx-auto">
+    <footer className="px-10 pt-10 pb-8 border-t border-border max-w-250 mx-auto">
       <div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-10 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-3">

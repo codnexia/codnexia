@@ -15,7 +15,7 @@ export function SectionReveal({ children, className = "", style }: SectionReveal
       ref={ref}
       className={clsx(
         "transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]",
-        vis ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[30px]",
+        vis ? "opacity-100 translate-y-0" : "opacity-0 translate-y-7.5",
         className,
       )}
       style={style}

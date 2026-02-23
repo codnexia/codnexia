@@ -28,7 +28,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
         className="bg-surface border-r border-border flex flex-col transition-[width] duration-300 ease-[cubic-bezier(.22,1,.36,1)] overflow-hidden shrink-0"
         style={{ width: collapsed ? 68 : 240 }}
       >
-        <div className={clsx("flex items-center gap-2.5 border-b border-border h-16 box-border", collapsed ? "px-[18px] py-5" : "p-5")}>
+        <div className={clsx("flex items-center gap-2.5 border-b border-border h-16 box-border", collapsed ? "px-4.5 py-5" : "p-5")}>
           <div className="w-8 h-8 rounded-lg shrink-0 bg-grad flex items-center justify-center text-[11px] font-extrabold text-main">{"</>"}</div>
           {!collapsed && <span className="text-sm font-bold text-main whitespace-nowrap">Codnexia <span className="text-accent font-normal">Admin</span></span>}
         </div>
@@ -37,20 +37,20 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
           {tabs.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} className={clsx(
               "w-full flex items-center gap-3 rounded-[10px] border-none cursor-pointer text-[13px] font-semibold mb-0.5 transition-all duration-200 font-sans border-l-2",
-              collapsed ? "py-[11px] px-0 justify-center" : "py-[11px] px-3.5 justify-start",
+              collapsed ? "py-2.75 px-0 justify-center" : "py-2.75 px-3.5 justify-start",
               tab === t.id ? "bg-accent-dim text-accent border-l-accent" : "bg-transparent text-secondary border-l-transparent",
             )}>
-              <span className="text-[17px] w-[22px] text-center">{t.icon}</span>
+              <span className="text-[17px] w-5.5 text-center">{t.icon}</span>
               {!collapsed && <span className="whitespace-nowrap">{t.label}</span>}
             </button>
           ))}
         </nav>
 
         <div className="p-2 border-t border-border">
-          <button onClick={onBack} className="w-full py-[9px] px-3 rounded-lg bg-transparent border border-border text-secondary text-xs cursor-pointer font-sans mb-1 flex items-center justify-center gap-1.5">
+          <button onClick={onBack} className="w-full py-2.25 px-3 rounded-lg bg-transparent border border-border text-secondary text-xs cursor-pointer font-sans mb-1 flex items-center justify-center gap-1.5">
             {collapsed ? "\u2190" : "\u2190 Back to Site"}
           </button>
-          <button onClick={() => setCollapsed(!collapsed)} className="w-full py-[9px] px-3 rounded-lg bg-card border border-border text-muted text-xs cursor-pointer flex items-center justify-center font-sans">
+          <button onClick={() => setCollapsed(!collapsed)} className="w-full py-2.25 px-3 rounded-lg bg-card border border-border text-muted text-xs cursor-pointer flex items-center justify-center font-sans">
             {collapsed ? "\u2192" : "Collapse \u2190"}
           </button>
         </div>

@@ -9,7 +9,7 @@ export function StatCard({ label, value, change, spark, icon, delay = 0, suffix 
   useEffect(() => { const t = setTimeout(() => setVis(true), delay); return () => clearTimeout(t); }, [delay]);
   return (
     <div className={clsx(
-      "bg-card border border-border rounded-[14px] px-[22px] py-5 relative overflow-hidden transition-all duration-600 ease-[cubic-bezier(.22,1,.36,1)]",
+      "bg-card border border-border rounded-[14px] px-5.5 py-5 relative overflow-hidden transition-all duration-600 ease-[cubic-bezier(.22,1,.36,1)]",
       vis ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3.5",
     )}>
       <div className="absolute -top-1.5 right-1.5 opacity-[0.04] text-[72px] leading-none">{icon}</div>

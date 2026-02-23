@@ -48,7 +48,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
   };
 
   return (
-    <section ref={sectionRef} id="contact" className="px-10 py-[90px] max-w-250 mx-auto">
+    <section ref={sectionRef} id="contact" className="px-10 py-22.5 max-w-250 mx-auto">
       <SectionReveal>
         <Pill>Contact Us</Pill>
         <h2 className="text-[40px] font-bold text-main mt-4 mb-12 -tracking-[1.5px]">
@@ -77,13 +77,13 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <Input label="Company" placeholder="Acme Inc." value={form.company} onChange={v => setForm({ ...form, company: v })} />
-                  <div className="mb-[18px]">
+                  <div className="mb-4.5">
                     <label className="text-xs text-secondary block mb-1.5 font-semibold">Service Interested In</label>
                     <select
                       value={form.service}
                       onChange={(e) => setForm({ ...form, service: e.target.value })}
                       className={clsx(
-                        "w-full px-4 py-[11px] rounded-[10px] bg-surface border border-border text-sm font-sans outline-none appearance-none cursor-pointer box-border",
+                        "w-full px-4 py-2.75 rounded-[10px] bg-surface border border-border text-sm font-sans outline-none appearance-none cursor-pointer box-border",
                         form.service ? "text-main" : "text-muted",
                       )}
                     >
@@ -92,7 +92,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
                     </select>
                   </div>
                 </div>
-                <div className="mb-[18px]">
+                <div className="mb-4.5">
                   <label className="text-xs text-secondary block mb-2 font-semibold">Budget Range</label>
                   <div className="flex gap-2 flex-wrap">
                     {["< $5K", "$5K - $15K", "$15K - $50K", "$50K+", "Not sure"].map(b => (
@@ -146,7 +146,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
                     { name: "Twitter", icon: "\uD835\uDD4F" }, { name: "GitHub", icon: "\u2318" },
                     { name: "LinkedIn", icon: "in" }, { name: "Dribbble", icon: "\u25C9" },
                   ].map(s => (
-                    <button key={s.name} onClick={() => toast(`Opening ${s.name}...`, "info")} className="w-[42px] h-[42px] rounded-[10px] bg-surface border border-border flex items-center justify-center text-base text-secondary cursor-pointer transition-all duration-200 font-sans hover:border-accent/27 hover:text-accent">
+                    <button key={s.name} onClick={() => toast(`Opening ${s.name}...`, "info")} className="w-10.5 h-10.5 rounded-[10px] bg-surface border border-border flex items-center justify-center text-base text-secondary cursor-pointer transition-all duration-200 font-sans hover:border-accent/27 hover:text-accent">
                       {s.icon}
                     </button>
                   ))}

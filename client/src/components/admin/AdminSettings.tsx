@@ -18,11 +18,11 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
   };
 
   return (
-    <div className="max-w-[620px]">
+    <div className="max-w-155">
       <Card className="!p-8 mb-4">
         <h3 className="text-base font-bold text-main mb-6">Admin Profile</h3>
         <div className="flex items-center gap-4 mb-7">
-          <div className="w-[60px] h-[60px] rounded-2xl bg-grad flex items-center justify-center text-2xl font-bold text-main">C</div>
+          <div className="w-15 h-15 rounded-2xl bg-grad flex items-center justify-center text-2xl font-bold text-main">C</div>
           <div>
             <div className="text-[17px] font-bold text-main">{profile.name}</div>
             <div className="text-[13px] text-secondary">{profile.email} &middot; {profile.role}</div>
@@ -30,13 +30,13 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
         </div>
         <Input label="Full Name" value={profile.name} onChange={v => setProfile({ ...profile, name: v })} />
         <Input label="Email Address" value={profile.email} onChange={v => setProfile({ ...profile, email: v })} type="email" />
-        <div className="mb-[18px]">
+        <div className="mb-4.5">
           <label className="text-xs text-secondary block mb-1.5 font-semibold">Role</label>
-          <div className="px-4 py-[11px] rounded-[10px] bg-surface border border-border text-muted text-sm">
+          <div className="px-4 py-2.75 rounded-[10px] bg-surface border border-border text-muted text-sm">
             {profile.role} <span className="text-[11px] opacity-50">(managed by system)</span>
           </div>
         </div>
-        <Btn onClick={save} className="!py-[11px] !px-7">{saved ? "\u2713 Saved!" : "Save Changes"}</Btn>
+        <Btn onClick={save} className="!py-2.75 !px-7">{saved ? "\u2713 Saved!" : "Save Changes"}</Btn>
       </Card>
 
       <Card className="!p-8 mb-4">

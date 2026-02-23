@@ -60,11 +60,11 @@ export function AdminContent() {
             <div className="flex gap-1.5 justify-end">
               {editing === p.id ? (
                 <>
-                  <button onClick={() => saveEdit(p.id)} className="py-[5px] px-3 rounded-md bg-accent-dim border border-accent/27 text-accent text-[11px] font-semibold cursor-pointer font-sans">Save</button>
-                  <button onClick={() => setEditing(null)} className="py-[5px] px-3 rounded-md bg-surface border border-border text-muted text-[11px] cursor-pointer font-sans">Cancel</button>
+                  <button onClick={() => saveEdit(p.id)} className="py-1.25 px-3 rounded-md bg-accent-dim border border-accent/27 text-accent text-[11px] font-semibold cursor-pointer font-sans">Save</button>
+                  <button onClick={() => setEditing(null)} className="py-1.25 px-3 rounded-md bg-surface border border-border text-muted text-[11px] cursor-pointer font-sans">Cancel</button>
                 </>
               ) : (
-                <button onClick={() => startEdit(p)} className="py-[5px] px-3.5 rounded-md bg-surface border border-border text-secondary text-[11px] font-semibold cursor-pointer font-sans transition-all duration-200 hover:border-accent/27 hover:text-accent">
+                <button onClick={() => startEdit(p)} className="py-1.25 px-3.5 rounded-md bg-surface border border-border text-secondary text-[11px] font-semibold cursor-pointer font-sans transition-all duration-200 hover:border-accent/27 hover:text-accent">
                   Edit
                 </button>
               )}

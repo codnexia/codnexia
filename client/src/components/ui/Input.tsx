@@ -5,10 +5,10 @@ export function Input({ label, placeholder, value, onChange, type = "text", text
   const base = clsx(
     "w-full rounded-[10px] bg-surface border text-main text-sm font-sans outline-none transition-[border-color] duration-200 box-border",
     error ? "border-error" : "border-border focus:border-accent/40",
-    textarea ? "px-4 py-3 resize-y min-h-[100px]" : "px-4 py-[11px]",
+    textarea ? "px-4 py-3 resize-y min-h-25" : "px-4 py-2.75",
   );
   return (
-    <div className="mb-[18px]">
+    <div className="mb-4.5">
       {label && <label className="text-xs text-secondary block mb-1.5 font-semibold">{label}</label>}
       {textarea ? (
         <textarea placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} className={base} />

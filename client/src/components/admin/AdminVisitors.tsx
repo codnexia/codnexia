@@ -28,7 +28,7 @@ export function AdminVisitors() {
         <div className="px-5 py-4 flex justify-between items-center border-b border-border">
           <div className="flex items-center gap-2">
             <span className="text-[15px] font-bold text-main">Live Sessions</span>
-            <div className="flex items-center gap-[5px] ml-2">
+            <div className="flex items-center gap-1.25 ml-2">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse-dot" />
               <span className="text-xs text-accent font-semibold">Real-time</span>
             </div>
@@ -36,7 +36,7 @@ export function AdminVisitors() {
           <div className="flex gap-1.5">
             {(["all", "active", "idle"] as const).map(f => (
               <button key={f} onClick={() => setFilter(f)} className={clsx(
-                "px-3.5 py-[5px] rounded-md border-none cursor-pointer text-xs font-semibold font-sans capitalize",
+                "px-3.5 py-1.25 rounded-md border-none cursor-pointer text-xs font-semibold font-sans capitalize",
                 filter === f ? "bg-accent-dim text-accent" : "bg-surface text-secondary",
               )}>{f}</button>
             ))}

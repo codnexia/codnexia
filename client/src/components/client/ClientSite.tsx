@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import type { ClientSiteProps } from "../../types";
 import { SECTIONS } from "../../constants";

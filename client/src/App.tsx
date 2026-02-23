@@ -21,7 +21,7 @@ export default function App() {
               const isActive = v === view;
               return (
                 <button key={v} onClick={() => setView(v === "admin" ? (view === "admin" ? "admin" : "login") : v)} className={clsx(
-                  "px-[22px] py-[7px] rounded-lg border-none text-xs font-bold cursor-pointer capitalize transition-all duration-250 font-sans",
+                  "px-5.5 py-1.75 rounded-lg border-none text-xs font-bold cursor-pointer capitalize transition-all duration-250 font-sans",
                   isActive
                     ? "bg-grad text-main shadow-[0_2px_12px_var(--color-accent-glow)]"
                     : "bg-card text-secondary",
