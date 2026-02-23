@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export type ToastType = "success" | "error" | "info" | "warning";
 export type ToastFn = (msg: string, type?: ToastType) => void;
-export type ViewState = "landing" | "client" | "login" | "admin";
+export type ViewState = "client" | "login" | "admin";
 
 export interface Toast {
   id: number;
@@ -75,8 +75,6 @@ export interface SectionRevealProps {
   className?: string;
   style?: React.CSSProperties;
 }
-
-export interface ClientSiteProps {}
 
 export interface AdminLoginProps {
   onLogin: () => void;
