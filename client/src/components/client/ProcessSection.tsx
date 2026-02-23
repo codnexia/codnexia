@@ -21,14 +21,14 @@ export function ProcessSection({ sectionRef }: ProcessSectionProps) {
           { step: "04", title: "Deploy & Scale", desc: "Containerized deployment, monitoring dashboards, and ongoing support for growth.", icon: "\uD83D\uDE80" },
         ].map((s, i) => (
           <SectionReveal key={i} style={{ transitionDelay: `${i * 0.1}s` }}>
-            <Card hoverable className="relative h-full !p-6">
+            <Card hoverable className="relative h-full p-6!">
               <div className="flex justify-between items-start mb-4">
                 <span className="text-[34px] font-extrabold text-primary font-mono -tracking-[2px] opacity-50">{s.step}</span>
                 <span className="text-[26px]">{s.icon}</span>
               </div>
               <div className="text-[15px] font-bold text-main mb-2">{s.title}</div>
               <div className="text-[13px] text-secondary leading-[1.7]">{s.desc}</div>
-              {i < 3 && <div className="absolute -right-3.5 top-1/2 -translate-y-1/2 text-lg text-muted z-[2]">&rarr;</div>}
+              {i < 3 && <div className="absolute -right-3.5 top-1/2 -translate-y-1/2 text-lg text-muted z-2">&rarr;</div>}
             </Card>
           </SectionReveal>
         ))}

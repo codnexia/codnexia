@@ -33,9 +33,9 @@ export function AdminContent() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <p className="text-sm text-secondary m-0">Manage Codnexia website sections</p>
-        <Btn onClick={() => toast("New section modal would open here", "info")} className="!py-2.5 !px-5 !text-[13px]">+ New Section</Btn>
+        <Btn onClick={() => toast("New section modal would open here", "info")} className="py-2.5! px-5! text-[13px]!">+ New Section</Btn>
       </div>
-      <Card className="!p-0 overflow-hidden">
+      <Card className="p-0! overflow-hidden">
         <div className="grid grid-cols-[2fr_2fr_1fr_1fr_120px] px-5 py-3 border-b border-border text-[11px] text-muted font-semibold uppercase tracking-[0.8px]">
           <span>Section</span><span>Content Preview</span><span>Status</span><span>Updated</span><span></span>
         </div>

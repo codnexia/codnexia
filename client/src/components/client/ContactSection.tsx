@@ -59,7 +59,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
       <div className="grid grid-cols-2 gap-6">
         {/* Form */}
         <SectionReveal>
-          <Card className="!p-8">
+          <Card className="p-8!">
             <h3 className="text-lg font-bold text-main mb-1">Send us a message</h3>
             <p className="text-[13px] text-secondary mb-6">Fill out the form and we'll get back to you within 24 hours.</p>
 
@@ -106,7 +106,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
                   </div>
                 </div>
                 <Input label="Project Details *" placeholder="Tell us about your project, goals, and timeline..." value={form.message} onChange={v => setForm({ ...form, message: v })} textarea error={formErrors.message} />
-                <Btn onClick={submitForm} disabled={sending} className="!w-full !py-3.5 !px-0">
+                <Btn onClick={submitForm} disabled={sending} className="w-full! py-3.5! px-0!">
                   {sending ? "Sending..." : "Send Message \u2192"}
                 </Btn>
               </>
@@ -117,7 +117,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
         {/* Contact Info */}
         <SectionReveal style={{ transitionDelay: "0.15s" }}>
           <div className="flex flex-col gap-4">
-            <Card className="!p-7">
+            <Card className="p-7!">
               <h3 className="text-base font-bold text-main mb-4">Get in Touch</h3>
               {[
                 { icon: "\u2709", label: "Email", value: "info@codnexia.com", sub: "We respond within 24 hours" },
@@ -136,9 +136,9 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
               ))}
             </Card>
 
-            <Card className="!p-7 relative overflow-hidden">
+            <Card className="p-7! relative overflow-hidden">
               <HexGrid />
-              <div className="relative z-[1]">
+              <div className="relative z-1">
                 <h3 className="text-base font-bold text-main mb-2">Follow Us</h3>
                 <p className="text-[13px] text-secondary mb-4">Stay updated with our latest projects and insights.</p>
                 <div className="flex gap-2.5">

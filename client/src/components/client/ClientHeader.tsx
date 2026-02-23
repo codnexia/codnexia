@@ -6,10 +6,9 @@ interface ClientHeaderProps {
   headerOpacity: number;
   activeSection: string;
   scrollTo: (id: string) => void;
-  onSwitchToAdmin: () => void;
 }
 
-export function ClientHeader({ headerOpacity, activeSection, scrollTo, onSwitchToAdmin }: ClientHeaderProps) {
+export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientHeaderProps) {
   return (
     <header
       className="sticky top-0 z-100 px-10 h-16 flex items-center justify-between transition-[border-color] duration-300"
@@ -35,12 +34,7 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo, onSwitchT
         ))}
       </nav>
 
-      <div className="flex gap-2.5 items-center">
-        <button onClick={onSwitchToAdmin} className="px-3.5 py-1.75 rounded-lg bg-transparent border border-border text-secondary text-xs font-semibold cursor-pointer font-sans transition-all duration-200 hover:border-border-light">
-          Admin
-        </button>
-        <Btn onClick={() => scrollTo("contact")} className="!px-5 !py-2 !text-[13px]">Start a Project</Btn>
-      </div>
+      <Btn onClick={() => scrollTo("contact")} className="px-5! py-2! text-[13px]!">Start a Project</Btn>
     </header>
   );
 }

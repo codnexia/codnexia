@@ -33,14 +33,14 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
       <div className="absolute top-[30%] left-[40%] w-125 h-125 blur-[120px] opacity-40" style={{ background: "radial-gradient(circle, rgba(30,58,138,0.35), transparent)" }} />
       <div className="absolute bottom-[20%] right-[30%] w-75 h-75 blur-[80px] opacity-30" style={{ background: "radial-gradient(circle, rgba(45,212,168,0.22), transparent)" }} />
 
-      <div className="w-105 relative z-[1]">
+      <div className="w-105 relative z-1">
         <div className="text-center mb-8">
           <div className="w-13 h-13 rounded-[14px] bg-grad inline-flex items-center justify-center text-xl font-extrabold text-main mb-4 shadow-[0_4px_30px_var(--color-accent-glow)]">{"</>"}</div>
           <h1 className="text-[26px] font-bold text-main mb-1">Welcome Back</h1>
           <p className="text-sm text-secondary">Sign in to Codnexia Admin Panel</p>
         </div>
 
-        <Card className="!p-8">
+        <Card className="p-8!">
           <Input label="Email Address" placeholder="admin@codnexia.com" value={email} onChange={setEmail} type="email" />
           <div className="relative">
             <Input label="Password" placeholder="Enter your password" value={password} onChange={setPassword} type={showPass ? "text" : "password"} />
@@ -56,7 +56,7 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
             <span className="text-[13px] text-accent cursor-pointer font-semibold">Forgot password?</span>
           </div>
 
-          <Btn onClick={handleLogin} disabled={loading} className="!w-full !py-3.5 !px-0">
+          <Btn onClick={handleLogin} disabled={loading} className="w-full! py-3.5! px-0!">
             {loading ? "Signing in..." : "Sign In \u2192"}
           </Btn>
 

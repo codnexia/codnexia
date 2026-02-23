@@ -19,7 +19,7 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
 
   return (
     <div className="max-w-155">
-      <Card className="!p-8 mb-4">
+      <Card className="p-8! mb-4">
         <h3 className="text-base font-bold text-main mb-6">Admin Profile</h3>
         <div className="flex items-center gap-4 mb-7">
           <div className="w-15 h-15 rounded-2xl bg-grad flex items-center justify-center text-2xl font-bold text-main">C</div>
@@ -36,10 +36,10 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
             {profile.role} <span className="text-[11px] opacity-50">(managed by system)</span>
           </div>
         </div>
-        <Btn onClick={save} className="!py-2.75 !px-7">{saved ? "\u2713 Saved!" : "Save Changes"}</Btn>
+        <Btn onClick={save} className="py-2.75! px-7!">{saved ? "\u2713 Saved!" : "Save Changes"}</Btn>
       </Card>
 
-      <Card className="!p-8 mb-4">
+      <Card className="p-8! mb-4">
         <h3 className="text-base font-bold text-main mb-5">Security</h3>
         {[
           { label: "JWT Expiry", value: "24 hours", desc: "Token refresh handled automatically" },
@@ -57,12 +57,12 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
         ))}
       </Card>
 
-      <Card className="!p-8 !border-error/20">
+      <Card className="p-8! border-error/20!">
         <h3 className="text-base font-bold text-error mb-2">Danger Zone</h3>
         <p className="text-[13px] text-secondary mb-4">Irreversible actions that affect your account.</p>
         <div className="flex gap-2.5">
-          <Btn variant="secondary" onClick={onLogout} className="!border-error/27 !text-error">Log Out</Btn>
-          <Btn variant="secondary" onClick={() => toast("This would delete the account", "warning")} className="!border-error/13 !text-muted">Delete Account</Btn>
+          <Btn variant="secondary" onClick={onLogout} className="border-error/27! text-error!">Log Out</Btn>
+          <Btn variant="secondary" onClick={() => toast("This would delete the account", "warning")} className="border-error/13! text-muted!">Delete Account</Btn>
         </div>
       </Card>
     </div>

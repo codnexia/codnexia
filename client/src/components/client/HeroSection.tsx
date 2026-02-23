@@ -13,7 +13,9 @@ export function HeroSection({ sectionRef, scrollTo }: HeroSectionProps) {
   return (
     <section ref={sectionRef} id="hero" className="px-10 pt-25 pb-22.5 text-center relative overflow-hidden">
       <HexGrid />
-      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-175 blur-[100px] opacity-50 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(30,58,138,0.35) 0%, transparent 60%)" }} />
+      <div 
+        className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-175 blur-[100px] opacity-50 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(30,58,138,0.35) 0%, transparent 60%)" }} 
+      />
       <div className="absolute top-[60%] left-[30%] w-100 h-100 blur-[80px] opacity-30 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(45,212,168,0.22) 0%, transparent 60%)" }} />
       <SectionReveal className="relative z-1">
         <Pill color="#2DD4A8">Global Code &middot; African Excellence</Pill>

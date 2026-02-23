@@ -24,7 +24,7 @@ export function AdminVisitors() {
         <StatCard label="Today's Views" value={1847} change={11.3} icon="\u25D0" delay={80} spark={[800,950,1100,1300,1500,1700,1847]} />
         <StatCard label="Bounce Rate" value={38} change={-3.1} icon="\u21A9" delay={160} suffix="%" spark={[45,42,44,40,41,39,38]} />
       </div>
-      <Card className="!p-0 overflow-hidden">
+      <Card className="p-0! overflow-hidden">
         <div className="px-5 py-4 flex justify-between items-center border-b border-border">
           <div className="flex items-center gap-2">
             <span className="text-[15px] font-bold text-main">Live Sessions</span>

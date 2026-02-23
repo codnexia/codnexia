@@ -1,6 +1,5 @@
 
 import { useState, useEffect, useRef } from "react";
-import type { ClientSiteProps } from "../../types";
 import { SECTIONS } from "../../constants";
 import { ClientHeader } from "./ClientHeader";
 import { HeroSection } from "./HeroSection";
@@ -10,7 +9,7 @@ import { ServicesSection } from "./ServicesSection";
 import { ContactSection } from "./ContactSection";
 import { ClientFooter } from "./ClientFooter";
 
-export function ClientSite({ onSwitchToAdmin }: ClientSiteProps) {
+export function ClientSite() {
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState("hero");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,7 +43,7 @@ export function ClientSite({ onSwitchToAdmin }: ClientSiteProps) {
 
   return (
     <div ref={containerRef} className="h-full overflow-auto bg-bg relative scroll-smooth">
-      <ClientHeader headerOpacity={headerOpacity} activeSection={activeSection} scrollTo={scrollTo} onSwitchToAdmin={onSwitchToAdmin} />
+      <ClientHeader headerOpacity={headerOpacity} activeSection={activeSection} scrollTo={scrollTo} />
       <HeroSection sectionRef={setSectionRef("hero")} scrollTo={scrollTo} />
       <AboutSection sectionRef={setSectionRef("about")} />
       <ProcessSection sectionRef={setSectionRef("how")} />
