@@ -1,0 +1,77 @@
+import { useState } from "react";
+import clsx from "clsx";
+import type { ContentPage } from "../../types";
+import { useToast } from "../../context/ToastContext";
+import { Pill } from "../ui/Pill";
+import { Btn } from "../ui/Btn";
+import { Card } from "../ui/Card";
+
+export function AdminContent() {
+  const toast = useToast();
+  const [pages, setPages] = useState<ContentPage[]>([
+    { id: 1, name: "Hero Section", status: "Published", updated: "2 min ago", content: "Engineering the Next Generation of Software" },
+    { id: 2, name: "About Codnexia", status: "Published", updated: "1 hour ago", content: "Codnexia Software is a global software development company..." },
+    { id: 3, name: "Our Process", status: "Draft", updated: "3 hours ago", content: "Discovery, Build, Test, Deploy" },
+    { id: 4, name: "Services", status: "Published", updated: "1 day ago", content: "Web Apps, Mobile, SaaS, APIs, AI" },
+    { id: 5, name: "Contact Info", status: "Published", updated: "2 days ago", content: "info@codnexia.com" },
+  ]);
+  const [editing, setEditing] = useState<number | null>(null);
+  const [editContent, setEditContent] = useState("");
+
+  const startEdit = (p: ContentPage) => { setEditing(p.id); setEditContent(p.content); };
+  const saveEdit = (id: number) => {
+    setPages(pages.map(p => p.id === id ? { ...p, content: editContent, updated: "Just now" } : p));
+    setEditing(null);
+    toast("Section updated successfully!", "success");
+  };
+  const toggleStatus = (id: number) => {
+    setPages(pages.map(p => p.id === id ? { ...p, status: p.status === "Published" ? "Draft" : "Published", updated: "Just now" } : p));
+    toast("Status updated", "info");
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <p className="text-sm text-secondary m-0">Manage Codnexia website sections</p>
+        <Btn onClick={() => toast("New section modal would open here", "info")} className="!py-2.5 !px-5 !text-[13px]">+ New Section</Btn>
+      </div>
+      <Card className="!p-0 overflow-hidden">
+        <div className="grid grid-cols-[2fr_2fr_1fr_1fr_120px] px-5 py-3 border-b border-border text-[11px] text-muted font-semibold uppercase tracking-[0.8px]">
+          <span>Section</span><span>Content Preview</span><span>Status</span><span>Updated</span><span></span>
+        </div>
+        {pages.map((p, i) => (
+          <div key={p.id} className={clsx(
+            "grid grid-cols-[2fr_2fr_1fr_1fr_120px] px-5 py-3.5 items-center transition-colors duration-200",
+            i < pages.length - 1 && "border-b border-border",
+            editing === p.id ? "bg-surface-hover" : "hover:bg-surface-hover",
+          )}>
+            <span className="text-sm font-semibold text-main">{p.name}</span>
+            {editing === p.id ? (
+              <input value={editContent} onChange={(e) => setEditContent(e.target.value)}
+                className="bg-surface border border-accent/27 rounded-md px-2.5 py-1.5 text-main text-xs font-sans outline-none w-full"
+                autoFocus onKeyDown={(e) => { if (e.key === "Enter") saveEdit(p.id); }} />
+            ) : (
+              <span className="text-xs text-secondary truncate">{p.content}</span>
+            )}
+            <span onClick={() => toggleStatus(p.id)} className="cursor-pointer">
+              <Pill color={p.status === "Published" ? "#2DD4A8" : "#F5A623"}>{p.status}</Pill>
+            </span>
+            <span className="text-xs text-secondary">{p.updated}</span>
+            <div className="flex gap-1.5 justify-end">
+              {editing === p.id ? (
+                <>
+                  <button onClick={() => saveEdit(p.id)} className="py-[5px] px-3 rounded-md bg-accent-dim border border-accent/27 text-accent text-[11px] font-semibold cursor-pointer font-sans">Save</button>
+                  <button onClick={() => setEditing(null)} className="py-[5px] px-3 rounded-md bg-surface border border-border text-muted text-[11px] cursor-pointer font-sans">Cancel</button>
+                </>
+              ) : (
+                <button onClick={() => startEdit(p)} className="py-[5px] px-3.5 rounded-md bg-surface border border-border text-secondary text-[11px] font-semibold cursor-pointer font-sans transition-all duration-200 hover:border-accent/27 hover:text-accent">
+                  Edit
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </Card>
+    </div>
+  );
+}

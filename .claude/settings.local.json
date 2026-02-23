@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:\\\\Users\\\\ADMIN\\\\OneDrive\\\\Desktop\\\\codenexia\\\\client\" && npx tsc -b --noEmit 2>&122)",
+      "Bash(cd \"C:\\\\Users\\\\ADMIN\\\\OneDrive\\\\Desktop\\\\codenexia\\\\client\" && npx vite --host 2>&1)",
+      "Bash(cd:*)",
+      "Bash(cd /c/Users/ADMIN/OneDrive/Desktop/codenexia/client && npx vite build 2>&1)"
+    ]
+  }
+}

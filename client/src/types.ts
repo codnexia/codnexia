@@ -1,0 +1,126 @@
+import type { ReactNode } from "react";
+
+export type ToastType = "success" | "error" | "info" | "warning";
+export type ToastFn = (msg: string, type?: ToastType) => void;
+export type ViewState = "client" | "login" | "admin";
+
+export interface Toast {
+  id: number;
+  msg: string;
+  type: ToastType;
+}
+
+export interface AnimNumProps {
+  value: number;
+  duration?: number;
+  suffix?: string;
+  prefix?: string;
+}
+
+export interface PillProps {
+  children: ReactNode;
+  color?: string;
+}
+
+export interface BtnProps {
+  children: ReactNode;
+  variant?: "primary" | "ghost" | "secondary";
+  onClick?: () => void;
+  className?: string;
+  disabled?: boolean;
+}
+
+export interface InputProps {
+  label?: string;
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  textarea?: boolean;
+  error?: string;
+}
+
+export interface SparklineProps {
+  data: number[];
+  color?: string;
+  w?: number;
+  h?: number;
+}
+
+export interface BarChartProps {
+  data: number[];
+  labels?: string[];
+  color?: string;
+}
+
+export interface StatCardProps {
+  label: string;
+  value: number;
+  change?: number;
+  spark?: number[];
+  icon?: string;
+  delay?: number;
+  suffix?: string;
+  prefix?: string;
+}
+
+export interface CardProps {
+  children: ReactNode;
+  className?: string;
+  hoverable?: boolean;
+}
+
+export interface SectionRevealProps {
+  children: ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface ClientSiteProps {
+  onSwitchToAdmin: () => void;
+}
+
+export interface AdminLoginProps {
+  onLogin: () => void;
+  onBack: () => void;
+}
+
+export interface AdminPanelProps {
+  onLogout: () => void;
+  onBack: () => void;
+}
+
+export interface AdminSettingsProps {
+  onLogout: () => void;
+}
+
+export interface ContactForm {
+  name: string;
+  email: string;
+  company: string;
+  service: string;
+  budget: string;
+  message: string;
+}
+
+export interface ContentPage {
+  id: number;
+  name: string;
+  status: string;
+  updated: string;
+  content: string;
+}
+
+export interface MediaFile {
+  id: number;
+  name: string;
+  size: string;
+  type: string;
+  date: string;
+}
+
+export interface AdminProfile {
+  name: string;
+  email: string;
+  role: string;
+}

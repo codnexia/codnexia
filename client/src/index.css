@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors (matching the current C object) */
+  --color-bg: #060B18;
+  --color-surface: #0C1324;
+  --color-surface-hover: #111B33;
+  --color-card: #0E1628;
+  --color-border: #162040;
+  --color-border-light: #1E2D55;
+  --color-accent: #2DD4A8;
+  --color-accent-dim: rgba(45, 212, 168, 0.10);
+  --color-accent-glow: rgba(45, 212, 168, 0.22);
+  --color-primary: #1E3A8A;
+  --color-primary-light: #2B4FAF;
+  --color-primary-glow: rgba(30, 58, 138, 0.35);
+  --color-main: #EFF4FC;
+  --color-secondary: #7A8DB5;
+  --color-muted: #3E5280;
+  --color-warning: #F5A623;
+  --color-error: #E84855;
+  --color-info: #4A9FF5;
+
+  /* Fonts */
+  --font-sans: 'DM Sans', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+  /* Custom animations */
+  --animate-pulse-dot: pulse-dot 2s infinite;
+  --animate-slide-in: slide-in 0.3s ease;
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+}
+
+/* Custom utilities for repeated patterns */
+@utility bg-grad {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary-light));
+}
+
+/* Global styles */
+@layer base {
+  html, body, #root {
+    margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+  }
+  body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-border-light); }
+  ::selection { background: rgba(45, 212, 168, 0.2); color: var(--color-main); }
+  input::placeholder, textarea::placeholder { color: var(--color-muted); }
+  select option { background: var(--color-surface); color: var(--color-main); }
+}
