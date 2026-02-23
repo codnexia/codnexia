@@ -1,7 +1,7 @@
 export function ClientFooter() {
   return (
     <footer className="px-4 md:px-10 pt-10 pb-8 border-t border-border max-w-250 mx-auto">
-      <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr] gap-6 md:gap-10 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr] gap-6 md:gap-10 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-3">
             <div className="w-7 h-7 rounded-md bg-grad flex items-center justify-center text-[10px] font-extrabold text-main">{"</>"}</div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { SECTIONS } from "../../constants";
 import { Btn } from "../ui/Btn";
@@ -11,6 +11,21 @@ interface ClientHeaderProps {
 
 export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.documentElement.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.documentElement.style.overflow = ""; };
+  }, [menuOpen]);
+
+  // Close menu on resize to desktop
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 768 && menuOpen) setMenuOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [menuOpen]);
 
   return (
     <header

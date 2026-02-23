@@ -23,8 +23,8 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
       <Card className="p-5! md:p-8! mb-4">
         <h3 className="text-base font-bold text-main mb-6">Admin Profile</h3>
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-7">
-          <div className="w-15 h-15 rounded-2xl bg-grad flex items-center justify-center text-2xl font-bold text-main">C</div>
-          <div>
+          <div className="w-15 h-15 rounded-2xl bg-grad flex items-center justify-center text-2xl font-bold text-main shrink-0">C</div>
+          <div className="text-center sm:text-left">
             <div className="text-[17px] font-bold text-main">{profile.name}</div>
             <div className="text-[13px] text-secondary">{profile.email} &middot; {profile.role}</div>
           </div>

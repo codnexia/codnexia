@@ -30,8 +30,8 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
   return (
     <div className="h-full flex items-center justify-center bg-bg relative overflow-hidden">
       <HexGrid />
-      <div className="absolute top-[30%] left-[40%] w-125 h-125 blur-[120px] opacity-40" style={{ background: "radial-gradient(circle, rgba(30,58,138,0.35), transparent)" }} />
-      <div className="absolute bottom-[20%] right-[30%] w-75 h-75 blur-[80px] opacity-30" style={{ background: "radial-gradient(circle, rgba(45,212,168,0.22), transparent)" }} />
+      <div className="absolute top-[30%] left-[40%] w-60 h-60 md:w-125 md:h-125 blur-[120px] opacity-40" style={{ background: "radial-gradient(circle, rgba(30,58,138,0.35), transparent)" }} />
+      <div className="absolute bottom-[20%] right-[30%] w-40 h-40 md:w-75 md:h-75 blur-[80px] opacity-30" style={{ background: "radial-gradient(circle, rgba(45,212,168,0.22), transparent)" }} />
 
       <div className="w-full max-w-105 px-4 md:px-0 relative z-1">
         <div className="text-center mb-8">
