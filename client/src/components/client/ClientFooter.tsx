@@ -1,7 +1,7 @@
 export function ClientFooter() {
   return (
-    <footer className="px-10 pt-10 pb-8 border-t border-border max-w-250 mx-auto">
-      <div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-10 mb-8">
+    <footer className="px-4 md:px-10 pt-10 pb-8 border-t border-border max-w-250 mx-auto">
+      <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr] gap-6 md:gap-10 mb-8">
         <div>
           <div className="flex items-center gap-2 mb-3">
             <div className="w-7 h-7 rounded-md bg-grad flex items-center justify-center text-[10px] font-extrabold text-main">{"</>"}</div>
@@ -24,7 +24,7 @@ export function ClientFooter() {
           </div>
         ))}
       </div>
-      <div className="flex justify-between items-center pt-5 border-t border-border">
+      <div className="flex flex-col sm:flex-row gap-2 justify-between items-center pt-5 border-t border-border">
         <span className="text-xs text-muted">&copy; 2026 Codnexia Software. All rights reserved.</span>
         <span className="text-[11px] text-accent font-semibold opacity-70">Global Code. African Excellence.</span>
       </div>

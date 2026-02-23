@@ -1,6 +1,7 @@
 import { Pill } from "../ui/Pill";
 import { Card } from "../ui/Card";
 import { SectionReveal } from "../ui/SectionReveal";
+import { ABOUT_PILLARS, CORE_VALUES } from "../../assets/data";
 
 interface AboutSectionProps {
   sectionRef: (el: HTMLElement | null) => void;
@@ -8,10 +9,10 @@ interface AboutSectionProps {
 
 export function AboutSection({ sectionRef }: AboutSectionProps) {
   return (
-    <section ref={sectionRef} id="about" className="px-10 py-22.5 max-w-250 mx-auto">
+    <section ref={sectionRef} id="about" className="px-4 py-14 md:px-10 md:py-22.5 max-w-250 mx-auto">
       <SectionReveal>
         <Pill>About Codnexia</Pill>
-        <h2 className="text-[40px] font-bold text-main mt-4 mb-3.5 -tracking-[1.5px]">
+        <h2 className="text-[28px] md:text-[40px] font-bold text-main mt-4 mb-3.5 -tracking-[1.5px]">
           Transforming ideas into<br /><span className="text-accent">reliable software</span>
         </h2>
         <p className="text-base text-secondary leading-[1.8] max-w-160 mb-11">
@@ -19,12 +20,8 @@ export function AboutSection({ sectionRef }: AboutSectionProps) {
         </p>
       </SectionReveal>
 
-      <div className="grid grid-cols-3 gap-4 mb-11">
-        {[
-          { icon: "\u25CE", title: "Mission", desc: "To build high-quality, scalable, and innovative software solutions that empower businesses globally while showcasing African engineering excellence.", color: "#2DD4A8" },
-          { icon: "\u25C8", title: "Vision", desc: "To become a globally trusted technology company originating from Africa, shaping the future of digital innovation and software development.", color: "#4A9FF5" },
-          { icon: "\u2726", title: "Values", desc: "Innovation First \u00B7 Engineering Excellence \u00B7 Integrity & Trust \u00B7 Global Mindset \u00B7 African Excellence", color: "#F5A623" },
-        ].map((f, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-11">
+        {ABOUT_PILLARS.map((f, i) => (
           <SectionReveal key={i} style={{ transitionDelay: `${i * 0.1}s` }}>
             <Card hoverable className="relative overflow-hidden p-7 h-full">
               <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full" style={{ background: `radial-gradient(circle, ${f.color}15, transparent)` }} />
@@ -38,7 +35,7 @@ export function AboutSection({ sectionRef }: AboutSectionProps) {
 
       <SectionReveal>
         <div className="flex gap-2.5 flex-wrap">
-          {["Innovation First", "Engineering Excellence", "Integrity & Trust", "Global Mindset", "African Excellence"].map(v => (
+          {CORE_VALUES.map(v => (
             <span key={v} className="px-4 py-2 rounded-[20px] bg-surface border border-border text-xs text-secondary font-medium transition-all duration-200 cursor-default hover:border-accent/27 hover:text-accent">
               {v}
             </span>

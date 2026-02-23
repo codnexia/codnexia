@@ -5,10 +5,11 @@ import { useToast } from "../../context/ToastContext";
 import { Btn } from "../ui/Btn";
 import { Input } from "../ui/Input";
 import { Card } from "../ui/Card";
+import { DEFAULT_PROFILE, SECURITY_SETTINGS } from "../../assets/data";
 
 export function AdminSettings({ onLogout }: AdminSettingsProps) {
   const toast = useToast();
-  const [profile, setProfile] = useState<AdminProfile>({ name: "Codnexia Admin", email: "admin@codnexia.com", role: "Super Admin" });
+  const [profile, setProfile] = useState<AdminProfile>(DEFAULT_PROFILE);
   const [saved, setSaved] = useState(false);
 
   const save = () => {
@@ -19,9 +20,9 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
 
   return (
     <div className="max-w-155">
-      <Card className="p-8! mb-4">
+      <Card className="p-5! md:p-8! mb-4">
         <h3 className="text-base font-bold text-main mb-6">Admin Profile</h3>
-        <div className="flex items-center gap-4 mb-7">
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-7">
           <div className="w-15 h-15 rounded-2xl bg-grad flex items-center justify-center text-2xl font-bold text-main">C</div>
           <div>
             <div className="text-[17px] font-bold text-main">{profile.name}</div>
@@ -39,14 +40,9 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
         <Btn onClick={save} className="py-2.75! px-7!">{saved ? "\u2713 Saved!" : "Save Changes"}</Btn>
       </Card>
 
-      <Card className="p-8! mb-4">
+      <Card className="p-5! md:p-8! mb-4">
         <h3 className="text-base font-bold text-main mb-5">Security</h3>
-        {[
-          { label: "JWT Expiry", value: "24 hours", desc: "Token refresh handled automatically" },
-          { label: "Cookie Type", value: "HTTP-only, Secure", desc: "Prevents XSS attacks" },
-          { label: "Session", value: "Active", desc: "Since Feb 17, 2026 at 09:14 AM" },
-          { label: "2FA", value: "Disabled", desc: "Recommended for production" },
-        ].map((s, i) => (
+        {SECURITY_SETTINGS.map((s, i) => (
           <div key={i} className={clsx("flex justify-between items-center py-3.5", i < 3 && "border-b border-border")}>
             <div>
               <div className="text-[13px] text-main font-semibold">{s.label}</div>
@@ -57,10 +53,10 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
         ))}
       </Card>
 
-      <Card className="p-8! border-error/20!">
+      <Card className="p-5! md:p-8! border-error/20!">
         <h3 className="text-base font-bold text-error mb-2">Danger Zone</h3>
         <p className="text-[13px] text-secondary mb-4">Irreversible actions that affect your account.</p>
-        <div className="flex gap-2.5">
+        <div className="flex flex-col sm:flex-row gap-2.5">
           <Btn variant="secondary" onClick={onLogout} className="border-error/27! text-error!">Log Out</Btn>
           <Btn variant="secondary" onClick={() => toast("This would delete the account", "warning")} className="border-error/13! text-muted!">Delete Account</Btn>
         </div>

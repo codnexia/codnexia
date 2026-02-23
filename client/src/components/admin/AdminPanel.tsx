@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import type { AdminPanelProps } from "../../types";
 import { useToast } from "../../context/ToastContext";
@@ -11,7 +11,15 @@ import { AdminSettings } from "./AdminSettings";
 export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
   const toast = useToast();
   const [tab, setTab] = useState("dashboard");
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 768);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth < 768) setCollapsed(true);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const tabs = [
     { id: "dashboard", icon: "\u25D0", label: "Dashboard" },
@@ -58,7 +66,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
 
       {/* Main */}
       <main className="flex-1 overflow-auto flex flex-col">
-        <header className="h-16 px-8 flex items-center justify-between border-b border-border bg-surface shrink-0">
+        <header className="h-16 px-4 md:px-8 flex items-center justify-between border-b border-border bg-surface shrink-0">
           <h1 className="text-lg font-bold text-main m-0 -tracking-[0.5px]">
             {tabs.find(t => t.id === tab)?.label}
           </h1>
@@ -76,7 +84,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
           </div>
         </header>
 
-        <div className="p-8 flex-1">
+        <div className="p-4 md:p-8 flex-1">
           {tab === "dashboard" && <AdminDashboard />}
           {tab === "content" && <AdminContent />}
           {tab === "media" && <AdminMedia />}

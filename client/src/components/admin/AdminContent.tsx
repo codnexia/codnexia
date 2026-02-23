@@ -5,16 +5,11 @@ import { useToast } from "../../context/ToastContext";
 import { Pill } from "../ui/Pill";
 import { Btn } from "../ui/Btn";
 import { Card } from "../ui/Card";
+import { INITIAL_PAGES } from "../../assets/data";
 
 export function AdminContent() {
   const toast = useToast();
-  const [pages, setPages] = useState<ContentPage[]>([
-    { id: 1, name: "Hero Section", status: "Published", updated: "2 min ago", content: "Engineering the Next Generation of Software" },
-    { id: 2, name: "About Codnexia", status: "Published", updated: "1 hour ago", content: "Codnexia Software is a global software development company..." },
-    { id: 3, name: "Our Process", status: "Draft", updated: "3 hours ago", content: "Discovery, Build, Test, Deploy" },
-    { id: 4, name: "Services", status: "Published", updated: "1 day ago", content: "Web Apps, Mobile, SaaS, APIs, AI" },
-    { id: 5, name: "Contact Info", status: "Published", updated: "2 days ago", content: "info@codnexia.com" },
-  ]);
+  const [pages, setPages] = useState<ContentPage[]>(INITIAL_PAGES);
   const [editing, setEditing] = useState<number | null>(null);
   const [editContent, setEditContent] = useState("");
 
@@ -31,17 +26,18 @@ export function AdminContent() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center mb-6">
         <p className="text-sm text-secondary m-0">Manage Codnexia website sections</p>
         <Btn onClick={() => toast("New section modal would open here", "info")} className="py-2.5! px-5! text-[13px]!">+ New Section</Btn>
       </div>
       <Card className="p-0! overflow-hidden">
-        <div className="grid grid-cols-[2fr_2fr_1fr_1fr_120px] px-5 py-3 border-b border-border text-[11px] text-muted font-semibold uppercase tracking-[0.8px]">
+        <div className="overflow-x-auto">
+        <div className="grid grid-cols-[2fr_2fr_1fr_1fr_120px] min-w-[600px] px-5 py-3 border-b border-border text-[11px] text-muted font-semibold uppercase tracking-[0.8px]">
           <span>Section</span><span>Content Preview</span><span>Status</span><span>Updated</span><span></span>
         </div>
         {pages.map((p, i) => (
           <div key={p.id} className={clsx(
-            "grid grid-cols-[2fr_2fr_1fr_1fr_120px] px-5 py-3.5 items-center transition-colors duration-200",
+            "grid grid-cols-[2fr_2fr_1fr_1fr_120px] min-w-[600px] px-5 py-3.5 items-center transition-colors duration-200",
             i < pages.length - 1 && "border-b border-border",
             editing === p.id ? "bg-surface-hover" : "hover:bg-surface-hover",
           )}>
@@ -71,6 +67,7 @@ export function AdminContent() {
             </div>
           </div>
         ))}
+        </div>
       </Card>
     </div>
   );
