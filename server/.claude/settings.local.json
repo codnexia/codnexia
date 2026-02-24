@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:/Users/ADMIN/OneDrive/Desktop/codnexia/server\" && node dist/src/main.js 2>&1)",
+      "Bash(curl:*)"
+    ]
+  }
+}
