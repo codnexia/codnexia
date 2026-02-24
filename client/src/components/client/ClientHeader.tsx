@@ -15,7 +15,9 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.documentElement.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.documentElement.style.overflow = ""; };
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
   }, [menuOpen]);
 
   // Close menu on resize to desktop
@@ -36,23 +38,44 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
         borderBottom: `1px solid ${headerOpacity > 0.3 ? "#162040" : "transparent"}`,
       }}
     >
-      <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => scrollTo("hero")}>
-        <div className="w-8.5 h-8.5 rounded-lg bg-grad flex items-center justify-center text-[13px] font-extrabold text-main shadow-[0_0_20px_var(--color-primary-glow)]">{"</>"}</div>
+      {/* Logo */}
+      <div
+        className="flex items-center gap-2.5 cursor-pointer"
+        onClick={() => scrollTo("hero")}
+      >
+        <div className="w-8.5 h-8.5 rounded-lg bg-grad flex items-center justify-center text-[13px] font-extrabold text-main shadow-[0_0_20px_var(--color-primary-glow)]">
+          {"</>"}
+        </div>
         <span className="text-[17px] font-bold text-main -tracking-[0.5px]">
           Codnexia<span className="text-accent font-normal ml-1">Software</span>
         </span>
       </div>
 
+      {/* Desktop nav */}
       <nav className="hidden md:flex gap-1.5">
         {SECTIONS.map(s => (
-          <button key={s.id} onClick={() => scrollTo(s.id)} className={clsx(
-            "px-4 py-1.5 rounded-lg border-none cursor-pointer text-[13px] font-semibold transition-all duration-250 font-sans",
-            activeSection === s.id ? "bg-accent-dim text-accent" : "bg-transparent text-secondary",
-          )}>{s.label}</button>
+          <button
+            key={s.id}
+            onClick={() => scrollTo(s.id)}
+            className={clsx(
+              "px-4 py-1.5 rounded-lg border-none cursor-pointer text-[13px] font-semibold transition-all duration-250 font-sans",
+              activeSection === s.id
+                ? "bg-accent-dim text-accent"
+                : "bg-transparent text-secondary",
+            )}
+          >
+            {s.label}
+          </button>
         ))}
       </nav>
 
-      <Btn onClick={() => scrollTo("contact")} className="hidden md:inline-flex px-5! py-2! text-[13px]!">Start a Project</Btn>
+      {/* Desktop CTA */}
+      <Btn
+        onClick={() => scrollTo("contact")}
+        className="hidden md:inline-flex px-5! py-2! text-[13px]!"
+      >
+        Start a Project
+      </Btn>
 
       {/* Hamburger button - mobile only */}
       <button
@@ -60,7 +83,15 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
         className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg bg-transparent border border-border text-main cursor-pointer"
         aria-label="Toggle menu"
       >
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        >
           {menuOpen ? (
             <>
               <line x1="4" y1="4" x2="16" y2="16" />
@@ -82,14 +113,29 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
           {SECTIONS.map(s => (
             <button
               key={s.id}
-              onClick={() => { scrollTo(s.id); setMenuOpen(false); }}
+              onClick={() => {
+                scrollTo(s.id);
+                setMenuOpen(false);
+              }}
               className={clsx(
                 "px-6 py-3 rounded-lg border-none cursor-pointer text-base font-semibold transition-all duration-200 font-sans w-60 text-center",
-                activeSection === s.id ? "bg-accent-dim text-accent" : "bg-transparent text-secondary",
+                activeSection === s.id
+                  ? "bg-accent-dim text-accent"
+                  : "bg-transparent text-secondary",
               )}
-            >{s.label}</button>
+            >
+              {s.label}
+            </button>
           ))}
-          <Btn onClick={() => { scrollTo("contact"); setMenuOpen(false); }} className="mt-4 px-8! py-3!">Start a Project</Btn>
+          <Btn
+            onClick={() => {
+              scrollTo("contact");
+              setMenuOpen(false);
+            }}
+            className="mt-4 px-8! py-3!"
+          >
+            Start a Project
+          </Btn>
         </div>
       )}
     </header>

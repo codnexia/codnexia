@@ -6,7 +6,10 @@ import { AdminLogin } from "./components/admin/AdminLogin";
 import { AdminPanel } from "./components/admin/AdminPanel";
 
 function getInitialView(): ViewState {
-  return window.location.pathname === "/admin-dashboard" ? "login" : "client";
+  if (window.location.pathname === "/admin-dashboard") {
+    return sessionStorage.getItem("codnexia_auth") ? "admin" : "login";
+  }
+  return "client";
 }
 
 function navigate(path: string) {
@@ -17,8 +20,8 @@ export default function App() {
   const [view, setView] = useState<ViewState>(getInitialView);
 
   const goToClient = () => { navigate("/"); setView("client"); };
-  const goToAdminLogin = () => { navigate("/admin-dashboard"); setView("login"); };
-  const goToAdmin = () => { setView("admin"); };
+  const goToAdminLogin = () => { sessionStorage.removeItem("codnexia_auth"); navigate("/admin-dashboard"); setView("login"); };
+  const goToAdmin = () => { sessionStorage.setItem("codnexia_auth", "1"); setView("admin"); };
 
   return (
     <ToastProvider>
