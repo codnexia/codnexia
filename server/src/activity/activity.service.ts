@@ -7,9 +7,7 @@ import * as schema from '../database/schema';
 
 @Injectable()
 export class ActivityService {
-  constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
-  ) {}
+  constructor(@Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>) {}
 
   // Log an admin action (called from other services)
   async log(action: string, description: string, color = '#2DD4A8') {
