@@ -11,10 +11,10 @@ import { ClientFooter } from "./ClientFooter";
 
 // Generate or retrieve a unique session ID for analytics tracking
 function getSessionId(): string {
-  let sid = sessionStorage.getItem("codnexia_sid");
+  let sid = localStorage.getItem("codnexia_vid");
   if (!sid) {
-    sid = `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
-    sessionStorage.setItem("codnexia_sid", sid);
+    sid = `v_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+    localStorage.setItem("codnexia_vid", sid);
   }
   return sid;
 }
