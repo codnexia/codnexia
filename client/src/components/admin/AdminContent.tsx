@@ -1,49 +1,91 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import type { ContentPage } from "../../types";
+import { getContentPages, updateContentPage, createContentPage } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";
 import { Pill } from "../ui/Pill";
 import { Btn } from "../ui/Btn";
 import { Card } from "../ui/Card";
-import { INITIAL_PAGES } from "../../assets/data";
 
 export function AdminContent() {
   const toast = useToast();
-  const [pages, setPages] = useState<ContentPage[]>(INITIAL_PAGES);
-  const [editing, setEditing] = useState<number | null>(null);
+  const [pages, setPages] = useState<ContentPage[]>([]);
+  const [editing, setEditing] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // Fetch content pages from the API on mount
+  useEffect(() => {
+    fetchPages();
+  }, []);
+
+  const fetchPages = async () => {
+    try {
+      const data = await getContentPages();
+      setPages(data);
+    } catch {
+      toast("Failed to load content pages", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const startEdit = (p: ContentPage) => {
     setEditing(p.id);
     setEditContent(p.content);
   };
 
-  const saveEdit = (id: number) => {
-    setPages(pages.map(p =>
-      p.id === id ? { ...p, content: editContent, updated: "Just now" } : p,
-    ));
-    setEditing(null);
-    toast("Section updated successfully!", "success");
+  // Save edited content to the backend
+  const saveEdit = async (id: string) => {
+    try {
+      await updateContentPage(id, { content: editContent });
+      setEditing(null);
+      toast("Section updated successfully!", "success");
+      fetchPages(); // refresh the list
+    } catch {
+      toast("Failed to save changes", "error");
+    }
   };
 
-  const toggleStatus = (id: number) => {
-    setPages(pages.map(p =>
-      p.id === id
-        ? { ...p, status: p.status === "Published" ? "Draft" : "Published", updated: "Just now" }
-        : p,
-    ));
-    toast("Status updated", "info");
+  // Toggle published/draft status via API
+  const toggleStatus = async (p: ContentPage) => {
+    const newStatus = p.status === "Published" ? "Draft" : "Published";
+    try {
+      await updateContentPage(p.id, { status: newStatus });
+      toast("Status updated", "info");
+      fetchPages();
+    } catch {
+      toast("Failed to update status", "error");
+    }
   };
+
+  // Create a new content page via API
+  const addSection = async () => {
+    const name = prompt("Section name:");
+    if (!name) return;
+    try {
+      await createContentPage({ name, content: "", status: "Draft" });
+      toast("New section created!", "success");
+      fetchPages();
+    } catch {
+      toast("Failed to create section", "error");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-60 text-secondary text-sm">
+        Loading content...
+      </div>
+    );
+  }
 
   return (
     <div>
       {/* Action bar */}
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center mb-6">
         <p className="text-sm text-secondary m-0">Manage Codnexia website sections</p>
-        <Btn
-          onClick={() => toast("New section modal would open here", "info")}
-          className="py-2.5! px-5! text-[13px]!"
-        >
+        <Btn onClick={addSection} className="py-2.5! px-5! text-[13px]!">
           + New Section
         </Btn>
       </div>
@@ -86,7 +128,7 @@ export function AdminContent() {
                 <span className="text-xs text-secondary truncate">{p.content}</span>
               )}
 
-              <span onClick={() => toggleStatus(p.id)} className="cursor-pointer">
+              <span onClick={() => toggleStatus(p)} className="cursor-pointer">
                 <Pill color={p.status === "Published" ? "#2DD4A8" : "#F5A623"}>
                   {p.status}
                 </Pill>

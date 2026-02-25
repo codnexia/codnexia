@@ -1,6 +1,6 @@
-
 import { useState, useEffect, useRef } from "react";
 import { SECTIONS } from "../../constants";
+import { trackPageView } from "../../lib/api";
 import { ClientHeader } from "./ClientHeader";
 import { HeroSection } from "./HeroSection";
 import { AboutSection } from "./AboutSection";
@@ -9,11 +9,43 @@ import { ServicesSection } from "./ServicesSection";
 import { ContactSection } from "./ContactSection";
 import { ClientFooter } from "./ClientFooter";
 
+// Generate or retrieve a unique session ID for analytics tracking
+function getSessionId(): string {
+  let sid = sessionStorage.getItem("codnexia_sid");
+  if (!sid) {
+    sid = `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+    sessionStorage.setItem("codnexia_sid", sid);
+  }
+  return sid;
+}
+
+// Detect device type from user agent
+function getDeviceType(): string {
+  const ua = navigator.userAgent;
+  if (/Tablet|iPad/i.test(ua)) return "Tablet";
+  if (/Mobile|iPhone|Android.*Mobile/i.test(ua)) return "Mobile";
+  return "Desktop";
+}
+
 export function ClientSite() {
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState("hero");
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const lastTrackedSection = useRef(""); // avoid duplicate track calls
+
+  // Track page view on mount (initial load)
+  useEffect(() => {
+    trackPageView("/home", getSessionId(), getDeviceType()).catch(() => {});
+  }, []);
+
+  // Track section changes as the user scrolls
+  useEffect(() => {
+    if (activeSection && activeSection !== lastTrackedSection.current) {
+      lastTrackedSection.current = activeSection;
+      trackPageView(`/${activeSection}`, getSessionId(), getDeviceType()).catch(() => {});
+    }
+  }, [activeSection]);
 
   useEffect(() => {
     const el = containerRef.current; if (!el) return;

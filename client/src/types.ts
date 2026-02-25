@@ -100,7 +100,7 @@ export interface ContactForm {
 }
 
 export interface ContentPage {
-  id: number;
+  id: string;
   name: string;
   status: string;
   updated: string;
@@ -108,7 +108,7 @@ export interface ContentPage {
 }
 
 export interface MediaFile {
-  id: number;
+  id: string;
   name: string;
   size: string;
   type: string;

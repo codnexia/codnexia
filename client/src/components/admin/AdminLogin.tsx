@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { AdminLoginProps } from "../../types";
+import { login } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";
 import { Btn } from "../ui/Btn";
 import { Input } from "../ui/Input";
@@ -13,21 +14,21 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  const handleLogin = () => {
+  // Call the real backend auth endpoint
+  const handleLogin = async () => {
     if (!email || !password) {
       toast("Please fill in all fields", "warning");
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      if (password.length >= 3) {
-        toast("Welcome back, Admin!", "success");
-        onLogin();
-      } else {
-        toast("Invalid credentials. Try any password (3+ chars).", "error");
-        setLoading(false);
-      }
-    }, 1200);
+    try {
+      const data = await login(email, password);
+      toast(`Welcome back, ${data.user.name}!`, "success");
+      onLogin();
+    } catch (err: any) {
+      toast(err.message || "Invalid credentials", "error");
+      setLoading(false);
+    }
   };
 
   return (

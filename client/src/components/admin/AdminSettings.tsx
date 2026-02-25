@@ -1,22 +1,54 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import type { AdminSettingsProps, AdminProfile } from "../../types";
+import { getProfile, updateProfile } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";
 import { Btn } from "../ui/Btn";
 import { Input } from "../ui/Input";
 import { Card } from "../ui/Card";
-import { DEFAULT_PROFILE, SECURITY_SETTINGS } from "../../assets/data";
+import { SECURITY_SETTINGS } from "../../assets/data";
 
 export function AdminSettings({ onLogout }: AdminSettingsProps) {
   const toast = useToast();
-  const [profile, setProfile] = useState<AdminProfile>(DEFAULT_PROFILE);
+  const [profile, setProfile] = useState<AdminProfile>({ name: "", email: "", role: "Admin" });
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const save = () => {
-    setSaved(true);
-    toast("Profile saved successfully!", "success");
-    setTimeout(() => setSaved(false), 2000);
+  // Fetch the current admin profile from the backend on mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+        setProfile({ name: data.name, email: data.email, role: "Admin" });
+      } catch {
+        toast("Failed to load profile", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  // Save profile changes to the backend
+  const save = async () => {
+    try {
+      const updated = await updateProfile({ name: profile.name, email: profile.email });
+      setProfile({ name: updated.name, email: updated.email, role: "Admin" });
+      setSaved(true);
+      toast("Profile saved successfully!", "success");
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err: any) {
+      toast(err.message || "Failed to save profile", "error");
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-60 text-secondary text-sm">
+        Loading settings...
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-155">
@@ -26,7 +58,7 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
 
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-7">
           <div className="w-15 h-15 rounded-2xl bg-grad flex items-center justify-center text-2xl font-bold text-main shrink-0">
-            C
+            {profile.name.charAt(0).toUpperCase() || "A"}
           </div>
           <div className="text-center sm:text-left">
             <div className="text-[17px] font-bold text-main">{profile.name}</div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import clsx from "clsx";
 import type { ContactForm } from "../../types";
+import { submitContact } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";
 import { Pill } from "../ui/Pill";
 import { Btn } from "../ui/Btn";
@@ -38,10 +39,12 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
     return Object.keys(e).length === 0;
   };
 
-  const submitForm = () => {
+  // Submit the contact form to the backend
+  const submitForm = async () => {
     if (!validateForm()) return;
     setSending(true);
-    setTimeout(() => {
+    try {
+      await submitContact(form);
       setSending(false);
       setSent(true);
       toast("Message sent successfully! We'll be in touch soon.", "success");
@@ -49,7 +52,10 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
         setSent(false);
         setForm({ name: "", email: "", company: "", service: "", budget: "", message: "" });
       }, 3000);
-    }, 1500);
+    } catch (err: any) {
+      setSending(false);
+      toast(err.message || "Failed to send message. Please try again.", "error");
+    }
   };
 
   return (

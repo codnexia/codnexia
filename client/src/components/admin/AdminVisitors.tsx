@@ -1,20 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
+import { getVisitorData } from "../../lib/api";
 import { Pill } from "../ui/Pill";
 import { Card } from "../ui/Card";
 import { StatCard } from "../ui/StatCard";
-import { VISITOR_STATS, VISITORS } from "../../assets/data";
 
 export function AdminVisitors() {
   const [filter, setFilter] = useState("all");
-  const filtered = filter === "all" ? VISITORS : VISITORS.filter(v => v.status === filter);
+  const [stats, setStats] = useState<any[]>([]);
+  const [visitors, setVisitors] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch visitor data on mount + auto-refresh every 15s for real-time feel
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getVisitorData();
+        setStats(data.stats);
+        setVisitors(data.visitors);
+      } catch {
+        // Silently fail
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 15000); // refresh every 15s
+    return () => clearInterval(interval);
+  }, []);
+
+  // Apply the active/idle/all filter
+  const filtered = filter === "all" ? visitors : visitors.filter(v => v.status === filter);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-60 text-secondary text-sm">
+        Loading visitors...
+      </div>
+    );
+  }
 
   return (
     <div>
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        {VISITOR_STATS.map((s, i) => (
-          <StatCard key={i} {...s} />
+        {stats.map((s, i) => (
+          <StatCard key={i} {...s} delay={i * 80} />
         ))}
       </div>
 
@@ -50,21 +82,27 @@ export function AdminVisitors() {
         {/* Table */}
         <div className="overflow-x-auto">
           {/* Table header */}
-          <div className="grid grid-cols-[90px_1fr_90px_80px_80px_60px] min-w-145 px-5 py-2.5 text-[11px] text-muted font-semibold uppercase tracking-[0.8px] border-b border-border">
+          <div className="grid grid-cols-[90px_1fr_90px_80px_80px] min-w-120 px-5 py-2.5 text-[11px] text-muted font-semibold uppercase tracking-[0.8px] border-b border-border">
             <span>Visitor</span>
             <span>Page</span>
             <span>Duration</span>
             <span>Device</span>
             <span>Status</span>
-            <span></span>
           </div>
+
+          {/* Show empty state if no visitors */}
+          {filtered.length === 0 && (
+            <div className="px-5 py-8 text-center text-sm text-muted">
+              No visitors to display.
+            </div>
+          )}
 
           {/* Table rows */}
           {filtered.map((v, i) => (
             <div
               key={v.id}
               className={clsx(
-                "grid grid-cols-[90px_1fr_90px_80px_80px_60px] min-w-145 px-5 py-3 items-center transition-colors duration-150 hover:bg-surface-hover",
+                "grid grid-cols-[90px_1fr_90px_80px_80px] min-w-120 px-5 py-3 items-center transition-colors duration-150 hover:bg-surface-hover",
                 i < filtered.length - 1 && "border-b border-border",
               )}
             >
@@ -75,7 +113,6 @@ export function AdminVisitors() {
               <Pill color={v.status === "active" ? "#2DD4A8" : "#F5A623"}>
                 {v.status}
               </Pill>
-              <span className="text-xl text-center">{v.country}</span>
             </div>
           ))}
         </div>
