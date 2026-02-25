@@ -9,20 +9,21 @@ import { HexGrid } from "../ui/HexGrid";
 
 export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
   const toast = useToast();
-  const [email, setEmail] = useState("admin@codnexia.com");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  // Call the real backend auth endpoint
+  // Fixed admin email — only one admin account
+  const adminEmail = "admin@codnexia.com";
+
   const handleLogin = async () => {
-    if (!email || !password) {
-      toast("Please fill in all fields", "warning");
+    if (!password) {
+      toast("Please enter your password", "warning");
       return;
     }
     setLoading(true);
     try {
-      const data = await login(email, password);
+      const data = await login(adminEmail, password);
       toast(`Welcome back, ${data.user.name}!`, "success");
       onLogin();
     } catch (err: any) {
@@ -57,13 +58,13 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
 
         {/* Login form */}
         <Card className="p-5! md:p-8!">
-          <Input
-            label="Email Address"
-            placeholder="admin@codnexia.com"
-            value={email}
-            onChange={setEmail}
-            type="email"
-          />
+          {/* Email is fixed — display only */}
+          <div className="mb-4.5">
+            <label className="text-xs text-secondary block mb-1.5 font-semibold">Email Address</label>
+            <div className="px-4 py-2.75 rounded-[10px] bg-surface border border-border text-main text-sm">
+              {adminEmail}
+            </div>
+          </div>
 
           <div className="relative">
             <Input

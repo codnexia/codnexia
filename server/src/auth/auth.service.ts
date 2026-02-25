@@ -26,8 +26,8 @@ export class AuthService {
   async register(dto: RegisterDto) {
     const existing = await this.db
       .select()
-      .from(schema.users)
-      .where(eq(schema.users.email, dto.email));
+      .from(schema.admins)
+      .where(eq(schema.admins.email, dto.email));
 
     if (existing.length > 0) {
       throw new ConflictException('Email already in use');
@@ -36,17 +36,17 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
     const [user] = await this.db
-      .insert(schema.users)
+      .insert(schema.admins)
       .values({
         name: dto.name,
         email: dto.email,
         password: hashedPassword,
       })
       .returning({
-        id: schema.users.id,
-        name: schema.users.name,
-        email: schema.users.email,
-        createdAt: schema.users.createdAt,
+        id: schema.admins.id,
+        name: schema.admins.name,
+        email: schema.admins.email,
+        createdAt: schema.admins.createdAt,
       });
 
     return {
@@ -58,8 +58,8 @@ export class AuthService {
   async login(dto: LoginDto) {
     const [user] = await this.db
       .select()
-      .from(schema.users)
-      .where(eq(schema.users.email, dto.email));
+      .from(schema.admins)
+      .where(eq(schema.admins.email, dto.email));
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -88,13 +88,13 @@ export class AuthService {
   async getProfile(userId: string) {
     const [user] = await this.db
       .select({
-        id: schema.users.id,
-        name: schema.users.name,
-        email: schema.users.email,
-        createdAt: schema.users.createdAt,
+        id: schema.admins.id,
+        name: schema.admins.name,
+        email: schema.admins.email,
+        createdAt: schema.admins.createdAt,
       })
-      .from(schema.users)
-      .where(eq(schema.users.id, userId));
+      .from(schema.admins)
+      .where(eq(schema.admins.id, userId));
 
     if (!user) {
       throw new UnauthorizedException('User not found');
@@ -106,14 +106,14 @@ export class AuthService {
   // Update admin profile (name and/or email)
   async updateProfile(userId: string, dto: UpdateProfileDto) {
     const [user] = await this.db
-      .update(schema.users)
+      .update(schema.admins)
       .set({ ...dto, updatedAt: new Date() })
-      .where(eq(schema.users.id, userId))
+      .where(eq(schema.admins.id, userId))
       .returning({
-        id: schema.users.id,
-        name: schema.users.name,
-        email: schema.users.email,
-        createdAt: schema.users.createdAt,
+        id: schema.admins.id,
+        name: schema.admins.name,
+        email: schema.admins.email,
+        createdAt: schema.admins.createdAt,
       });
 
     if (!user) throw new UnauthorizedException('User not found');

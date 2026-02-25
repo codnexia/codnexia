@@ -54,7 +54,15 @@ export async function login(email: string, password: string) {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   });
-  // Store token so all future requests are authenticated
+  setToken(data.accessToken);
+  return data;
+}
+
+export async function register(name: string, email: string, password: string) {
+  const data = await apiFetch<{ user: any; accessToken: string }>('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ name, email, password }),
+  });
   setToken(data.accessToken);
   return data;
 }
