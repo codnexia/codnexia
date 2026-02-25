@@ -26,7 +26,7 @@ export function ServicesSection({ sectionRef }: ServicesSectionProps) {
           <SectionReveal
             key={i}
             style={{ transitionDelay: `${i * 0.06}s` }}
-            className={i === 6 ? "lg:[grid-column:2/3]" : ""}
+            className={i === 6 ? "lg:col-[2/3]" : ""}
           >
             <Card hoverable className="h-full">
               <div className="flex justify-between items-start mb-3.5">

@@ -50,7 +50,7 @@ export function AdminVisitors() {
         {/* Table */}
         <div className="overflow-x-auto">
           {/* Table header */}
-          <div className="grid grid-cols-[90px_1fr_90px_80px_80px_60px] min-w-[580px] px-5 py-2.5 text-[11px] text-muted font-semibold uppercase tracking-[0.8px] border-b border-border">
+          <div className="grid grid-cols-[90px_1fr_90px_80px_80px_60px] min-w-145 px-5 py-2.5 text-[11px] text-muted font-semibold uppercase tracking-[0.8px] border-b border-border">
             <span>Visitor</span>
             <span>Page</span>
             <span>Duration</span>
@@ -64,7 +64,7 @@ export function AdminVisitors() {
             <div
               key={v.id}
               className={clsx(
-                "grid grid-cols-[90px_1fr_90px_80px_80px_60px] min-w-[580px] px-5 py-3 items-center transition-colors duration-150 hover:bg-surface-hover",
+                "grid grid-cols-[90px_1fr_90px_80px_80px_60px] min-w-145 px-5 py-3 items-center transition-colors duration-150 hover:bg-surface-hover",
                 i < filtered.length - 1 && "border-b border-border",
               )}
             >

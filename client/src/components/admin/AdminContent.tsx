@@ -52,7 +52,7 @@ export function AdminContent() {
       <Card className="p-0! overflow-hidden">
         <div className="overflow-x-auto">
           {/* Table header */}
-          <div className="grid grid-cols-[2fr_2fr_1fr_1fr_120px] min-w-[600px] px-5 py-3 border-b border-border text-[11px] text-muted font-semibold uppercase tracking-[0.8px]">
+          <div className="grid grid-cols-[2fr_2fr_1fr_1fr_120px] min-w-150 px-5 py-3 border-b border-border text-[11px] text-muted font-semibold uppercase tracking-[0.8px]">
             <span>Section</span>
             <span>Content Preview</span>
             <span>Status</span>
@@ -65,7 +65,7 @@ export function AdminContent() {
             <div
               key={p.id}
               className={clsx(
-                "grid grid-cols-[2fr_2fr_1fr_1fr_120px] min-w-[600px] px-5 py-3.5 items-center transition-colors duration-200",
+                "grid grid-cols-[2fr_2fr_1fr_1fr_120px] min-w-150 px-5 py-3.5 items-center transition-colors duration-200",
                 i < pages.length - 1 && "border-b border-border",
                 editing === p.id ? "bg-surface-hover" : "hover:bg-surface-hover",
               )}
