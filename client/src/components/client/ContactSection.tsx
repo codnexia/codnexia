@@ -33,7 +33,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
     const e: Record<string, string> = {};
     if (!form.name.trim()) e.name = "Name is required";
     if (!form.email.trim()) e.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Invalid email format";
+    else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email)) e.email = "Invalid email format";
     if (!form.message.trim()) e.message = "Please describe your project";
     setFormErrors(e);
     return Object.keys(e).length === 0;
@@ -52,9 +52,9 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
         setSent(false);
         setForm({ name: "", email: "", company: "", service: "", budget: "", message: "" });
       }, 3000);
-    } catch (err: any) {
+    } catch (err) {
       setSending(false);
-      toast(err.message || "Failed to send message. Please try again.", "error");
+      toast((err as Error).message || "Failed to send message. Please try again.", "error");
     }
   };
 
@@ -116,10 +116,11 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
                     onChange={v => setForm({ ...form, company: v })}
                   />
                   <div className="mb-4.5">
-                    <label className="text-xs text-secondary block mb-1.5 font-semibold">
+                    <label htmlFor="contact-service" className="text-xs text-secondary block mb-1.5 font-semibold">
                       Service Interested In
                     </label>
                     <select
+                      id="contact-service"
                       value={form.service}
                       onChange={(e) => setForm({ ...form, service: e.target.value })}
                       className={clsx(
@@ -135,14 +136,17 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
                   </div>
                 </div>
 
-                <div className="mb-4.5">
-                  <label className="text-xs text-secondary block mb-2 font-semibold">
+                <fieldset className="mb-4.5 border-none p-0 m-0">
+                  <legend className="text-xs text-secondary block mb-2 font-semibold">
                     Budget Range
-                  </label>
-                  <div className="flex gap-2 flex-wrap">
+                  </legend>
+                  <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Budget range">
                     {BUDGET_OPTIONS.map(b => (
                       <button
                         key={b}
+                        type="button"
+                        role="radio"
+                        aria-checked={form.budget === b}
                         onClick={() => setForm({ ...form, budget: b })}
                         className={clsx(
                           "px-4 py-2 rounded-lg border text-xs font-semibold cursor-pointer font-sans transition-all duration-200",
@@ -155,7 +159,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
                       </button>
                     ))}
                   </div>
-                </div>
+                </fieldset>
 
                 <Input
                   label="Project Details *"
@@ -212,6 +216,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
                   {SOCIAL_LINKS.map(s => (
                     <button
                       key={s.name}
+                      aria-label={`Follow us on ${s.name}`}
                       onClick={() => toast(`Opening ${s.name}...`, "info")}
                       className="w-10.5 h-10.5 rounded-[10px] bg-surface border border-border flex items-center justify-center text-base text-secondary cursor-pointer transition-all duration-200 font-sans hover:border-accent/27 hover:text-accent"
                     >

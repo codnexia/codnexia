@@ -25,20 +25,20 @@ export const RECENT_ACTIVITY = [
 // ── Admin Content ──
 
 export const INITIAL_PAGES: ContentPage[] = [
-  { id: 1, name: "Hero Section", status: "Published", updated: "2 min ago", content: "Engineering the Next Generation of Software" },
-  { id: 2, name: "About Codnexia", status: "Published", updated: "1 hour ago", content: "Codnexia Software is a global software development company..." },
-  { id: 3, name: "Our Process", status: "Draft", updated: "3 hours ago", content: "Discovery, Build, Test, Deploy" },
-  { id: 4, name: "Services", status: "Published", updated: "1 day ago", content: "Web Apps, Mobile, SaaS, APIs, AI" },
-  { id: 5, name: "Contact Info", status: "Published", updated: "2 days ago", content: "info@codnexia.com" },
+  { id: "1", name: "Hero Section", status: "Published", updated: "2 min ago", content: "Engineering the Next Generation of Software" },
+  { id: "2", name: "About Codnexia", status: "Published", updated: "1 hour ago", content: "Codnexia Software is a global software development company..." },
+  { id: "3", name: "Our Process", status: "Draft", updated: "3 hours ago", content: "Discovery, Build, Test, Deploy" },
+  { id: "4", name: "Services", status: "Published", updated: "1 day ago", content: "Web Apps, Mobile, SaaS, APIs, AI" },
+  { id: "5", name: "Contact Info", status: "Published", updated: "2 days ago", content: "info@codnexia.com" },
 ];
 
 // ── Admin Media ──
 
 export const INITIAL_FILES: MediaFile[] = [
-  { id: 1, name: "hero-bg.jpg", size: "2.4 MB", type: "Image", date: "Feb 15" },
-  { id: 2, name: "codnexia-logo.svg", size: "12 KB", type: "SVG", date: "Feb 14" },
-  { id: 3, name: "team-nairobi.png", size: "1.8 MB", type: "Image", date: "Feb 12" },
-  { id: 4, name: "demo-reel.mp4", size: "8.2 MB", type: "Video", date: "Feb 10" },
+  { id: "1", name: "hero-bg.jpg", size: "2.4 MB", type: "Image", date: "Feb 15" },
+  { id: "2", name: "codnexia-logo.svg", size: "12 KB", type: "SVG", date: "Feb 14" },
+  { id: "3", name: "team-nairobi.png", size: "1.8 MB", type: "Image", date: "Feb 12" },
+  { id: "4", name: "demo-reel.mp4", size: "8.2 MB", type: "Video", date: "Feb 10" },
 ];
 
 // ── Admin Visitors ──
@@ -61,7 +61,7 @@ export const VISITORS = [
 
 // ── Admin Settings ──
 
-export const DEFAULT_PROFILE: AdminProfile = { name: "Codnexia Admin", email: "admin@codnexia.com", role: "Super Admin" };
+export const DEFAULT_PROFILE: AdminProfile = { name: "", email: "", role: "Admin" };
 
 export const SECURITY_SETTINGS = [
   { label: "JWT Expiry", value: "24 hours", desc: "Token refresh handled automatically" },

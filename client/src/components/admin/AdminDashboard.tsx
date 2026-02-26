@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import clsx from "clsx";
+import type { DashboardStat } from "../../types";
 import { getDashboardData, getRecentActivity } from "../../lib/api";
 import { Pill } from "../ui/Pill";
 import { Card } from "../ui/Card";
@@ -7,17 +8,14 @@ import { StatCard } from "../ui/StatCard";
 import { BarChart } from "../ui/BarChart";
 
 export function AdminDashboard() {
-  // Dashboard stats from the analytics API
-  const [stats, setStats] = useState<any[]>([]);
+  const [stats, setStats] = useState<DashboardStat[]>([]);
   const [weeklyTraffic, setWeeklyTraffic] = useState<{ data: number[]; labels: string[] }>({
     data: [],
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   });
-  // Recent admin activity from the activity log API
   const [activity, setActivity] = useState<{ text: string; time: string; color: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch dashboard data on mount + refresh every 30s
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,15 +26,15 @@ export function AdminDashboard() {
         setStats(dashboard.stats);
         setWeeklyTraffic(dashboard.weeklyTraffic);
         setActivity(activityData);
-      } catch {
-        // Silently fail - data will just show empty/zero
+      } catch (err) {
+        console.warn("Failed to load dashboard data:", (err as Error).message);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 30000); // refresh every 30s
+    const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
   }, []);
 

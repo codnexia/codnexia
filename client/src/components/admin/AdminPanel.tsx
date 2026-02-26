@@ -54,7 +54,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
         </div>
 
         {/* Sidebar nav */}
-        <nav className="px-2 py-3 flex-1">
+        <nav className="px-2 py-3 flex-1" aria-label="Admin navigation">
           {tabs.map(t => (
             <button
               key={t.id}
@@ -105,21 +105,23 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
             </div>
             <button
               onClick={() => toast("No new notifications", "info")}
+              aria-label="Notifications"
               className="w-9 h-9 rounded-[10px] bg-card border border-border flex items-center justify-center cursor-pointer text-base text-secondary"
             >
               {"\uD83D\uDD14"}
             </button>
-            <div
+            <button
               onClick={() => {
                 if (window.confirm("Log out?")) {
                   toast("Logged out", "info");
                   onLogout();
                 }
               }}
-              className="w-9 h-9 rounded-[10px] bg-grad flex items-center justify-center text-sm font-bold text-main cursor-pointer"
+              aria-label="User menu — log out"
+              className="w-9 h-9 rounded-[10px] bg-grad flex items-center justify-center text-sm font-bold text-main cursor-pointer border-none"
             >
               C
-            </div>
+            </button>
           </div>
         </header>
 

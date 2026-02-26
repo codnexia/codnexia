@@ -36,14 +36,18 @@ export function ClientSite() {
 
   // Track page view on mount (initial load)
   useEffect(() => {
-    trackPageView("/home", getSessionId(), getDeviceType()).catch(() => {});
+    trackPageView("/home", getSessionId(), getDeviceType()).catch((err) => {
+      console.warn("Analytics tracking failed:", (err as Error).message);
+    });
   }, []);
 
   // Track section changes as the user scrolls
   useEffect(() => {
     if (activeSection && activeSection !== lastTrackedSection.current) {
       lastTrackedSection.current = activeSection;
-      trackPageView(`/${activeSection}`, getSessionId(), getDeviceType()).catch(() => {});
+      trackPageView(`/${activeSection}`, getSessionId(), getDeviceType()).catch((err) => {
+        console.warn("Analytics tracking failed:", (err as Error).message);
+      });
     }
   }, [activeSection]);
 

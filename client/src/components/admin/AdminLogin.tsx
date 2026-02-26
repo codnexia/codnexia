@@ -13,21 +13,24 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  // Fixed admin email — only one admin account
-  const adminEmail = "admin@codnexia.com";
+  const [email, setEmail] = useState("");
 
   const handleLogin = async () => {
+    if (!email.trim()) {
+      toast("Please enter your email", "warning");
+      return;
+    }
     if (!password) {
       toast("Please enter your password", "warning");
       return;
     }
     setLoading(true);
     try {
-      const data = await login(adminEmail, password);
+      const data = await login(email, password);
       toast(`Welcome back, ${data.user.name}!`, "success");
       onLogin();
-    } catch (err: any) {
-      toast(err.message || "Invalid credentials", "error");
+    } catch (err) {
+      toast((err as Error).message || "Invalid credentials", "error");
       setLoading(false);
     }
   };
@@ -58,13 +61,13 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
 
         {/* Login form */}
         <Card className="p-5! md:p-8!">
-          {/* Email is fixed — display only */}
-          <div className="mb-4.5">
-            <label className="text-xs text-secondary block mb-1.5 font-semibold">Email Address</label>
-            <div className="px-4 py-2.75 rounded-[10px] bg-surface border border-border text-main text-sm">
-              {adminEmail}
-            </div>
-          </div>
+          <Input
+            label="Email Address"
+            placeholder="admin@example.com"
+            value={email}
+            onChange={setEmail}
+            type="email"
+          />
 
           <div className="relative">
             <Input

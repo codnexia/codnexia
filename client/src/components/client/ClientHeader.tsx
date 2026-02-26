@@ -42,6 +42,10 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
       <div
         className="flex items-center gap-2.5 cursor-pointer"
         onClick={() => scrollTo("hero")}
+        role="button"
+        aria-label="Scroll to top"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") scrollTo("hero"); }}
       >
         <div className="w-8.5 h-8.5 rounded-lg bg-grad flex items-center justify-center text-[13px] font-extrabold text-main shadow-[0_0_20px_var(--color-primary-glow)]">
           {"</>"}
@@ -52,7 +56,7 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
       </div>
 
       {/* Desktop nav */}
-      <nav className="hidden md:flex gap-1.5">
+      <nav className="hidden md:flex gap-1.5" aria-label="Main navigation">
         {SECTIONS.map(s => (
           <button
             key={s.id}
@@ -109,7 +113,7 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
 
       {/* Full-screen overlay menu - mobile only */}
       {menuOpen && (
-        <div className="fixed inset-0 top-16 z-99 bg-bg/95 backdrop-blur-xl flex flex-col items-center pt-12 gap-2 md:hidden">
+        <nav className="fixed inset-0 top-16 z-99 bg-bg/95 backdrop-blur-xl flex flex-col items-center pt-12 gap-2 md:hidden" aria-label="Mobile navigation">
           {SECTIONS.map(s => (
             <button
               key={s.id}
@@ -136,7 +140,7 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
           >
             Start a Project
           </Btn>
-        </div>
+        </nav>
       )}
     </header>
   );

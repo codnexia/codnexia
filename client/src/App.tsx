@@ -1,16 +1,30 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import type { ViewState } from "./types";
 import { clearAuth, isAuthenticated } from "./lib/api";
 import { ToastProvider } from "./context/ToastContext";
 import { ClientSite } from "./components/client/ClientSite";
-import { AdminLogin } from "./components/admin/AdminLogin";
-import { AdminPanel } from "./components/admin/AdminPanel";
 
-// Check if user is on admin route and has a valid token
+const AdminLogin = lazy(() =>
+  import("./components/admin/AdminLogin").then(m => ({ default: m.AdminLogin }))
+);
+const AdminPanel = lazy(() =>
+  import("./components/admin/AdminPanel").then(m => ({ default: m.AdminPanel }))
+);
+
+const KNOWN_PATHS = ["/", "/admin-dashboard"];
+
 function getInitialView(): ViewState {
-  if (window.location.pathname === "/admin-dashboard") {
+  const path = window.location.pathname;
+
+  if (path === "/admin-dashboard") {
     return isAuthenticated() ? "admin" : "login";
   }
+
+  if (path === "/" || KNOWN_PATHS.includes(path)) {
+    return "client";
+  }
+
+  // Unknown route — show client (acts as soft 404)
   return "client";
 }
 
@@ -18,21 +32,66 @@ function navigate(path: string) {
   window.history.pushState(null, "", path);
 }
 
+function LoadingFallback() {
+  return (
+    <div className="flex items-center justify-center h-screen bg-bg text-secondary text-sm">
+      Loading...
+    </div>
+  );
+}
+
+function NotFound() {
+  return (
+    <div className="flex flex-col items-center justify-center h-screen bg-bg text-main text-center px-4">
+      <div className="w-13 h-13 rounded-[14px] bg-grad inline-flex items-center justify-center text-xl font-extrabold text-main mb-6 shadow-[0_4px_30px_var(--color-accent-glow)]">
+        {"</>"}
+      </div>
+      <h1 className="text-[48px] font-extrabold text-accent mb-2">404</h1>
+      <p className="text-lg font-semibold mb-2">Page Not Found</p>
+      <p className="text-sm text-secondary mb-8 max-w-80">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <button
+        onClick={() => {
+          navigate("/");
+          window.location.reload();
+        }}
+        className="px-6 py-3 rounded-xl border-none bg-grad text-main text-sm font-semibold cursor-pointer font-sans"
+      >
+        Back to Home
+      </button>
+    </div>
+  );
+}
+
 export default function App() {
   const [view, setView] = useState<ViewState>(getInitialView);
+  const [is404] = useState(() => {
+    const path = window.location.pathname;
+    return path !== "/" && !KNOWN_PATHS.includes(path);
+  });
 
   const goToClient = () => { navigate("/"); setView("client"); };
   const goToAdminLogin = () => { clearAuth(); navigate("/admin-dashboard"); setView("login"); };
-  // Token is already stored by the login API call, just switch view
   const goToAdmin = () => { setView("admin"); };
+
+  if (is404) {
+    return (
+      <ToastProvider>
+        <NotFound />
+      </ToastProvider>
+    );
+  }
 
   return (
     <ToastProvider>
       <div className="font-sans w-full h-screen flex flex-col bg-bg text-main overflow-hidden">
         <div className="flex-1 overflow-hidden">
           {view === "client" && <ClientSite />}
-          {view === "login" && <AdminLogin onLogin={goToAdmin} onBack={goToClient} />}
-          {view === "admin" && <AdminPanel onLogout={goToAdminLogin} onBack={goToClient} />}
+          <Suspense fallback={<LoadingFallback />}>
+            {view === "login" && <AdminLogin onLogin={goToAdmin} onBack={goToClient} />}
+            {view === "admin" && <AdminPanel onLogout={goToAdminLogin} onBack={goToClient} />}
+          </Suspense>
         </div>
       </div>
     </ToastProvider>

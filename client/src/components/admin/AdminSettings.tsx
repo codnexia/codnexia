@@ -37,8 +37,8 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
       setSaved(true);
       toast("Profile saved successfully!", "success");
       setTimeout(() => setSaved(false), 2000);
-    } catch (err: any) {
-      toast(err.message || "Failed to save profile", "error");
+    } catch (err) {
+      toast((err as Error).message || "Failed to save profile", "error");
     }
   };
 
@@ -81,8 +81,8 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
         />
 
         <div className="mb-4.5">
-          <label className="text-xs text-secondary block mb-1.5 font-semibold">Role</label>
-          <div className="px-4 py-2.75 rounded-[10px] bg-surface border border-border text-muted text-sm">
+          <label id="role-label" className="text-xs text-secondary block mb-1.5 font-semibold">Role</label>
+          <div className="px-4 py-2.75 rounded-[10px] bg-surface border border-border text-muted text-sm" aria-labelledby="role-label">
             {profile.role} <span className="text-[11px] opacity-50">(managed by system)</span>
           </div>
         </div>

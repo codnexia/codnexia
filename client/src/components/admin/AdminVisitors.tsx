@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import clsx from "clsx";
+import type { DashboardStat, VisitorEntry } from "../../types";
 import { getVisitorData } from "../../lib/api";
 import { Pill } from "../ui/Pill";
 import { Card } from "../ui/Card";
@@ -7,26 +8,25 @@ import { StatCard } from "../ui/StatCard";
 
 export function AdminVisitors() {
   const [filter, setFilter] = useState("all");
-  const [stats, setStats] = useState<any[]>([]);
-  const [visitors, setVisitors] = useState<any[]>([]);
+  const [stats, setStats] = useState<DashboardStat[]>([]);
+  const [visitors, setVisitors] = useState<VisitorEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch visitor data on mount + auto-refresh every 15s for real-time feel
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getVisitorData();
         setStats(data.stats);
         setVisitors(data.visitors);
-      } catch {
-        // Silently fail
+      } catch (err) {
+        console.warn("Failed to load visitor data:", (err as Error).message);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 15000); // refresh every 15s
+    const interval = setInterval(fetchData, 15000);
     return () => clearInterval(interval);
   }, []);
 

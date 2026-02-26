@@ -89,6 +89,10 @@ export function AdminMedia() {
 
       {/* Drag & drop upload zone */}
       <div
+        role="button"
+        aria-label="Upload files — drag and drop or click to browse"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") openFilePicker(); }}
         onDragOver={(e) => {
           e.preventDefault();
           setDragOver(true);
@@ -118,6 +122,7 @@ export function AdminMedia() {
           <Card key={f.id} hoverable className="p-4.5! text-center relative">
             <button
               onClick={() => handleDelete(f.id)}
+              aria-label={`Delete ${f.name}`}
               className="absolute top-2 right-2 w-6 h-6 rounded-md bg-surface border border-border text-muted text-xs cursor-pointer flex items-center justify-center opacity-60 transition-opacity duration-200 hover:opacity-100"
             >
               {"\u2715"}

@@ -120,3 +120,75 @@ export interface AdminProfile {
   email: string;
   role: string;
 }
+
+// ── API Response Types ──
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface AuthResponse {
+  user: AuthUser;
+  accessToken: string;
+}
+
+export interface ProfileResponse {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface ContentPageResponse {
+  id: string;
+  name: string;
+  status: string;
+  content: string;
+  updatedAt: string;
+}
+
+export interface MediaFileResponse {
+  id: string;
+  originalName: string;
+  size: number;
+  mimeType: string;
+  createdAt: string;
+}
+
+export interface ActivityResponse {
+  description: string;
+  createdAt: string;
+  color?: string;
+}
+
+export interface DashboardStat {
+  label: string;
+  value: number;
+  change: number;
+  icon: string;
+  spark: number[];
+  suffix?: string;
+  prefix?: string;
+}
+
+export interface DashboardResponse {
+  stats: DashboardStat[];
+  weeklyTraffic: { data: number[]; labels: string[] };
+}
+
+export interface VisitorEntry {
+  id: string;
+  page: string;
+  duration: string;
+  country: string;
+  device: string;
+  status: string;
+}
+
+export interface VisitorResponse {
+  stats: DashboardStat[];
+  visitors: VisitorEntry[];
+}
