@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { AdminSettingsProps, AdminProfile } from "../../types";
 import { getProfile, updateProfile } from "../../lib/api";
@@ -6,6 +6,7 @@ import { useToast } from "../../context/ToastContext";
 import { Btn } from "../ui/Btn";
 import { Input } from "../ui/Input";
 import { Card } from "../ui/Card";
+import { AdminLoadingState } from "../ui/AdminLoadingState";
 import { SECURITY_SETTINGS } from "../../assets/data";
 
 export function AdminSettings({ onLogout }: AdminSettingsProps) {
@@ -13,6 +14,11 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
   const [profile, setProfile] = useState<AdminProfile>({ name: "", email: "", role: "Admin" });
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    return () => { clearTimeout(savedTimerRef.current); };
+  }, []);
 
   // Fetch the current admin profile from the backend on mount
   useEffect(() => {
@@ -36,18 +42,15 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
       setProfile({ name: updated.name, email: updated.email, role: "Admin" });
       setSaved(true);
       toast("Profile saved successfully!", "success");
-      setTimeout(() => setSaved(false), 2000);
+      clearTimeout(savedTimerRef.current);
+      savedTimerRef.current = setTimeout(() => setSaved(false), 2000);
     } catch (err) {
       toast((err as Error).message || "Failed to save profile", "error");
     }
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-60 text-secondary text-sm">
-        Loading settings...
-      </div>
-    );
+    return <AdminLoadingState label="Loading settings..." />;
   }
 
   return (
@@ -125,22 +128,13 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
         <p className="text-[13px] text-secondary mb-4">
           Irreversible actions that affect your account.
         </p>
-        <div className="flex flex-col sm:flex-row gap-2.5">
-          <Btn
-            variant="secondary"
-            onClick={onLogout}
-            className="border-error/27! text-error!"
-          >
-            Log Out
-          </Btn>
-          <Btn
-            variant="secondary"
-            onClick={() => toast("This would delete the account", "warning")}
-            className="border-error/13! text-muted!"
-          >
-            Delete Account
-          </Btn>
-        </div>
+        <Btn
+          variant="secondary"
+          onClick={onLogout}
+          className="border-error/27! text-error!"
+        >
+          Log Out
+        </Btn>
       </Card>
     </div>
   );

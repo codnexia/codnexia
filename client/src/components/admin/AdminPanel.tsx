@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
 import type { AdminPanelProps } from "../../types";
 import { useToast } from "../../context/ToastContext";
@@ -14,6 +14,26 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
   const [tab, setTab] = useState("dashboard");
   const [collapsed, setCollapsed] = useState(() => window.innerWidth < 768);
   const [showLogout, setShowLogout] = useState(false);
+  const logoutRef = useRef<HTMLDivElement>(null);
+
+  // Close logout dropdown on Escape or click outside
+  useEffect(() => {
+    if (!showLogout) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowLogout(false);
+    };
+    const handleClick = (e: MouseEvent) => {
+      if (logoutRef.current && !logoutRef.current.contains(e.target as Node)) {
+        setShowLogout(false);
+      }
+    };
+    document.addEventListener("keydown", handleKey);
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, [showLogout]);
 
   useEffect(() => {
     const onResize = () => {
@@ -102,10 +122,6 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
             {tabs.find(t => t.id === tab)?.label}
           </h1>
           <div className="flex items-center gap-3.5">
-            <div className="px-3 py-1.5 rounded-lg bg-card border border-border text-xs flex items-center gap-1.5">
-              <span className="text-accent text-[8px] animate-pulse-dot">{"\u25CF"}</span>
-              <span className="text-secondary">3 live</span>
-            </div>
             <button
               onClick={() => toast("No new notifications", "info")}
               aria-label="Notifications"
@@ -113,7 +129,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
             >
               {"\uD83D\uDD14"}
             </button>
-            <div className="relative">
+            <div className="relative" ref={logoutRef}>
               <button
                 onClick={() => setShowLogout(!showLogout)}
                 aria-label="User menu — log out"

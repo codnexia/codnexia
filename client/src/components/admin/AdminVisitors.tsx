@@ -5,6 +5,7 @@ import { getVisitorData } from "../../lib/api";
 import { Pill } from "../ui/Pill";
 import { Card } from "../ui/Card";
 import { StatCard } from "../ui/StatCard";
+import { AdminLoadingState } from "../ui/AdminLoadingState";
 
 export function AdminVisitors() {
   const [filter, setFilter] = useState("all");
@@ -26,7 +27,9 @@ export function AdminVisitors() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 15000);
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") fetchData();
+    }, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -34,11 +37,7 @@ export function AdminVisitors() {
   const filtered = filter === "all" ? visitors : visitors.filter(v => v.status === filter);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-60 text-secondary text-sm">
-        Loading visitors...
-      </div>
-    );
+    return <AdminLoadingState label="Loading visitors..." />;
   }
 
   return (

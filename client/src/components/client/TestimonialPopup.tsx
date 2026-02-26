@@ -68,6 +68,10 @@ export function TestimonialPopup() {
       setRevealed(false);
       setAnimating("in");
       setTimeout(() => setAnimating(null), ANIM_DURATION);
+      // Restart auto-cycle after manual navigation
+      if (testimonials.length > 1) {
+        timerRef.current = setInterval(cycleNext, CYCLE_INTERVAL);
+      }
     }, ANIM_DURATION);
   };
 
@@ -89,7 +93,7 @@ export function TestimonialPopup() {
     >
       {/* Dismiss button */}
       <button
-        onClick={dismiss}
+        onClick={(e) => { e.stopPropagation(); dismiss(); }}
         className="absolute top-2 right-2 text-muted hover:text-main text-sm leading-none cursor-pointer w-5 h-5 flex items-center justify-center"
       >
         &times;
@@ -119,7 +123,7 @@ export function TestimonialPopup() {
           {testimonials.map((_, i) => (
             <button
               key={i}
-              onClick={() => goTo(i)}
+              onClick={(e) => { e.stopPropagation(); goTo(i); }}
               className={`w-1.5 h-1.5 rounded-full transition-colors cursor-pointer ${
                 i === index ? "bg-accent" : "bg-muted/50"
               }`}

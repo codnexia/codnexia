@@ -2,6 +2,7 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -17,6 +18,8 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly jwtService: JwtService,
     @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
@@ -71,8 +74,9 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Log login activity for the admin dashboard
-    await this.activityService.log('login', `${user.name} logged in`, '#2DD4A8');
+    // Log login activity for the admin dashboard (non-blocking)
+    try { await this.activityService.log('login', `${user.name} logged in`, '#2DD4A8'); }
+    catch (e) { this.logger.warn(`Activity log failed: ${(e as Error).message}`); }
 
     return {
       user: {

@@ -6,6 +6,8 @@ import { useToast } from "../../context/ToastContext";
 import { Pill } from "../ui/Pill";
 import { Btn } from "../ui/Btn";
 import { Card } from "../ui/Card";
+import { AdminLoadingState } from "../ui/AdminLoadingState";
+import { InlineConfirm } from "../ui/InlineConfirm";
 
 export function AdminTestimonials() {
   const toast = useToast();
@@ -86,11 +88,7 @@ export function AdminTestimonials() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-60 text-secondary text-sm">
-        Loading testimonials...
-      </div>
-    );
+    return <AdminLoadingState label="Loading testimonials..." />;
   }
 
   return (
@@ -265,28 +263,11 @@ export function AdminTestimonials() {
 
               {/* Inline delete confirmation */}
               {deleting === t.id && (
-                <div className={clsx(
-                  "px-5 py-3 bg-error/5 border-b border-error/15 flex items-center justify-between",
-                  i < items.length - 1 && "border-b border-border",
-                )}>
-                  <span className="text-xs text-error">
-                    Delete testimonial from &ldquo;{t.author}&rdquo;?
-                  </span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setDeleting(null)}
-                      className="py-1.25 px-3 rounded-md bg-surface border border-border text-muted text-[11px] cursor-pointer font-sans"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => confirmDelete(t)}
-                      className="py-1.25 px-3 rounded-md bg-error/15 border border-error/30 text-error text-[11px] font-semibold cursor-pointer font-sans"
-                    >
-                      Confirm
-                    </button>
-                  </div>
-                </div>
+                <InlineConfirm
+                  message={`Delete testimonial from \u201C${t.author}\u201D?`}
+                  onCancel={() => setDeleting(null)}
+                  onConfirm={() => confirmDelete(t)}
+                />
               )}
             </div>
           ))}

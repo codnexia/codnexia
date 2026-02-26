@@ -85,15 +85,6 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
             </button>
           </div>
 
-          <div className="flex justify-between items-center mb-5">
-            <label className="flex items-center gap-2 text-[13px] text-secondary cursor-pointer">
-              <input type="checkbox" className="accent-accent" /> Remember me
-            </label>
-            <span className="text-[13px] text-accent cursor-pointer font-semibold">
-              Forgot password?
-            </span>
-          </div>
-
           <Btn onClick={handleLogin} disabled={loading} className="w-full! py-3.5! px-0!">
             {loading ? "Signing in..." : "Sign In \u2192"}
           </Btn>

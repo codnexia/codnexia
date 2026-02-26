@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import type { ViewState } from "./types";
 import { clearAuth, isAuthenticated } from "./lib/api";
 import { ToastProvider } from "./context/ToastContext";
@@ -66,10 +66,29 @@ function NotFound() {
 
 export default function App() {
   const [view, setView] = useState<ViewState>(getInitialView);
-  const [is404] = useState(() => {
+  const [is404, setIs404] = useState(() => {
     const path = window.location.pathname;
     return path !== "/" && !KNOWN_PATHS.includes(path);
   });
+
+  // Handle browser back/forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (KNOWN_PATHS.includes(path)) {
+        setIs404(false);
+        if (path === "/admin-dashboard") {
+          setView(isAuthenticated() ? "admin" : "login");
+        } else {
+          setView("client");
+        }
+      } else {
+        setIs404(true);
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   const goToClient = () => { navigate("/"); setView("client"); };
   const goToAdminLogin = () => { clearAuth(); navigate("/admin-dashboard"); setView("login"); };

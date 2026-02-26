@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -33,13 +34,13 @@ export class ContentController {
 
   // Update content page by ID
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateContentDto) {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateContentDto) {
     return this.contentService.update(id, dto);
   }
 
   // Delete content page by ID
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.contentService.remove(id);
   }
 }

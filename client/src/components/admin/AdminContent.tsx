@@ -6,6 +6,7 @@ import { useToast } from "../../context/ToastContext";
 import { Pill } from "../ui/Pill";
 import { Btn } from "../ui/Btn";
 import { Card } from "../ui/Card";
+import { AdminLoadingState } from "../ui/AdminLoadingState";
 
 export function AdminContent() {
   const toast = useToast();
@@ -79,11 +80,7 @@ export function AdminContent() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-60 text-secondary text-sm">
-        Loading content...
-      </div>
-    );
+    return <AdminLoadingState label="Loading content..." />;
   }
 
   return (

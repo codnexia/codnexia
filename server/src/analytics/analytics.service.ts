@@ -139,11 +139,21 @@ export class AnalyticsService {
       .select({ count: sql<number>`count(distinct ${schema.pageViews.sessionId})` })
       .from(schema.pageViews);
 
-    // Simple bounce rate: sessions with only 1 page view / total sessions
-    const viewCount = Number(totalViews[0]?.count ?? 0);
-    const sessionCount = Number(totalSessions[0]?.count ?? 1);
+    // Bounce rate: count sessions with exactly 1 page view / total sessions
+    const singleViewSessions = await this.db
+      .select({ count: sql<number>`count(*)` })
+      .from(
+        this.db
+          .select({ sid: schema.pageViews.sessionId, views: sql<number>`count(*)` })
+          .from(schema.pageViews)
+          .groupBy(schema.pageViews.sessionId)
+          .having(sql`count(*) = 1`)
+          .as('single_view'),
+      );
+    const sessionCount = Number(totalSessions[0]?.count ?? 0);
+    const bounceCount = Number(singleViewSessions[0]?.count ?? 0);
     const bounceRate = sessionCount > 0
-      ? Math.round((1 - (viewCount / sessionCount - 1) / Math.max(viewCount / sessionCount, 1)) * 50)
+      ? Math.round((bounceCount / sessionCount) * 100)
       : 0;
 
     // Recent sessions (last 30 min) for the visitors table

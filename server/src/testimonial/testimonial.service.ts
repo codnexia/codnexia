@@ -1,7 +1,7 @@
 // Manages client testimonials stored in DB
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 import { ActivityService } from '../activity/activity.service';
@@ -10,6 +10,8 @@ import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
 
 @Injectable()
 export class TestimonialService {
+  private readonly logger = new Logger(TestimonialService.name);
+
   constructor(
     @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
     private readonly activityService: ActivityService,
@@ -44,7 +46,8 @@ export class TestimonialService {
       })
       .returning();
 
-    await this.activityService.log('testimonial', `Added testimonial from "${dto.author}"`, '#4A9FF5');
+    try { await this.activityService.log('testimonial', `Added testimonial from "${dto.author}"`, '#4A9FF5'); }
+    catch (e) { this.logger.warn(`Activity log failed: ${(e as Error).message}`); }
     return testimonial;
   }
 
@@ -57,7 +60,8 @@ export class TestimonialService {
       .returning();
 
     if (!testimonial) throw new NotFoundException('Testimonial not found');
-    await this.activityService.log('testimonial', `Updated testimonial from "${testimonial.author}"`, '#F5A623');
+    try { await this.activityService.log('testimonial', `Updated testimonial from "${testimonial.author}"`, '#F5A623'); }
+    catch (e) { this.logger.warn(`Activity log failed: ${(e as Error).message}`); }
     return testimonial;
   }
 
@@ -69,13 +73,16 @@ export class TestimonialService {
       .returning();
 
     if (!testimonial) throw new NotFoundException('Testimonial not found');
-    await this.activityService.log('testimonial', `Deleted testimonial from "${testimonial.author}"`, '#F56565');
+    try { await this.activityService.log('testimonial', `Deleted testimonial from "${testimonial.author}"`, '#F56565'); }
+    catch (e) { this.logger.warn(`Activity log failed: ${(e as Error).message}`); }
     return { success: true };
   }
 
-  // Count total testimonials
+  // Count total testimonials using SQL count
   async count() {
-    const rows = await this.db.select().from(schema.testimonials);
-    return rows.length;
+    const [{ count }] = await this.db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.testimonials);
+    return Number(count);
   }
 }

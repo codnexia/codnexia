@@ -1,7 +1,7 @@
 // Handles contact form submissions - save to DB and retrieve for admin
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { desc } from 'drizzle-orm';
+import { desc, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 import { ActivityService } from '../activity/activity.service';
@@ -32,14 +32,15 @@ export class ContactService {
       })
       .returning();
 
-    // Log this as activity for the admin dashboard
-    await this.activityService.log('contact', `New contact from ${dto.name}`, '#2DD4A8');
+    // Log this as activity for the admin dashboard (non-blocking)
+    try { await this.activityService.log('contact', `New contact from ${dto.name}`, '#2DD4A8'); }
+    catch (e) { this.logger.warn(`Activity log failed: ${(e as Error).message}`); }
 
     // Send email notification (non-blocking — failure should not break the response)
     try {
       await this.mailService.sendContactNotification(dto);
     } catch (err) {
-      this.logger.warn(`Failed to send contact email for ${dto.name}: ${err.message}`);
+      this.logger.warn(`Failed to send contact email for ${dto.name}: ${(err as Error).message}`);
     }
 
     return contact;
@@ -53,9 +54,11 @@ export class ContactService {
       .orderBy(desc(schema.contacts.createdAt));
   }
 
-  // Get total count of submissions
+  // Get total count of submissions using SQL count
   async count() {
-    const rows = await this.db.select().from(schema.contacts);
-    return rows.length;
+    const [{ count }] = await this.db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.contacts);
+    return Number(count);
   }
 }

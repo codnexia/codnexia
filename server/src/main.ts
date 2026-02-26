@@ -9,6 +9,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // Graceful shutdown — let active requests finish before exiting
+  app.enableShutdownHooks();
+
   // Allow requests from the frontend
   app.enableCors({
     origin: process.env.CLIENT_URL ?? 'http://localhost:5173',

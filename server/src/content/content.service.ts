@@ -1,7 +1,7 @@
 // Manages content pages (hero, about, services, etc.) stored in DB
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 import { ActivityService } from '../activity/activity.service';
@@ -19,10 +19,14 @@ const DEFAULT_PAGES = [
 
 @Injectable()
 export class ContentService {
+  private readonly logger = new Logger(ContentService.name);
+
   constructor(
     @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
     private readonly activityService: ActivityService,
   ) {}
+
+  private seeding: Promise<void> | null = null;
 
   // Get all content pages, seed defaults if empty
   async findAll() {
@@ -31,9 +35,16 @@ export class ContentService {
       .from(schema.contentPages)
       .orderBy(desc(schema.contentPages.updatedAt));
 
-    // Seed default pages on first load
+    // Seed default pages on first load (guard against concurrent calls)
     if (pages.length === 0) {
-      await this.db.insert(schema.contentPages).values(DEFAULT_PAGES);
+      if (!this.seeding) {
+        this.seeding = this.db
+          .insert(schema.contentPages)
+          .values(DEFAULT_PAGES)
+          .then(() => { this.seeding = null; })
+          .catch((e) => { this.seeding = null; throw e; });
+      }
+      await this.seeding;
       pages = await this.db
         .select()
         .from(schema.contentPages)
@@ -54,7 +65,8 @@ export class ContentService {
       })
       .returning();
 
-    await this.activityService.log('content', `Created section "${dto.name}"`, '#4A9FF5');
+    try { await this.activityService.log('content', `Created section "${dto.name}"`, '#4A9FF5'); }
+    catch (e) { this.logger.warn(`Activity log failed: ${(e as Error).message}`); }
     return page;
   }
 
@@ -67,7 +79,8 @@ export class ContentService {
       .returning();
 
     if (!page) throw new NotFoundException('Content page not found');
-    await this.activityService.log('content', `Updated "${page.name}" section`, '#F5A623');
+    try { await this.activityService.log('content', `Updated "${page.name}" section`, '#F5A623'); }
+    catch (e) { this.logger.warn(`Activity log failed: ${(e as Error).message}`); }
     return page;
   }
 
@@ -82,9 +95,11 @@ export class ContentService {
     return { success: true };
   }
 
-  // Count total pages
+  // Count total pages using SQL count
   async count() {
-    const rows = await this.db.select().from(schema.contentPages);
-    return rows.length;
+    const [{ count }] = await this.db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.contentPages);
+    return Number(count);
   }
 }

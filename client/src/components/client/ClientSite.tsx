@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { SECTIONS } from "../../constants";
 import { trackPageView } from "../../lib/api";
 import { ClientHeader } from "./ClientHeader";
@@ -54,17 +54,25 @@ export function ClientSite() {
 
   useEffect(() => {
     const el = containerRef.current; if (!el) return;
+    let rafId = 0;
     const handler = () => {
-      setScrollY(el.scrollTop);
-      const offsets = SECTIONS.map(s => {
-        const ref = sectionRefs.current[s.id];
-        return ref ? { id: s.id, top: ref.offsetTop - 100 } : null;
-      }).filter(Boolean) as { id: string; top: number }[];
-      const current = offsets.reverse().find(o => el.scrollTop >= o.top);
-      if (current) setActiveSection(current.id);
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        setScrollY(el.scrollTop);
+        const offsets = SECTIONS.map(s => {
+          const ref = sectionRefs.current[s.id];
+          return ref ? { id: s.id, top: ref.offsetTop - 100 } : null;
+        }).filter(Boolean) as { id: string; top: number }[];
+        const current = offsets.reverse().find(o => el.scrollTop >= o.top);
+        if (current) setActiveSection(current.id);
+      });
     };
     el.addEventListener("scroll", handler, { passive: true });
-    return () => el.removeEventListener("scroll", handler);
+    return () => {
+      el.removeEventListener("scroll", handler);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const scrollTo = (id: string) => {
@@ -74,9 +82,9 @@ export function ClientSite() {
 
   const headerOpacity = Math.min(scrollY / 80, 0.96);
 
-  const setSectionRef = (id: string) => (el: HTMLElement | null) => {
+  const setSectionRef = useCallback((id: string) => (el: HTMLElement | null) => {
     sectionRefs.current[id] = el;
-  };
+  }, []);
 
   return (
     <div ref={containerRef} className="h-full overflow-auto bg-bg relative scroll-smooth">

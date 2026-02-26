@@ -1,8 +1,8 @@
 // Handles media file uploads and metadata storage
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { eq, desc } from 'drizzle-orm';
-import * as fs from 'fs';
+import { eq, desc, sql } from 'drizzle-orm';
+import { promises as fs } from 'fs';
 import * as path from 'path';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
@@ -10,6 +10,8 @@ import { ActivityService } from '../activity/activity.service';
 
 @Injectable()
 export class MediaService {
+  private readonly logger = new Logger(MediaService.name);
+
   constructor(
     @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
     private readonly activityService: ActivityService,
@@ -28,7 +30,8 @@ export class MediaService {
       })
       .returning();
 
-    await this.activityService.log('upload', `Uploaded "${file.originalname}"`, '#4A9FF5');
+    try { await this.activityService.log('upload', `Uploaded "${file.originalname}"`, '#4A9FF5'); }
+    catch (e) { this.logger.warn(`Activity log failed: ${(e as Error).message}`); }
     return media;
   }
 
@@ -49,18 +52,19 @@ export class MediaService {
 
     if (!file) throw new NotFoundException('File not found');
 
-    // Try to remove the actual file from disk
+    // Try to remove the actual file from disk (async, non-blocking)
     const filePath = path.join(process.cwd(), 'uploads', file.name);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
+    try { await fs.unlink(filePath); }
+    catch (e) { this.logger.warn(`Failed to delete file from disk: ${(e as Error).message}`); }
 
     return { success: true };
   }
 
-  // Count total files
+  // Count total files using SQL count
   async count() {
-    const rows = await this.db.select().from(schema.mediaFiles);
-    return rows.length;
+    const [{ count }] = await this.db
+      .select({ count: sql<number>`count(*)` })
+      .from(schema.mediaFiles);
+    return Number(count);
   }
 }

@@ -5,6 +5,7 @@ import { getMediaFiles, uploadMediaFile, deleteMediaFile } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";
 import { Btn } from "../ui/Btn";
 import { Card } from "../ui/Card";
+import { AdminLoadingState } from "../ui/AdminLoadingState";
 
 export function AdminMedia() {
   const toast = useToast();
@@ -58,11 +59,7 @@ export function AdminMedia() {
   const openFilePicker = () => fileInputRef.current?.click();
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-60 text-secondary text-sm">
-        Loading media...
-      </div>
-    );
+    return <AdminLoadingState label="Loading media..." />;
   }
 
   return (

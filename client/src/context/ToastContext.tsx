@@ -1,4 +1,4 @@
-import { useState, useCallback, createContext, useContext } from "react";
+import { useState, useCallback, useRef, createContext, useContext } from "react";
 import type { ReactNode } from "react";
 import clsx from "clsx";
 import type { Toast, ToastFn } from "../types";
@@ -11,8 +11,9 @@ export const useToast = () => useContext(ToastCtx);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const idRef = useRef(0);
   const add = useCallback<ToastFn>((msg, type = "success") => {
-    const id = Date.now();
+    const id = ++idRef.current;
     setToasts(t => [...t, { id, msg, type }]);
     setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3500);
   }, []);

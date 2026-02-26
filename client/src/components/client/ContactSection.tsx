@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import type { ContactForm } from "../../types";
 import { submitContact } from "../../lib/api";
@@ -28,6 +28,11 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const sentTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    return () => { clearTimeout(sentTimerRef.current); };
+  }, []);
 
   const validateForm = () => {
     const e: Record<string, string> = {};
@@ -48,7 +53,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
       setSending(false);
       setSent(true);
       toast("Message sent successfully! We'll be in touch soon.", "success");
-      setTimeout(() => {
+      sentTimerRef.current = setTimeout(() => {
         setSent(false);
         setForm({ name: "", email: "", company: "", service: "", budget: "", message: "" });
       }, 3000);

@@ -20,6 +20,16 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
     };
   }, [menuOpen]);
 
+  // Close mobile menu on Escape key
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [menuOpen]);
+
   // Close menu on resize to desktop
   useEffect(() => {
     const onResize = () => {

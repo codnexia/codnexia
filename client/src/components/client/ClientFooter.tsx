@@ -32,7 +32,7 @@ export function ClientFooter() {
             {col.items.map(item => (
               <div
                 key={item}
-                className="text-[13px] text-secondary py-1 cursor-pointer transition-colors duration-200 hover:text-accent"
+                className="text-[13px] text-secondary py-1"
               >
                 {item}
               </div>

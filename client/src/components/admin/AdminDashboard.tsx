@@ -6,6 +6,7 @@ import { Pill } from "../ui/Pill";
 import { Card } from "../ui/Card";
 import { StatCard } from "../ui/StatCard";
 import { BarChart } from "../ui/BarChart";
+import { AdminLoadingState } from "../ui/AdminLoadingState";
 
 export function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStat[]>([]);
@@ -34,16 +35,14 @@ export function AdminDashboard() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 30000);
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") fetchData();
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-60 text-secondary text-sm">
-        Loading dashboard...
-      </div>
-    );
+    return <AdminLoadingState label="Loading dashboard..." />;
   }
 
   return (
