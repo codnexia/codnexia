@@ -9,11 +9,13 @@ import { ContentModule } from './content/content.module';
 import { MediaModule } from './media/media.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { ActivityModule } from './activity/activity.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
+    MailModule,
     AuthModule,
     ContactModule,
     ContentModule,

@@ -1,17 +1,21 @@
 // Handles contact form submissions - save to DB and retrieve for admin
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { desc } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 import { ActivityService } from '../activity/activity.service';
+import { MailService } from '../mail/mail.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 
 @Injectable()
 export class ContactService {
+  private readonly logger = new Logger(ContactService.name);
+
   constructor(
     @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
     private readonly activityService: ActivityService,
+    private readonly mailService: MailService,
   ) {}
 
   // Save a new contact form submission
@@ -30,6 +34,13 @@ export class ContactService {
 
     // Log this as activity for the admin dashboard
     await this.activityService.log('contact', `New contact from ${dto.name}`, '#2DD4A8');
+
+    // Send email notification (non-blocking — failure should not break the response)
+    try {
+      await this.mailService.sendContactNotification(dto);
+    } catch (err) {
+      this.logger.warn(`Failed to send contact email for ${dto.name}: ${err.message}`);
+    }
 
     return contact;
   }
