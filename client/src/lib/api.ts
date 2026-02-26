@@ -9,6 +9,7 @@ import type {
   ActivityResponse,
   DashboardResponse,
   VisitorResponse,
+  TestimonialResponse,
 } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
@@ -174,6 +175,38 @@ export async function getRecentActivity() {
   return items.map(mapActivity);
 }
 
+// ── Testimonials ──
+
+export async function getPublishedTestimonials() {
+  const items = await apiFetch<TestimonialResponse[]>('/testimonials/public');
+  return items.map(mapTestimonial);
+}
+
+export async function getTestimonials() {
+  const items = await apiFetch<TestimonialResponse[]>('/testimonials');
+  return items.map(mapTestimonial);
+}
+
+export async function createTestimonial(data: { author: string; company: string; content: string; published?: boolean }) {
+  const item = await apiFetch<TestimonialResponse>('/testimonials', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return mapTestimonial(item);
+}
+
+export async function updateTestimonial(id: string, data: { author?: string; company?: string; content?: string; published?: boolean }) {
+  const item = await apiFetch<TestimonialResponse>(`/testimonials/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+  return mapTestimonial(item);
+}
+
+export async function deleteTestimonial(id: string) {
+  return apiFetch<{ success: boolean }>(`/testimonials/${id}`, { method: 'DELETE' });
+}
+
 // ── Response Mappers ──
 // Transform backend responses to match the frontend type shapes
 
@@ -202,6 +235,17 @@ function mapActivity(item: ActivityResponse) {
     text: item.description,
     time: timeAgo(item.createdAt),
     color: item.color || '#2DD4A8',
+  };
+}
+
+function mapTestimonial(item: TestimonialResponse) {
+  return {
+    id: item.id,
+    author: item.author,
+    company: item.company,
+    content: item.content,
+    published: item.published,
+    updated: timeAgo(item.updatedAt),
   };
 }
 

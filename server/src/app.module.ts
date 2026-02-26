@@ -10,6 +10,7 @@ import { MediaModule } from './media/media.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { ActivityModule } from './activity/activity.module';
 import { MailModule } from './mail/mail.module';
+import { TestimonialModule } from './testimonial/testimonial.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { MailModule } from './mail/mail.module';
     MediaModule,
     AnalyticsModule,
     ActivityModule,
+    TestimonialModule,
   ],
   controllers: [AppController],
   providers: [AppService],

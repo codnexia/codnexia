@@ -8,6 +8,7 @@ import { ProcessSection } from "./ProcessSection";
 import { ServicesSection } from "./ServicesSection";
 import { ContactSection } from "./ContactSection";
 import { ClientFooter } from "./ClientFooter";
+import { TestimonialPopup } from "./TestimonialPopup";
 
 // Generate or retrieve a unique session ID for analytics tracking
 function getSessionId(): string {
@@ -86,6 +87,7 @@ export function ClientSite() {
       <ServicesSection sectionRef={setSectionRef("services")} />
       <ContactSection sectionRef={setSectionRef("contact")} />
       <ClientFooter />
+      <TestimonialPopup />
     </div>
   );
 }

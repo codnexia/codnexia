@@ -13,6 +13,8 @@ export function AdminContent() {
   const [editing, setEditing] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [newName, setNewName] = useState("");
 
   // Fetch content pages from the API on mount
   useEffect(() => {
@@ -60,12 +62,16 @@ export function AdminContent() {
   };
 
   // Create a new content page via API
-  const addSection = async () => {
-    const name = prompt("Section name:");
-    if (!name) return;
+  const submitNewSection = async () => {
+    if (!newName.trim()) {
+      toast("Section name is required", "warning");
+      return;
+    }
     try {
-      await createContentPage({ name, content: "", status: "Draft" });
+      await createContentPage({ name: newName.trim(), content: "", status: "Draft" });
       toast("New section created!", "success");
+      setCreating(false);
+      setNewName("");
       fetchPages();
     } catch {
       toast("Failed to create section", "error");
@@ -85,10 +91,46 @@ export function AdminContent() {
       {/* Action bar */}
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center mb-6">
         <p className="text-sm text-secondary m-0">Manage Codnexia website sections</p>
-        <Btn onClick={addSection} className="py-2.5! px-5! text-[13px]!">
-          + New Section
-        </Btn>
+        {!creating && (
+          <Btn onClick={() => setCreating(true)} className="py-2.5! px-5! text-[13px]!">
+            + New Section
+          </Btn>
+        )}
       </div>
+
+      {/* Inline create form */}
+      {creating && (
+        <Card className="mb-6 p-5!">
+          <h3 className="text-sm font-semibold text-main mb-3">New Section</h3>
+          <div className="mb-4">
+            <label className="text-[11px] text-muted uppercase tracking-wide mb-1 block">Section Name</label>
+            <input
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              placeholder="e.g. Pricing, FAQ..."
+              className="w-full max-w-sm bg-surface border border-border rounded-md px-3 py-2 text-main text-sm font-sans outline-none focus:border-accent/40"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") submitNewSection();
+              }}
+            />
+          </div>
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={() => { setCreating(false); setNewName(""); }}
+              className="py-2 px-4 rounded-md bg-surface border border-border text-muted text-xs cursor-pointer font-sans"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={submitNewSection}
+              className="py-2 px-4 rounded-md bg-accent-dim border border-accent/27 text-accent text-xs font-semibold cursor-pointer font-sans"
+            >
+              Create
+            </button>
+          </div>
+        </Card>
+      )}
 
       {/* Content table */}
       <Card className="p-0! overflow-hidden">

@@ -192,3 +192,21 @@ export interface VisitorResponse {
   stats: DashboardStat[];
   visitors: VisitorEntry[];
 }
+
+export interface Testimonial {
+  id: string;
+  author: string;
+  company: string;
+  content: string;
+  published: boolean;
+  updated: string;
+}
+
+export interface TestimonialResponse {
+  id: string;
+  author: string;
+  company: string;
+  content: string;
+  published: boolean;
+  updatedAt: string;
+}

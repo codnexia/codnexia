@@ -7,11 +7,13 @@ import { AdminContent } from "./AdminContent";
 import { AdminMedia } from "./AdminMedia";
 import { AdminVisitors } from "./AdminVisitors";
 import { AdminSettings } from "./AdminSettings";
+import { AdminTestimonials } from "./AdminTestimonials";
 
 export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
   const toast = useToast();
   const [tab, setTab] = useState("dashboard");
   const [collapsed, setCollapsed] = useState(() => window.innerWidth < 768);
+  const [showLogout, setShowLogout] = useState(false);
 
   useEffect(() => {
     const onResize = () => {
@@ -25,6 +27,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
     { id: "dashboard", icon: "\u25D0", label: "Dashboard" },
     { id: "content", icon: "\u270E", label: "Content" },
     { id: "media", icon: "\u25C8", label: "Media" },
+    { id: "testimonials", icon: "\u275D", label: "Testimonials" },
     { id: "visitors", icon: "\u25C9", label: "Visitors" },
     { id: "settings", icon: "\u2699", label: "Settings" },
   ];
@@ -110,18 +113,34 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
             >
               {"\uD83D\uDD14"}
             </button>
-            <button
-              onClick={() => {
-                if (window.confirm("Log out?")) {
-                  toast("Logged out", "info");
-                  onLogout();
-                }
-              }}
-              aria-label="User menu — log out"
-              className="w-9 h-9 rounded-[10px] bg-grad flex items-center justify-center text-sm font-bold text-main cursor-pointer border-none"
-            >
-              C
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowLogout(!showLogout)}
+                aria-label="User menu — log out"
+                className="w-9 h-9 rounded-[10px] bg-grad flex items-center justify-center text-sm font-bold text-main cursor-pointer border-none"
+              >
+                C
+              </button>
+              {showLogout && (
+                <div className="absolute right-0 top-12 w-52 rounded-xl border border-border bg-surface p-4 shadow-lg shadow-black/30 z-50 animate-slide-in">
+                  <p className="text-sm text-secondary mb-3">Log out of admin?</p>
+                  <div className="flex gap-2 justify-end">
+                    <button
+                      onClick={() => setShowLogout(false)}
+                      className="py-1.5 px-3 rounded-md bg-surface border border-border text-muted text-[11px] cursor-pointer font-sans"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => { toast("Logged out", "info"); onLogout(); }}
+                      className="py-1.5 px-3 rounded-md bg-error/15 border border-error/30 text-error text-[11px] font-semibold cursor-pointer font-sans"
+                    >
+                      Log out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
@@ -130,6 +149,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
           {tab === "dashboard" && <AdminDashboard />}
           {tab === "content" && <AdminContent />}
           {tab === "media" && <AdminMedia />}
+          {tab === "testimonials" && <AdminTestimonials />}
           {tab === "visitors" && <AdminVisitors />}
           {tab === "settings" && <AdminSettings onLogout={onLogout} />}
         </div>
