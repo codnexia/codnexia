@@ -13,7 +13,7 @@ export function TestimonialPopup() {
   const [animating, setAnimating] = useState<"in" | "out" | null>(null);
   const [dismissed, setDismissed] = useState(false);
   const [revealed, setRevealed] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Fetch published testimonials on mount
   useEffect(() => {

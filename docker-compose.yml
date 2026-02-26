@@ -1,0 +1,21 @@
+services:
+  server:
+    build: ./server
+    env_file: ./server/.env
+    volumes:
+      - uploads:/app/uploads
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      args:
+        VITE_API_URL: /api
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    restart: unless-stopped
+
+volumes:
+  uploads:

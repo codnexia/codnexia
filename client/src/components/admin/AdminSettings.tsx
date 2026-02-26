@@ -14,7 +14,7 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
   const [profile, setProfile] = useState<AdminProfile>({ name: "", email: "", role: "Admin" });
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
-  const savedTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     return () => { clearTimeout(savedTimerRef.current); };

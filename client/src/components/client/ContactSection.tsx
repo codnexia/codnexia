@@ -28,7 +28,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
-  const sentTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const sentTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     return () => { clearTimeout(sentTimerRef.current); };
