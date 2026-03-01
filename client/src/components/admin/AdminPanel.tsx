@@ -66,9 +66,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
             collapsed ? "px-4.5 py-5" : "p-5",
           )}
         >
-          <div className="w-8 h-8 rounded-lg shrink-0 bg-grad flex items-center justify-center text-[11px] font-extrabold text-main">
-            {"</>"}
-          </div>
+          <img src="/codnexiafav.png" alt="Codnexia" className="w-8 h-8 shrink-0" />
           {!collapsed && (
             <span className="text-sm font-bold text-main whitespace-nowrap">
               Codnexia <span className="text-accent font-normal">Admin</span>

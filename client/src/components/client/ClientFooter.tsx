@@ -11,12 +11,7 @@ export function ClientFooter() {
         {/* Brand */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-7 h-7 rounded-md bg-grad flex items-center justify-center text-[10px] font-extrabold text-main">
-              {"</>"}
-            </div>
-            <span className="text-[15px] font-bold text-main">
-              Codnexia <span className="text-accent font-normal">Software</span>
-            </span>
+            <img src="/codnexialogo.png" alt="Codnexia Software" className="h-10 w-auto" />
           </div>
           <p className="text-[13px] text-secondary leading-[1.7]">
             Engineering the next generation of software. Global code, African excellence.

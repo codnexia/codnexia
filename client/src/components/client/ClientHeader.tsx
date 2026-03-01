@@ -57,12 +57,7 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") scrollTo("hero"); }}
       >
-        <div className="w-8.5 h-8.5 rounded-lg bg-grad flex items-center justify-center text-[13px] font-extrabold text-main shadow-[0_0_20px_var(--color-primary-glow)]">
-          {"</>"}
-        </div>
-        <span className="text-[17px] font-bold text-main -tracking-[0.5px]">
-          Codnexia<span className="text-accent font-normal ml-1">Software</span>
-        </span>
+        <img src="/codnexialogo.png" alt="Codnexia Software" className="h-12 w-auto" />
       </div>
 
       {/* Desktop nav */}
