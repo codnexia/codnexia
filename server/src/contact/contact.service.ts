@@ -46,12 +46,21 @@ export class ContactService {
     return contact;
   }
 
-  // Get all contact submissions (newest first) for admin panel
-  async findAll() {
-    return this.db
-      .select()
-      .from(schema.contacts)
-      .orderBy(desc(schema.contacts.createdAt));
+  // Get paginated contact submissions (newest first) for admin panel
+  async findAll(page = 1, limit = 20) {
+    const offset = (page - 1) * limit;
+    const [data, [{ total }]] = await Promise.all([
+      this.db
+        .select()
+        .from(schema.contacts)
+        .orderBy(desc(schema.contacts.createdAt))
+        .limit(limit)
+        .offset(offset),
+      this.db
+        .select({ total: sql<number>`count(*)` })
+        .from(schema.contacts),
+    ]);
+    return { data, total: Number(total), page, limit };
   }
 
   // Get total count of submissions using SQL count

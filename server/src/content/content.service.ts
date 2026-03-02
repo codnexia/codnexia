@@ -28,15 +28,23 @@ export class ContentService {
 
   private seeding: Promise<void> | null = null;
 
-  // Get all content pages, seed defaults if empty
-  async findAll() {
-    let pages = await this.db
-      .select()
-      .from(schema.contentPages)
-      .orderBy(desc(schema.contentPages.updatedAt));
+  // Get paginated content pages, seed defaults if empty
+  async findAll(page = 1, limit = 20) {
+    const offset = (page - 1) * limit;
+    let [data, [{ total }]] = await Promise.all([
+      this.db
+        .select()
+        .from(schema.contentPages)
+        .orderBy(desc(schema.contentPages.updatedAt))
+        .limit(limit)
+        .offset(offset),
+      this.db
+        .select({ total: sql<number>`count(*)` })
+        .from(schema.contentPages),
+    ]);
 
     // Seed default pages on first load (guard against concurrent calls)
-    if (pages.length === 0) {
+    if (Number(total) === 0) {
       if (!this.seeding) {
         this.seeding = this.db
           .insert(schema.contentPages)
@@ -45,13 +53,20 @@ export class ContentService {
           .catch((e) => { this.seeding = null; throw e; });
       }
       await this.seeding;
-      pages = await this.db
-        .select()
-        .from(schema.contentPages)
-        .orderBy(desc(schema.contentPages.updatedAt));
+      [data, [{ total }]] = await Promise.all([
+        this.db
+          .select()
+          .from(schema.contentPages)
+          .orderBy(desc(schema.contentPages.updatedAt))
+          .limit(limit)
+          .offset(offset),
+        this.db
+          .select({ total: sql<number>`count(*)` })
+          .from(schema.contentPages),
+      ]);
     }
 
-    return pages;
+    return { data, total: Number(total), page, limit };
   }
 
   // Create a new content page

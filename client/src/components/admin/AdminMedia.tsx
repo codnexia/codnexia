@@ -21,8 +21,8 @@ export function AdminMedia() {
 
   const fetchFiles = async () => {
     try {
-      const data = await getMediaFiles();
-      setFiles(data);
+      const res = await getMediaFiles();
+      setFiles(res.data);
     } catch {
       toast("Failed to load media files", "error");
     } finally {
@@ -109,7 +109,7 @@ export function AdminMedia() {
         <div className="text-[44px] mb-3 opacity-60">{"\uD83D\uDCC2"}</div>
         <div className="text-base font-semibold text-main mb-1">Drag & drop files here</div>
         <div className="text-[13px] text-secondary">
-          PNG, JPG, SVG, MP4 up to 50MB &middot; or click to browse
+          PNG, JPG, GIF, WebP, PDF, MP4 up to 10MB &middot; or click to browse
         </div>
       </div>
 

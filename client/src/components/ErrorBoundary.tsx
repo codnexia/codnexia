@@ -40,22 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
             padding: "2rem",
           }}
         >
-          <div
-            style={{
-              width: 52,
-              height: 52,
-              borderRadius: 14,
-              background: "linear-gradient(135deg, #1E3A8A, #2DD4A8)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 20,
-              fontWeight: 800,
-              marginBottom: 24,
-            }}
-          >
-            {"</>"}
-          </div>
+          <img src="/codnexiafav.png" alt="Codnexia" style={{ width: 52, height: 52, marginBottom: 24 }} />
           <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
             Something went wrong
           </h1>

@@ -28,4 +28,11 @@ export class AuthController {
   ) {
     return this.authService.updateProfile(req.user.id, dto);
   }
+
+  // Issue a fresh token (call before current one expires)
+  @UseGuards(JwtAuthGuard)
+  @Post('refresh')
+  refresh(@Req() req: { user: { id: string; email: string } }) {
+    return this.authService.refresh(req.user.id, req.user.email);
+  }
 }

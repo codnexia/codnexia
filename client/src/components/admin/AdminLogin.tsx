@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { AdminLoginProps } from "../../types";
 import { login } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";
@@ -14,6 +14,15 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
   const [showPass, setShowPass] = useState(false);
 
   const [email, setEmail] = useState("");
+
+  // C3: Show "Session expired" toast when redirected from 401
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('session') === 'expired') {
+      toast('Session expired. Please log in again.', 'warning');
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   const handleLogin = async () => {
     if (!email.trim()) {
@@ -52,9 +61,7 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
       <div className="w-full max-w-105 px-4 md:px-0 relative z-1">
         {/* Logo & heading */}
         <div className="text-center mb-8">
-          <div className="w-13 h-13 rounded-[14px] bg-grad inline-flex items-center justify-center text-xl font-extrabold text-main mb-4 shadow-[0_4px_30px_var(--color-accent-glow)]">
-            {"</>"}
-          </div>
+          <img src="/codnexiafav.png" alt="Codnexia" className="w-13 h-13 mb-4 mx-auto" />
           <h1 className="text-[26px] font-bold text-main mb-1">Welcome Back</h1>
           <p className="text-sm text-secondary">Sign in to Codnexia Admin Panel</p>
         </div>
@@ -90,7 +97,7 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
           </Btn>
 
           <div className="text-center mt-4">
-            <span className="text-xs text-muted">Secured with JWT + HTTP-only Cookies</span>
+            <span className="text-xs text-muted">Secured with JWT Bearer Authentication</span>
           </div>
         </Card>
 

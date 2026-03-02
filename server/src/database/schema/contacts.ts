@@ -1,5 +1,5 @@
 // Contact form submissions from the public site
-import { pgTable, uuid, varchar, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, text, timestamp, index } from 'drizzle-orm/pg-core';
 
 export const contacts = pgTable('contacts', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -10,4 +10,6 @@ export const contacts = pgTable('contacts', {
   budget: varchar('budget', { length: 100 }),
   message: text('message').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-});
+}, (table) => [
+  index('idx_contacts_created_at').on(table.createdAt),
+]);

@@ -8,11 +8,13 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ContentService } from './content.service';
 import { CreateContentDto } from './dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -20,10 +22,10 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
 
-  // List all content pages
+  // List paginated content pages
   @Get()
-  findAll() {
-    return this.contentService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.contentService.findAll(pagination.page, pagination.limit);
   }
 
   // Create a new content page

@@ -7,6 +7,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -16,19 +17,24 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { MediaService } from './media.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
-// Allowed file extensions for upload
-const ALLOWED_EXT = /\.(jpg|jpeg|png|gif|webp|svg|pdf|mp4|webm)$/i;
+// Allowed file extensions and MIME types for upload (SVG removed — XSS risk)
+const ALLOWED_EXT = /\.(jpg|jpeg|png|gif|webp|pdf|mp4|webm)$/i;
+const ALLOWED_MIME: Set<string> = new Set([
+  'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+  'application/pdf', 'video/mp4', 'video/webm',
+]);
 
 @UseGuards(JwtAuthGuard)
 @Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
-  // List all uploaded files
+  // List paginated uploaded files
   @Get()
-  findAll() {
-    return this.mediaService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.mediaService.findAll(pagination.page, pagination.limit);
   }
 
   // Upload a single file (stored in /uploads with unique name)
@@ -43,10 +49,13 @@ export class MediaController {
           cb(null, `${unique}${extname(file.originalname)}`);
         },
       }),
-      limits: { fileSize: 50 * 1024 * 1024 }, // 50MB max
+      limits: { fileSize: 10 * 1024 * 1024 }, // H8: 10MB max
       fileFilter: (_req, file, cb) => {
         if (!ALLOWED_EXT.test(file.originalname)) {
-          return cb(new BadRequestException('File type not allowed. Accepted: jpg, png, gif, webp, svg, pdf, mp4, webm'), false);
+          return cb(new BadRequestException('File type not allowed. Accepted: jpg, png, gif, webp, pdf, mp4, webm'), false);
+        }
+        if (!ALLOWED_MIME.has(file.mimetype)) {
+          return cb(new BadRequestException(`MIME type "${file.mimetype}" not allowed`), false);
         }
         cb(null, true);
       },
