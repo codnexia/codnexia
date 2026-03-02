@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { AdminLoginProps } from "../../types";
 import { login } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";
@@ -14,6 +14,15 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
   const [showPass, setShowPass] = useState(false);
 
   const [email, setEmail] = useState("");
+
+  // C3: Show "Session expired" toast when redirected from 401
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('session') === 'expired') {
+      toast('Session expired. Please log in again.', 'warning');
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   const handleLogin = async () => {
     if (!email.trim()) {
@@ -88,7 +97,7 @@ export function AdminLogin({ onLogin, onBack }: AdminLoginProps) {
           </Btn>
 
           <div className="text-center mt-4">
-            <span className="text-xs text-muted">Secured with JWT + HTTP-only Cookies</span>
+            <span className="text-xs text-muted">Secured with JWT Bearer Authentication</span>
           </div>
         </Card>
 

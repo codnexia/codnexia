@@ -25,8 +25,8 @@ export function AdminTestimonials() {
 
   const fetchItems = async () => {
     try {
-      const data = await getTestimonials();
-      setItems(data);
+      const res = await getTestimonials();
+      setItems(res.data);
     } catch {
       toast("Failed to load testimonials", "error");
     } finally {

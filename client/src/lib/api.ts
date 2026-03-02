@@ -10,9 +10,14 @@ import type {
   DashboardResponse,
   VisitorResponse,
   TestimonialResponse,
+  PaginatedResponse,
 } from '../types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || (
+  import.meta.env.PROD
+    ? (() => { throw new Error('VITE_API_URL must be set in production'); })()
+    : 'http://localhost:3000/api'
+);
 
 // ── Token Management ──
 
@@ -54,6 +59,13 @@ async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> 
     throw new Error('Too many requests. Please wait a moment and try again.');
   }
 
+  // C3: Handle expired/invalid JWT — clear token and redirect to login
+  if (res.status === 401 && token) {
+    clearAuth();
+    window.location.href = '/?session=expired';
+    throw new Error('Session expired. Please log in again.');
+  }
+
   if (!res.ok) {
     const err = await res.json().catch(() => ({ message: res.statusText }));
     throw new Error(err.message || 'Request failed');
@@ -73,11 +85,8 @@ export async function login(email: string, password: string) {
   return data;
 }
 
-export async function register(name: string, email: string, password: string) {
-  const data = await apiFetch<AuthResponse>('/auth/register', {
-    method: 'POST',
-    body: JSON.stringify({ name, email, password }),
-  });
+export async function refreshToken() {
+  const data = await apiFetch<{ accessToken: string }>('/auth/refresh', { method: 'POST' });
   setToken(data.accessToken);
   return data;
 }
@@ -104,9 +113,9 @@ export async function submitContact(form: {
 
 // ── Content Pages ──
 
-export async function getContentPages() {
-  const pages = await apiFetch<ContentPageResponse[]>('/content');
-  return pages.map(mapContentPage);
+export async function getContentPages(page = 1, limit = 20) {
+  const res = await apiFetch<PaginatedResponse<ContentPageResponse>>(`/content?page=${page}&limit=${limit}`);
+  return { ...res, data: res.data.map(mapContentPage) };
 }
 
 export async function createContentPage(data: { name: string; content?: string; status?: string }) {
@@ -131,9 +140,9 @@ export async function deleteContentPage(id: string) {
 
 // ── Media Files ──
 
-export async function getMediaFiles() {
-  const files = await apiFetch<MediaFileResponse[]>('/media');
-  return files.map(mapMediaFile);
+export async function getMediaFiles(page = 1, limit = 20) {
+  const res = await apiFetch<PaginatedResponse<MediaFileResponse>>(`/media?page=${page}&limit=${limit}`);
+  return { ...res, data: res.data.map(mapMediaFile) };
 }
 
 export async function uploadMediaFile(file: File) {
@@ -182,9 +191,9 @@ export async function getPublishedTestimonials() {
   return items.map(mapTestimonial);
 }
 
-export async function getTestimonials() {
-  const items = await apiFetch<TestimonialResponse[]>('/testimonials');
-  return items.map(mapTestimonial);
+export async function getTestimonials(page = 1, limit = 20) {
+  const res = await apiFetch<PaginatedResponse<TestimonialResponse>>(`/testimonials?page=${page}&limit=${limit}`);
+  return { ...res, data: res.data.map(mapTestimonial) };
 }
 
 export async function createTestimonial(data: { author: string; company: string; content: string; published?: boolean }) {
@@ -269,7 +278,6 @@ function formatFileSize(bytes: number): string {
 }
 
 function getFileType(mimeType: string): string {
-  if (mimeType.includes('svg')) return 'SVG';
   if (mimeType.startsWith('image/')) return 'Image';
   if (mimeType.startsWith('video/')) return 'Video';
   if (mimeType.startsWith('audio/')) return 'Audio';

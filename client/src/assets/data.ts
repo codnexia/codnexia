@@ -65,7 +65,7 @@ export const DEFAULT_PROFILE: AdminProfile = { name: "", email: "", role: "Admin
 
 export const SECURITY_SETTINGS = [
   { label: "JWT Expiry", value: "24 hours", desc: "Token refresh handled automatically" },
-  { label: "Cookie Type", value: "HTTP-only, Secure", desc: "Prevents XSS attacks" },
+  { label: "Token Storage", value: "Session Storage", desc: "JWT stored in browser session" },
   { label: "Session", value: "Active", desc: "Since Feb 17, 2026 at 09:14 AM" },
   { label: "2FA", value: "Disabled", desc: "Recommended for production" },
 ];

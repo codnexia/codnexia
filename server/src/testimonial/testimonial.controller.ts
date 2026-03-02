@@ -8,11 +8,13 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { TestimonialService } from './testimonial.service';
 import { CreateTestimonialDto } from './dto/create-testimonial.dto';
 import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('testimonials')
@@ -25,11 +27,11 @@ export class TestimonialController {
     return this.testimonialService.findPublished();
   }
 
-  // Admin only - list all testimonials
+  // Admin only - list paginated testimonials
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.testimonialService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.testimonialService.findAll(pagination.page, pagination.limit);
   }
 
   // Admin only - create a new testimonial

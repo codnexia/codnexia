@@ -1,7 +1,8 @@
 // Contact endpoints - public POST for form, protected GET for admin
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { CreateContactDto } from './dto/create-contact.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('contact')
@@ -14,10 +15,10 @@ export class ContactController {
     return this.contactService.create(dto);
   }
 
-  // Admin only - view all contact submissions
+  // Admin only - view paginated contact submissions
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.contactService.findAll();
+  findAll(@Query() pagination: PaginationDto) {
+    return this.contactService.findAll(pagination.page, pagination.limit);
   }
 }

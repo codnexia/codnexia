@@ -2,6 +2,7 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { eq, desc, sql } from 'drizzle-orm';
+
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import { DRIZZLE } from '../database/database.module';
@@ -35,12 +36,21 @@ export class MediaService {
     return media;
   }
 
-  // Get all media files (newest first)
-  async findAll() {
-    return this.db
-      .select()
-      .from(schema.mediaFiles)
-      .orderBy(desc(schema.mediaFiles.createdAt));
+  // Get paginated media files (newest first)
+  async findAll(page = 1, limit = 20) {
+    const offset = (page - 1) * limit;
+    const [data, [{ total }]] = await Promise.all([
+      this.db
+        .select()
+        .from(schema.mediaFiles)
+        .orderBy(desc(schema.mediaFiles.createdAt))
+        .limit(limit)
+        .offset(offset),
+      this.db
+        .select({ total: sql<number>`count(*)` })
+        .from(schema.mediaFiles),
+    ]);
+    return { data, total: Number(total), page, limit };
   }
 
   // Delete a media file from DB and disk

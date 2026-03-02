@@ -24,8 +24,8 @@ export function AdminContent() {
 
   const fetchPages = async () => {
     try {
-      const data = await getContentPages();
-      setPages(data);
+      const res = await getContentPages();
+      setPages(res.data);
     } catch {
       toast("Failed to load content pages", "error");
     } finally {

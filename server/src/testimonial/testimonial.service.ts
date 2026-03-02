@@ -26,12 +26,21 @@ export class TestimonialService {
       .orderBy(desc(schema.testimonials.createdAt));
   }
 
-  // Get all testimonials (admin)
-  async findAll() {
-    return this.db
-      .select()
-      .from(schema.testimonials)
-      .orderBy(desc(schema.testimonials.updatedAt));
+  // Get paginated testimonials (admin)
+  async findAll(page = 1, limit = 20) {
+    const offset = (page - 1) * limit;
+    const [data, [{ total }]] = await Promise.all([
+      this.db
+        .select()
+        .from(schema.testimonials)
+        .orderBy(desc(schema.testimonials.updatedAt))
+        .limit(limit)
+        .offset(offset),
+      this.db
+        .select({ total: sql<number>`count(*)` })
+        .from(schema.testimonials),
+    ]);
+    return { data, total: Number(total), page, limit };
   }
 
   // Create a new testimonial

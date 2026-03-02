@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Inject,
   Injectable,
   Logger,
@@ -12,7 +11,6 @@ import * as bcrypt from 'bcryptjs';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 import { ActivityService } from '../activity/activity.service';
-import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
@@ -25,38 +23,6 @@ export class AuthService {
     @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
     private readonly activityService: ActivityService,
   ) {}
-
-  async register(dto: RegisterDto) {
-    const existing = await this.db
-      .select()
-      .from(schema.admins)
-      .where(eq(schema.admins.email, dto.email));
-
-    if (existing.length > 0) {
-      throw new ConflictException('Email already in use');
-    }
-
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
-
-    const [user] = await this.db
-      .insert(schema.admins)
-      .values({
-        name: dto.name,
-        email: dto.email,
-        password: hashedPassword,
-      })
-      .returning({
-        id: schema.admins.id,
-        name: schema.admins.name,
-        email: schema.admins.email,
-        createdAt: schema.admins.createdAt,
-      });
-
-    return {
-      user,
-      accessToken: this.generateToken(user.id, user.email),
-    };
-  }
 
   async login(dto: LoginDto) {
     const [user] = await this.db
@@ -122,6 +88,11 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException('User not found');
     return user;
+  }
+
+  // Issue a fresh JWT for an authenticated user (token refresh)
+  async refresh(userId: string, email: string) {
+    return { accessToken: this.generateToken(userId, email) };
   }
 
   private generateToken(userId: string, email: string) {
