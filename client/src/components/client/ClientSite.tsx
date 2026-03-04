@@ -6,6 +6,7 @@ import { HeroSection } from "./HeroSection";
 import { AboutSection } from "./AboutSection";
 import { ProcessSection } from "./ProcessSection";
 import { ServicesSection } from "./ServicesSection";
+import { PortfolioSection } from "./PortfolioSection";
 import { ContactSection } from "./ContactSection";
 import { ClientFooter } from "./ClientFooter";
 import { TestimonialPopup } from "./TestimonialPopup";
@@ -93,6 +94,7 @@ export function ClientSite() {
       <AboutSection sectionRef={setSectionRef("about")} />
       <ProcessSection sectionRef={setSectionRef("how")} />
       <ServicesSection sectionRef={setSectionRef("services")} />
+      <PortfolioSection sectionRef={setSectionRef("portfolio")} />
       <ContactSection sectionRef={setSectionRef("contact")} />
       <ClientFooter />
       <TestimonialPopup />
