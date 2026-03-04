@@ -58,7 +58,7 @@ export function PortfolioSection({ sectionRef }: PortfolioSectionProps) {
       <SectionReveal>
         <Pill>Portfolio</Pill>
         <h2 className="text-[28px] md:text-[40px] font-bold text-main mt-4 mb-3 -tracking-[1.5px]">
-          Our recent work
+          What we've built
         </h2>
         <p className="text-secondary text-sm md:text-base mb-12 max-w-160 leading-relaxed">
           Real products we've designed, built, and shipped for clients across Africa and beyond.
