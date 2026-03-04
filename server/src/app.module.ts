@@ -14,6 +14,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { ActivityModule } from './activity/activity.module';
 import { MailModule } from './mail/mail.module';
 import { TestimonialModule } from './testimonial/testimonial.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
@@ -70,6 +71,7 @@ import { HealthModule } from './health/health.module';
     AnalyticsModule,
     ActivityModule,
     TestimonialModule,
+    PortfolioModule,
     HealthModule,
   ],
   controllers: [AppController],
