@@ -219,3 +219,40 @@ export interface TestimonialResponse {
   published: boolean;
   updatedAt: string;
 }
+
+export interface PortfolioProject {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  category: string;
+  color: string;
+  tags: string[];
+  metrics: { v: string; l: string }[];
+  imageUrl: string | null;
+  thumbnailUrl: string | null;
+  liveUrl: string | null;
+  repoUrl: string | null;
+  featured: boolean;
+  published: boolean;
+  sortOrder: number;
+}
+
+export interface PortfolioResponse {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  category: string;
+  color: string;
+  tags: string[];
+  metrics: { v: string; l: string }[];
+  imageUrl: string | null;
+  thumbnailUrl: string | null;
+  liveUrl: string | null;
+  repoUrl: string | null;
+  featured: boolean;
+  published: boolean;
+  sortOrder: number;
+  updatedAt: string;
+}

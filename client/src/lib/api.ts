@@ -10,6 +10,7 @@ import type {
   DashboardResponse,
   VisitorResponse,
   TestimonialResponse,
+  PortfolioResponse,
   PaginatedResponse,
 } from '../types';
 
@@ -216,6 +217,60 @@ export async function deleteTestimonial(id: string) {
   return apiFetch<{ success: boolean }>(`/testimonials/${id}`, { method: 'DELETE' });
 }
 
+// ── Portfolios ──
+
+export async function getPublishedPortfolios() {
+  return apiFetch<PortfolioResponse[]>('/portfolios/public');
+}
+
+export async function getPortfolios(page = 1, limit = 20) {
+  const res = await apiFetch<PaginatedResponse<PortfolioResponse>>(`/portfolios?page=${page}&limit=${limit}`);
+  return { ...res, data: res.data.map(mapPortfolio) };
+}
+
+export async function createPortfolio(data: {
+  title: string; subtitle: string; description: string; category: string;
+  color?: string; tags?: string[]; metrics?: { v: string; l: string }[];
+  liveUrl?: string; repoUrl?: string; featured?: boolean; published?: boolean; sortOrder?: number;
+}) {
+  const item = await apiFetch<PortfolioResponse>('/portfolios', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return mapPortfolio(item);
+}
+
+export async function updatePortfolio(id: string, data: {
+  title?: string; subtitle?: string; description?: string; category?: string;
+  color?: string; tags?: string[]; metrics?: { v: string; l: string }[];
+  liveUrl?: string; repoUrl?: string; featured?: boolean; published?: boolean; sortOrder?: number;
+}) {
+  const item = await apiFetch<PortfolioResponse>(`/portfolios/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+  return mapPortfolio(item);
+}
+
+export async function deletePortfolio(id: string) {
+  return apiFetch<{ success: boolean }>(`/portfolios/${id}`, { method: 'DELETE' });
+}
+
+export async function uploadPortfolioImage(id: string, file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  const item = await apiFetch<PortfolioResponse>(`/portfolios/${id}/image`, {
+    method: 'POST',
+    body: formData,
+  });
+  return mapPortfolio(item);
+}
+
+export async function removePortfolioImage(id: string) {
+  const item = await apiFetch<PortfolioResponse>(`/portfolios/${id}/image`, { method: 'DELETE' });
+  return mapPortfolio(item);
+}
+
 // ── Response Mappers ──
 // Transform backend responses to match the frontend type shapes
 
@@ -254,6 +309,27 @@ function mapTestimonial(item: TestimonialResponse) {
     company: item.company,
     content: item.content,
     published: item.published,
+    updated: timeAgo(item.updatedAt),
+  };
+}
+
+function mapPortfolio(item: PortfolioResponse) {
+  return {
+    id: item.id,
+    title: item.title,
+    subtitle: item.subtitle,
+    description: item.description,
+    category: item.category,
+    color: item.color,
+    tags: item.tags,
+    metrics: item.metrics,
+    imageUrl: item.imageUrl,
+    thumbnailUrl: item.thumbnailUrl,
+    liveUrl: item.liveUrl,
+    repoUrl: item.repoUrl,
+    featured: item.featured,
+    published: item.published,
+    sortOrder: item.sortOrder,
     updated: timeAgo(item.updatedAt),
   };
 }
