@@ -56,8 +56,7 @@ export function PortfolioSection({ sectionRef }: PortfolioSectionProps) {
     >
       {/* Header */}
       <SectionReveal>
-        <Pill>Portfolio</Pill>
-        <h2 className="text-[28px] md:text-[40px] font-bold text-main mt-4 mb-3 -tracking-[1.5px]">
+        <h2 className="text-[28px] md:text-[40px] font-bold text-main mb-3 -tracking-[1.5px]">
           What we've built
         </h2>
         <p className="text-secondary text-sm md:text-base mb-12 max-w-160 leading-relaxed">

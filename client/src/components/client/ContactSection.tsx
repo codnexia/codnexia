@@ -3,7 +3,6 @@ import clsx from "clsx";
 import type { ContactForm } from "../../types";
 import { submitContact } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";
-import { Pill } from "../ui/Pill";
 import { Btn } from "../ui/Btn";
 import { Input } from "../ui/Input";
 import { Card } from "../ui/Card";
@@ -70,8 +69,7 @@ export function ContactSection({ sectionRef }: ContactSectionProps) {
       className="px-4 py-14 md:px-10 md:py-22.5 max-w-250 mx-auto"
     >
       <SectionReveal>
-        <Pill>Contact Us</Pill>
-        <h2 className="text-[28px] md:text-[40px] font-bold text-main mt-4 mb-12 -tracking-[1.5px]">
+        <h2 className="text-[28px] md:text-[40px] font-bold text-main mb-12 -tracking-[1.5px]">
           Let's build something <span className="text-accent">great</span>
         </h2>
       </SectionReveal>
