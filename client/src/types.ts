@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export type ToastType = "success" | "error" | "info" | "warning";
 export type ToastFn = (msg: string, type?: ToastType) => void;
-export type ViewState = "client" | "login" | "admin";
+export type ViewState = "client" | "login" | "signup" | "admin";
 
 export interface Toast {
   id: number;
@@ -84,6 +84,12 @@ export interface AdminLoginProps {
 export interface AdminPanelProps {
   onLogout: () => void;
   onBack: () => void;
+}
+
+export interface AdminSignupProps {
+  onSuccess: () => void;
+  onBack: () => void;
+  inviteToken: string;
 }
 
 export interface AdminSettingsProps {
@@ -255,4 +261,12 @@ export interface PortfolioResponse {
   published: boolean;
   sortOrder: number;
   updatedAt: string;
+}
+
+export interface InviteTokenResponse {
+  id: string;
+  token: string;
+  used: boolean;
+  expiresAt: string;
+  createdAt: string;
 }

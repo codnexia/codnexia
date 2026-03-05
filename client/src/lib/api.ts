@@ -11,6 +11,7 @@ import type {
   VisitorResponse,
   TestimonialResponse,
   PortfolioResponse,
+  InviteTokenResponse,
   PaginatedResponse,
 } from '../types';
 
@@ -101,6 +102,21 @@ export async function updateProfile(data: { name?: string; email?: string }) {
     method: 'PATCH',
     body: JSON.stringify(data),
   });
+}
+
+export async function register(data: { name: string; email: string; password: string; inviteToken: string }) {
+  return apiFetch<{ message: string }>('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function generateInvite() {
+  return apiFetch<{ token: string; expiresAt: string }>('/auth/invite', { method: 'POST' });
+}
+
+export async function getInvites(page = 1, limit = 20) {
+  return apiFetch<PaginatedResponse<InviteTokenResponse>>(`/auth/invites?page=${page}&limit=${limit}`);
 }
 
 // ── Contact ──

@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
-import type { AdminSettingsProps, AdminProfile } from "../../types";
-import { getProfile, updateProfile } from "../../lib/api";
+import type { AdminSettingsProps, AdminProfile, InviteTokenResponse } from "../../types";
+import { getProfile, updateProfile, generateInvite, getInvites } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";
 import { Btn } from "../ui/Btn";
-import { Input } from "../ui/Input";
 import { Card } from "../ui/Card";
+import { Input } from "../ui/Input";
 import { AdminLoadingState } from "../ui/AdminLoadingState";
 import { SECURITY_SETTINGS } from "../../assets/data";
 
@@ -15,6 +15,9 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const savedTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const [invites, setInvites] = useState<InviteTokenResponse[]>([]);
+  const [inviteLoading, setInviteLoading] = useState(false);
+  const [copiedToken, setCopiedToken] = useState<string | null>(null);
 
   useEffect(() => {
     return () => { clearTimeout(savedTimerRef.current); };
@@ -34,6 +37,41 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
     };
     fetchProfile();
   }, []);
+
+  // Fetch invite tokens on mount
+  useEffect(() => {
+    getInvites(1, 10)
+      .then(res => setInvites(res.data))
+      .catch(() => {});
+  }, []);
+
+  const handleGenerateInvite = async () => {
+    setInviteLoading(true);
+    try {
+      await generateInvite();
+      toast("Invite token generated!", "success");
+      const res = await getInvites(1, 10);
+      setInvites(res.data);
+    } catch (err) {
+      toast((err as Error).message || "Failed to generate invite", "error");
+    } finally {
+      setInviteLoading(false);
+    }
+  };
+
+  const copyInviteUrl = (token: string) => {
+    const url = `${window.location.origin}/admin-dashboard?invite=${token}`;
+    navigator.clipboard.writeText(url);
+    setCopiedToken(token);
+    toast("Invite URL copied!", "success");
+    setTimeout(() => setCopiedToken(null), 2000);
+  };
+
+  const getTokenStatus = (t: InviteTokenResponse): { label: string; color: string } => {
+    if (t.used) return { label: "Used", color: "text-muted" };
+    if (new Date(t.expiresAt) < new Date()) return { label: "Expired", color: "text-warning" };
+    return { label: "Active", color: "text-accent" };
+  };
 
   // Save profile changes to the backend
   const save = async () => {
@@ -120,6 +158,54 @@ export function AdminSettings({ onLogout }: AdminSettingsProps) {
             </span>
           </div>
         ))}
+      </Card>
+
+      {/* Invite admins */}
+      <Card className="p-5! md:p-8! mb-4">
+        <h3 className="text-base font-bold text-main mb-2">Invite Admins</h3>
+        <p className="text-[13px] text-secondary mb-5">
+          Generate one-time invite links for new administrators. Links expire after 7 days.
+        </p>
+
+        <Btn onClick={handleGenerateInvite} disabled={inviteLoading} className="py-2.75! px-7! mb-5!">
+          {inviteLoading ? "Generating..." : "Generate Invite Link"}
+        </Btn>
+
+        {invites.length > 0 && (
+          <div className="space-y-2.5">
+            {invites.map(t => {
+              const status = getTokenStatus(t);
+              return (
+                <div
+                  key={t.id}
+                  className="flex items-center justify-between gap-3 py-2.5 px-3.5 rounded-lg bg-surface border border-border"
+                >
+                  <div className="min-w-0 flex-1">
+                    <code className="text-[11px] text-muted font-mono block truncate">
+                      {t.token.slice(0, 16)}...
+                    </code>
+                    <div className="text-[11px] text-muted mt-0.5">
+                      Expires {new Date(t.expiresAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <span className={clsx("text-[12px] font-semibold", status.color)}>
+                      {status.label}
+                    </span>
+                    {status.label === "Active" && (
+                      <button
+                        onClick={() => copyInviteUrl(t.token)}
+                        className="text-[11px] text-accent bg-none border-none cursor-pointer font-sans font-semibold"
+                      >
+                        {copiedToken === t.token ? "Copied!" : "Copy URL"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </Card>
 
       {/* Danger zone */}

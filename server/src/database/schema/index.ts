@@ -7,3 +7,4 @@ export { activityLogs } from './activity-logs';
 export { pageViews } from './page-views';
 export { testimonials } from './testimonials';
 export { portfolios } from './portfolios';
+export { inviteTokens } from './invite-tokens';
