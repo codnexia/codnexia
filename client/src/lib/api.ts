@@ -64,7 +64,7 @@ async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> 
   // C3: Handle expired/invalid JWT — clear token and redirect to login
   if (res.status === 401 && token) {
     clearAuth();
-    window.location.href = '/?session=expired';
+    window.location.href = '/admin-dashboard?session=expired';
     throw new Error('Session expired. Please log in again.');
   }
 
