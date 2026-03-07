@@ -15,8 +15,7 @@ export function ServicesSection({ sectionRef }: ServicesSectionProps) {
       className="px-4 py-14 md:px-10 md:py-22.5 max-w-250 mx-auto"
     >
       <SectionReveal>
-        <Pill>Services</Pill>
-        <h2 className="text-[28px] md:text-[40px] font-bold text-main mt-4 mb-12 -tracking-[1.5px]">
+        <h2 className="text-[28px] md:text-[40px] font-bold text-main mb-12 -tracking-[1.5px]">
           What we build
         </h2>
       </SectionReveal>

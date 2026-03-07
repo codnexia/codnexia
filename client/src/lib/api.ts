@@ -10,6 +10,8 @@ import type {
   DashboardResponse,
   VisitorResponse,
   TestimonialResponse,
+  PortfolioResponse,
+  InviteTokenResponse,
   PaginatedResponse,
 } from '../types';
 
@@ -62,7 +64,7 @@ async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> 
   // C3: Handle expired/invalid JWT — clear token and redirect to login
   if (res.status === 401 && token) {
     clearAuth();
-    window.location.href = '/?session=expired';
+    window.location.href = '/admin-dashboard?session=expired';
     throw new Error('Session expired. Please log in again.');
   }
 
@@ -100,6 +102,21 @@ export async function updateProfile(data: { name?: string; email?: string }) {
     method: 'PATCH',
     body: JSON.stringify(data),
   });
+}
+
+export async function register(data: { name: string; email: string; password: string; inviteToken: string }) {
+  return apiFetch<{ message: string }>('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function generateInvite() {
+  return apiFetch<{ token: string; expiresAt: string }>('/auth/invite', { method: 'POST' });
+}
+
+export async function getInvites(page = 1, limit = 20) {
+  return apiFetch<PaginatedResponse<InviteTokenResponse>>(`/auth/invites?page=${page}&limit=${limit}`);
 }
 
 // ── Contact ──
@@ -216,6 +233,60 @@ export async function deleteTestimonial(id: string) {
   return apiFetch<{ success: boolean }>(`/testimonials/${id}`, { method: 'DELETE' });
 }
 
+// ── Portfolios ──
+
+export async function getPublishedPortfolios() {
+  return apiFetch<PortfolioResponse[]>('/portfolios/public');
+}
+
+export async function getPortfolios(page = 1, limit = 20) {
+  const res = await apiFetch<PaginatedResponse<PortfolioResponse>>(`/portfolios?page=${page}&limit=${limit}`);
+  return { ...res, data: res.data.map(mapPortfolio) };
+}
+
+export async function createPortfolio(data: {
+  title: string; subtitle: string; description: string; category: string;
+  color?: string; tags?: string[]; metrics?: { v: string; l: string }[];
+  liveUrl?: string; repoUrl?: string; featured?: boolean; published?: boolean; sortOrder?: number;
+}) {
+  const item = await apiFetch<PortfolioResponse>('/portfolios', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return mapPortfolio(item);
+}
+
+export async function updatePortfolio(id: string, data: {
+  title?: string; subtitle?: string; description?: string; category?: string;
+  color?: string; tags?: string[]; metrics?: { v: string; l: string }[];
+  liveUrl?: string; repoUrl?: string; featured?: boolean; published?: boolean; sortOrder?: number;
+}) {
+  const item = await apiFetch<PortfolioResponse>(`/portfolios/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+  return mapPortfolio(item);
+}
+
+export async function deletePortfolio(id: string) {
+  return apiFetch<{ success: boolean }>(`/portfolios/${id}`, { method: 'DELETE' });
+}
+
+export async function uploadPortfolioImage(id: string, file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  const item = await apiFetch<PortfolioResponse>(`/portfolios/${id}/image`, {
+    method: 'POST',
+    body: formData,
+  });
+  return mapPortfolio(item);
+}
+
+export async function removePortfolioImage(id: string) {
+  const item = await apiFetch<PortfolioResponse>(`/portfolios/${id}/image`, { method: 'DELETE' });
+  return mapPortfolio(item);
+}
+
 // ── Response Mappers ──
 // Transform backend responses to match the frontend type shapes
 
@@ -254,6 +325,27 @@ function mapTestimonial(item: TestimonialResponse) {
     company: item.company,
     content: item.content,
     published: item.published,
+    updated: timeAgo(item.updatedAt),
+  };
+}
+
+function mapPortfolio(item: PortfolioResponse) {
+  return {
+    id: item.id,
+    title: item.title,
+    subtitle: item.subtitle,
+    description: item.description,
+    category: item.category,
+    color: item.color,
+    tags: item.tags,
+    metrics: item.metrics,
+    imageUrl: item.imageUrl,
+    thumbnailUrl: item.thumbnailUrl,
+    liveUrl: item.liveUrl,
+    repoUrl: item.repoUrl,
+    featured: item.featured,
+    published: item.published,
+    sortOrder: item.sortOrder,
     updated: timeAgo(item.updatedAt),
   };
 }

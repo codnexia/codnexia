@@ -10,13 +10,22 @@ const AdminLogin = lazy(() =>
 const AdminPanel = lazy(() =>
   import("./components/admin/AdminPanel").then(m => ({ default: m.AdminPanel }))
 );
+const AdminSignup = lazy(() =>
+  import("./components/admin/AdminSignup").then(m => ({ default: m.AdminSignup }))
+);
 
 const KNOWN_PATHS = ["/", "/admin-dashboard"];
+
+function getInviteToken(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("invite");
+}
 
 function getInitialView(): ViewState {
   const path = window.location.pathname;
 
   if (path === "/admin-dashboard") {
+    if (getInviteToken()) return "signup";
     return isAuthenticated() ? "admin" : "login";
   }
 
@@ -76,7 +85,8 @@ export default function App() {
       if (KNOWN_PATHS.includes(path)) {
         setIs404(false);
         if (path === "/admin-dashboard") {
-          setView(isAuthenticated() ? "admin" : "login");
+          if (getInviteToken()) setView("signup");
+          else setView(isAuthenticated() ? "admin" : "login");
         } else {
           setView("client");
         }
@@ -91,6 +101,7 @@ export default function App() {
   const goToClient = () => { navigate("/"); setView("client"); };
   const goToAdminLogin = () => { clearAuth(); navigate("/admin-dashboard"); setView("login"); };
   const goToAdmin = () => { setView("admin"); };
+  const goToLoginFromSignup = () => { navigate("/admin-dashboard"); setView("login"); };
 
   if (is404) {
     return (
@@ -107,6 +118,13 @@ export default function App() {
           {view === "client" && <ClientSite />}
           <Suspense fallback={<LoadingFallback />}>
             {view === "login" && <AdminLogin onLogin={goToAdmin} onBack={goToClient} />}
+            {view === "signup" && (
+              <AdminSignup
+                onSuccess={goToLoginFromSignup}
+                onBack={goToLoginFromSignup}
+                inviteToken={getInviteToken() || ""}
+              />
+            )}
             {view === "admin" && <AdminPanel onLogout={goToAdminLogin} onBack={goToClient} />}
           </Suspense>
         </div>

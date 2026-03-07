@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export type ToastType = "success" | "error" | "info" | "warning";
 export type ToastFn = (msg: string, type?: ToastType) => void;
-export type ViewState = "client" | "login" | "admin";
+export type ViewState = "client" | "login" | "signup" | "admin";
 
 export interface Toast {
   id: number;
@@ -84,6 +84,12 @@ export interface AdminLoginProps {
 export interface AdminPanelProps {
   onLogout: () => void;
   onBack: () => void;
+}
+
+export interface AdminSignupProps {
+  onSuccess: () => void;
+  onBack: () => void;
+  inviteToken: string;
 }
 
 export interface AdminSettingsProps {
@@ -218,4 +224,49 @@ export interface TestimonialResponse {
   content: string;
   published: boolean;
   updatedAt: string;
+}
+
+export interface PortfolioProject {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  category: string;
+  color: string;
+  tags: string[];
+  metrics: { v: string; l: string }[];
+  imageUrl: string | null;
+  thumbnailUrl: string | null;
+  liveUrl: string | null;
+  repoUrl: string | null;
+  featured: boolean;
+  published: boolean;
+  sortOrder: number;
+}
+
+export interface PortfolioResponse {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  category: string;
+  color: string;
+  tags: string[];
+  metrics: { v: string; l: string }[];
+  imageUrl: string | null;
+  thumbnailUrl: string | null;
+  liveUrl: string | null;
+  repoUrl: string | null;
+  featured: boolean;
+  published: boolean;
+  sortOrder: number;
+  updatedAt: string;
+}
+
+export interface InviteTokenResponse {
+  id: string;
+  token: string;
+  used: boolean;
+  expiresAt: string;
+  createdAt: string;
 }
