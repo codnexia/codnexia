@@ -122,25 +122,30 @@ export class AuthService {
     return { token: invite.token, expiresAt: invite.expiresAt };
   }
 
-  // Register a new admin using a valid invite token
+  // Register a new admin (optionally with invite token)
   async register(dto: RegisterDto) {
-    // Validate the invite token
-    const [invite] = await this.db
-      .select()
-      .from(schema.inviteTokens)
-      .where(
-        and(
-          eq(schema.inviteTokens.token, dto.inviteToken),
-          eq(schema.inviteTokens.used, false),
-        ),
-      );
+    // If invite token provided, validate it
+    let invite: typeof schema.inviteTokens.$inferSelect | null = null;
+    if (dto.inviteToken) {
+      const [found] = await this.db
+        .select()
+        .from(schema.inviteTokens)
+        .where(
+          and(
+            eq(schema.inviteTokens.token, dto.inviteToken),
+            eq(schema.inviteTokens.used, false),
+          ),
+        );
 
-    if (!invite) {
-      throw new BadRequestException('Invalid or already used invite token');
-    }
+      if (!found) {
+        throw new BadRequestException('Invalid or already used invite token');
+      }
 
-    if (new Date() > invite.expiresAt) {
-      throw new BadRequestException('Invite token has expired');
+      if (new Date() > found.expiresAt) {
+        throw new BadRequestException('Invite token has expired');
+      }
+
+      invite = found;
     }
 
     // Check email uniqueness
@@ -165,16 +170,18 @@ export class AuthService {
         createdAt: schema.admins.createdAt,
       });
 
-    // Mark token as used
-    await this.db
-      .update(schema.inviteTokens)
-      .set({ used: true, usedBy: admin.id })
-      .where(eq(schema.inviteTokens.id, invite.id));
+    // Mark token as used if one was provided
+    if (invite) {
+      await this.db
+        .update(schema.inviteTokens)
+        .set({ used: true, usedBy: admin.id })
+        .where(eq(schema.inviteTokens.id, invite.id));
+    }
 
     try {
       await this.activityService.log(
         'register',
-        `${admin.name} registered via invite`,
+        `${admin.name} registered${invite ? ' via invite' : ''}`,
         '#2DD4A8',
       );
     } catch (e) {
