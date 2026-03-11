@@ -1,5 +1,6 @@
 // Analytics endpoints - public tracking + admin dashboard data
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AnalyticsService } from './analytics.service';
 import { TrackViewDto } from './dto/track-view.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -8,7 +9,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
 
-  // Public - client site calls this on every page navigation
+  // Public - client site calls this on every page navigation (30 per minute)
+  @Throttle({ strict: { ttl: 60000, limit: 30 } })
   @Post('track')
   track(@Body() dto: TrackViewDto) {
     return this.analyticsService.trackView(dto);

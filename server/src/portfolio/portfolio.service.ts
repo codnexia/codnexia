@@ -198,21 +198,30 @@ export class PortfolioService {
     return Number(count);
   }
 
-  // Serialize a DB row: parse JSON fields for API response
+  // Serialize a DB row: parse JSON fields for API response (validated)
   private serializeRow(row: typeof schema.portfolios.$inferSelect) {
     let tags: unknown[] = [];
     let metrics: unknown[] = [];
-    try { tags = row.tags ? JSON.parse(row.tags) : []; }
-    catch { this.logger.warn(`Invalid JSON in tags for portfolio ${row.id}`); }
-    try { metrics = row.metrics ? JSON.parse(row.metrics) : []; }
-    catch { this.logger.warn(`Invalid JSON in metrics for portfolio ${row.id}`); }
+    try {
+      const parsed = row.tags ? JSON.parse(row.tags) : [];
+      tags = Array.isArray(parsed) ? parsed.filter(t => typeof t === 'string') : [];
+    } catch { this.logger.warn(`Invalid JSON in tags for portfolio ${row.id}`); }
+    try {
+      const parsed = row.metrics ? JSON.parse(row.metrics) : [];
+      metrics = Array.isArray(parsed) ? parsed.filter(m => m && typeof m === 'object') : [];
+    } catch { this.logger.warn(`Invalid JSON in metrics for portfolio ${row.id}`); }
     return { ...row, tags, metrics };
   }
 
-  // Delete a file from disk by its URL path
+  // Delete a file from disk by its URL path (path-traversal safe)
   private async deleteFileFromDisk(urlPath: string | null) {
     if (!urlPath) return;
-    const filePath = path.join(process.cwd(), urlPath.replace(/^\//, ''));
+    const uploadsDir = path.resolve(process.cwd(), 'uploads');
+    const filePath = path.resolve(uploadsDir, path.basename(urlPath));
+    if (!filePath.startsWith(uploadsDir)) {
+      this.logger.error(`Blocked directory traversal attempt: ${urlPath}`);
+      return;
+    }
     try { await fs.unlink(filePath); }
     catch (e) { this.logger.warn(`Failed to delete file from disk: ${(e as Error).message}`); }
   }

@@ -38,8 +38,8 @@ import { HealthModule } from './health/health.module';
           console.warn('WARNING: JWT_SECRET is weak. Use a strong random secret (32+ chars) in production.');
         }
 
-        // C2: Validate SMTP & CLIENT_URL in production
-        const prodRequired = ['SMTP_USER', 'SMTP_PASS', 'CLIENT_URL'];
+        // C2: Validate SMTP, CLIENT_URL & MAIL_TO in production
+        const prodRequired = ['SMTP_USER', 'SMTP_PASS', 'CLIENT_URL', 'MAIL_TO'];
         for (const key of prodRequired) {
           if (!config[key]) {
             if (isProd) throw new Error(`Missing required env var for production: ${key}`);
@@ -60,8 +60,11 @@ import { HealthModule } from './health/health.module';
         autoLogging: { ignore: (req) => (req as { url?: string }).url === '/api/health' },
       },
     }),
-    // Global rate limiting — 60 requests per minute per IP
-    ThrottlerModule.forRoot([{ ttl: 60000, limit: 60 }]),
+    // Rate limiting — global default + named throttlers for sensitive endpoints
+    ThrottlerModule.forRoot([
+      { name: 'default', ttl: 60000, limit: 60 },
+      { name: 'strict', ttl: 60000, limit: 5 },
+    ]),
     DatabaseModule,
     MailModule,
     AuthModule,

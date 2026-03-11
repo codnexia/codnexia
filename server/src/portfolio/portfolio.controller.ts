@@ -17,11 +17,13 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { readFileSync, unlinkSync } from 'fs';
 import { PortfolioService } from './portfolio.service';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { validateFileMagic } from '../common/utils/file-validation';
 
 const ALLOWED_EXT = /\.(jpg|jpeg|png|gif|webp)$/i;
 const ALLOWED_MIME: Set<string> = new Set([
@@ -92,6 +94,17 @@ export class PortfolioController {
   )
   uploadImage(@Param('id', ParseUUIDPipe) id: string, @UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('No file provided');
+
+    // Validate file magic bytes to prevent MIME spoofing
+    const buffer = readFileSync(file.path);
+    const { valid, detectedMime } = validateFileMagic(buffer, ALLOWED_MIME);
+    if (!valid) {
+      try { unlinkSync(file.path); } catch {}
+      throw new BadRequestException(
+        `File content does not match an allowed image type (detected: ${detectedMime ?? 'unknown'})`,
+      );
+    }
+
     return this.portfolioService.uploadImage(id, file);
   }
 

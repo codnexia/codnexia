@@ -37,7 +37,7 @@ export class MailService {
     budget?: string;
     message: string;
   }) {
-    const to = this.config.get('MAIL_TO', 'shadrackbii324@gmail.com');
+    const to = this.config.getOrThrow<string>('MAIL_TO');
 
     // Escape all user input before interpolating into HTML
     const name = escapeHtml(contact.name);

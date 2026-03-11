@@ -62,10 +62,15 @@ export class MediaService {
 
     if (!file) throw new NotFoundException('File not found');
 
-    // Try to remove the actual file from disk (async, non-blocking)
-    const filePath = path.join(process.cwd(), 'uploads', file.name);
-    try { await fs.unlink(filePath); }
-    catch (e) { this.logger.warn(`Failed to delete file from disk: ${(e as Error).message}`); }
+    // Remove the actual file from disk (path-traversal safe)
+    const uploadsDir = path.resolve(process.cwd(), 'uploads');
+    const filePath = path.resolve(uploadsDir, path.basename(file.name));
+    if (!filePath.startsWith(uploadsDir)) {
+      this.logger.error(`Blocked directory traversal attempt: ${file.name}`);
+    } else {
+      try { await fs.unlink(filePath); }
+      catch (e) { this.logger.warn(`Failed to delete file from disk: ${(e as Error).message}`); }
+    }
 
     return { success: true };
   }

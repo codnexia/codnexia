@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { and, desc, eq, sql } from 'drizzle-orm';
+import { and, desc, eq, ne, sql } from 'drizzle-orm';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import { DRIZZLE } from '../database/database.module';
@@ -17,6 +17,11 @@ import { ActivityService } from '../activity/activity.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+
+// In-memory login attempt tracking (per-email)
+const loginAttempts = new Map<string, { count: number; lockedUntil: number }>();
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
 @Injectable()
 export class AuthService {
@@ -29,20 +34,34 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDto) {
+    // Account lockout check
+    const attempt = loginAttempts.get(dto.email);
+    if (attempt && attempt.lockedUntil > Date.now()) {
+      const minutesLeft = Math.ceil((attempt.lockedUntil - Date.now()) / 60000);
+      throw new UnauthorizedException(
+        `Account temporarily locked. Try again in ${minutesLeft} minute(s).`,
+      );
+    }
+
     const [user] = await this.db
       .select()
       .from(schema.admins)
       .where(eq(schema.admins.email, dto.email));
 
     if (!user) {
+      this.recordFailedAttempt(dto.email);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const passwordValid = await bcrypt.compare(dto.password, user.password);
 
     if (!passwordValid) {
+      this.recordFailedAttempt(dto.email);
       throw new UnauthorizedException('Invalid credentials');
     }
+
+    // Clear failed attempts on successful login
+    loginAttempts.delete(dto.email);
 
     // Log login activity for the admin dashboard (non-blocking)
     try { await this.activityService.log('login', `${user.name} logged in`, '#2DD4A8'); }
@@ -57,6 +76,17 @@ export class AuthService {
       },
       accessToken: this.generateToken(user.id, user.email),
     };
+  }
+
+  private recordFailedAttempt(email: string) {
+    const attempt = loginAttempts.get(email) ?? { count: 0, lockedUntil: 0 };
+    attempt.count += 1;
+    if (attempt.count >= MAX_ATTEMPTS) {
+      attempt.lockedUntil = Date.now() + LOCKOUT_DURATION_MS;
+      attempt.count = 0;
+      this.logger.warn(`Account locked for ${email} after ${MAX_ATTEMPTS} failed attempts`);
+    }
+    loginAttempts.set(email, attempt);
   }
 
   async getProfile(userId: string) {
@@ -79,6 +109,17 @@ export class AuthService {
 
   // Update admin profile (name and/or email)
   async updateProfile(userId: string, dto: UpdateProfileDto) {
+    // Check email uniqueness if changing email
+    if (dto.email) {
+      const [existing] = await this.db
+        .select({ id: schema.admins.id })
+        .from(schema.admins)
+        .where(and(eq(schema.admins.email, dto.email), ne(schema.admins.id, userId)));
+      if (existing) {
+        throw new ConflictException('An account with this email already exists');
+      }
+    }
+
     const [user] = await this.db
       .update(schema.admins)
       .set({ ...dto, updatedAt: new Date() })

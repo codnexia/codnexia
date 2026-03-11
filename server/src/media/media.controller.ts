@@ -15,9 +15,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { readFileSync, unlinkSync } from 'fs';
 import { MediaService } from './media.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { validateFileMagic } from '../common/utils/file-validation';
 
 // Allowed file extensions and MIME types for upload (SVG removed — XSS risk)
 const ALLOWED_EXT = /\.(jpg|jpeg|png|gif|webp|pdf|mp4|webm)$/i;
@@ -63,6 +65,17 @@ export class MediaController {
   )
   upload(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('No file provided');
+
+    // Validate file magic bytes to prevent MIME spoofing
+    const buffer = readFileSync(file.path);
+    const { valid, detectedMime } = validateFileMagic(buffer, ALLOWED_MIME);
+    if (!valid) {
+      try { unlinkSync(file.path); } catch {}
+      throw new BadRequestException(
+        `File content does not match an allowed type (detected: ${detectedMime ?? 'unknown'})`,
+      );
+    }
+
     return this.mediaService.create(file);
   }
 
