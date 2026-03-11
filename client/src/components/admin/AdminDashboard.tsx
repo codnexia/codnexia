@@ -28,7 +28,7 @@ export function AdminDashboard() {
         setWeeklyTraffic(dashboard.weeklyTraffic);
         setActivity(activityData);
       } catch (err) {
-        console.warn("Failed to load dashboard data:", (err as Error).message);
+        void err;
       } finally {
         setLoading(false);
       }

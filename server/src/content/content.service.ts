@@ -110,6 +110,15 @@ export class ContentService {
     return { success: true };
   }
 
+  // Get published content pages (public, no auth required)
+  async findPublished() {
+    return this.db
+      .select()
+      .from(schema.contentPages)
+      .where(eq(schema.contentPages.status, 'Published'))
+      .orderBy(desc(schema.contentPages.updatedAt));
+  }
+
   // Count total pages using SQL count
   async count() {
     const [{ count }] = await this.db

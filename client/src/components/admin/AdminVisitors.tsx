@@ -20,7 +20,7 @@ export function AdminVisitors() {
         setStats(data.stats);
         setVisitors(data.visitors);
       } catch (err) {
-        console.warn("Failed to load visitor data:", (err as Error).message);
+        void err;
       } finally {
         setLoading(false);
       }

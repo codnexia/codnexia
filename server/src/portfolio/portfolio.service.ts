@@ -200,11 +200,13 @@ export class PortfolioService {
 
   // Serialize a DB row: parse JSON fields for API response
   private serializeRow(row: typeof schema.portfolios.$inferSelect) {
-    return {
-      ...row,
-      tags: row.tags ? JSON.parse(row.tags) : [],
-      metrics: row.metrics ? JSON.parse(row.metrics) : [],
-    };
+    let tags: unknown[] = [];
+    let metrics: unknown[] = [];
+    try { tags = row.tags ? JSON.parse(row.tags) : []; }
+    catch { this.logger.warn(`Invalid JSON in tags for portfolio ${row.id}`); }
+    try { metrics = row.metrics ? JSON.parse(row.metrics) : []; }
+    catch { this.logger.warn(`Invalid JSON in metrics for portfolio ${row.id}`); }
+    return { ...row, tags, metrics };
   }
 
   // Delete a file from disk by its URL path

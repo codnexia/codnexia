@@ -130,6 +130,11 @@ export async function submitContact(form: {
 
 // ── Content Pages ──
 
+export async function getPublishedContent() {
+  const items = await apiFetch<ContentPageResponse[]>('/content/public');
+  return items.map(mapContentPage);
+}
+
 export async function getContentPages(page = 1, limit = 20) {
   const res = await apiFetch<PaginatedResponse<ContentPageResponse>>(`/content?page=${page}&limit=${limit}`);
   return { ...res, data: res.data.map(mapContentPage) };
