@@ -1,4 +1,4 @@
-import type { ContentPage, MediaFile, AdminProfile, PortfolioProject } from "../types";
+import type { ContentPage, MediaFile, AdminProfile, PortfolioProject, Testimonial } from "../types";
 
 // ── Admin Dashboard ──
 
@@ -258,5 +258,70 @@ export const FALLBACK_PORTFOLIOS: PortfolioProject[] = [
     featured: false,
     published: true,
     sortOrder: 5,
+  },
+];
+
+// ── Client: Testimonials ──
+
+export const FALLBACK_TESTIMONIALS: Testimonial[] = [
+  {
+    id: "ft-1",
+    author: "Kevin Otieno",
+    company: "FinTrack",
+    role: "CEO",
+    rating: 5,
+    content: "We needed a financial dashboard that could handle real-time analytics for 12K+ users. Codnexia nailed it \u2014 React frontend, PostgreSQL backend, Stripe integration, all shipped two weeks early with 99.9% uptime from day one.",
+    published: true,
+    updated: "",
+  },
+  {
+    id: "ft-2",
+    author: "Dr. Priya Nair",
+    company: "MediConnect",
+    role: "Chief Medical Officer",
+    rating: 5,
+    content: "Building a telemedicine platform with video consultations and prescription management is no small feat. Codnexia\u2019s team handled WebRTC, React Native, and MongoDB like pros. Over 200 doctors and 5K+ consultations later, it just works.",
+    published: true,
+    updated: "",
+  },
+  {
+    id: "ft-3",
+    author: "Ibrahim Danjuma",
+    company: "LogiFlow",
+    role: "Director of Logistics",
+    rating: 4,
+    content: "Our supply chain was a mess before LogiFlow. Codnexia built us a tracking and route planning system with real-time Google Maps integration. We\u2019ve cut costs by 30% and processed over 10K shipments without a hitch.",
+    published: true,
+    updated: "",
+  },
+  {
+    id: "ft-4",
+    author: "Grace Wanjiku",
+    company: "EduPulse",
+    role: "Founder & CEO",
+    rating: 5,
+    content: "Codnexia turned our idea into a gamified learning platform serving 50K+ students with 1.2K courses. The adaptive quizzes and real-time WebSocket features keep our learners engaged. Next.js and GraphQL was the right call.",
+    published: true,
+    updated: "",
+  },
+  {
+    id: "ft-5",
+    author: "Thomas Kamau",
+    company: "AgriSense",
+    role: "Head of Product",
+    rating: 5,
+    content: "IoT meets agriculture \u2014 that was our pitch, and Codnexia made it real. Soil sensors, drone mapping, ML-powered yield predictions, all on a beautiful React dashboard. 500+ farms connected with over a million data points flowing daily.",
+    published: true,
+    updated: "",
+  },
+  {
+    id: "ft-6",
+    author: "Fatima Hassan",
+    company: "PaySwift",
+    role: "VP of Engineering",
+    rating: 5,
+    content: "Handling M-Pesa, card payments, and crypto in one gateway with sub-200ms latency? Codnexia delivered. $5M+ processed, 100K+ transactions, and zero security breaches. Their Go and Kubernetes expertise is world-class.",
+    published: true,
+    updated: "",
   },
 ];

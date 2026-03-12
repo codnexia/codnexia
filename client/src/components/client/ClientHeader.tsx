@@ -64,7 +64,7 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
 
         {/* Desktop nav */}
         <nav className="hidden md:flex gap-1.5" aria-label="Main navigation">
-          {SECTIONS.map(s => (
+          {SECTIONS.filter(s => s.nav).map(s => (
             <button
               key={s.id}
               onClick={() => scrollTo(s.id)}

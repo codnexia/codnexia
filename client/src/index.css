@@ -56,6 +56,12 @@
   background: linear-gradient(135deg, var(--color-accent), var(--color-primary-light));
 }
 
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
 /* Global styles */
 @layer base {
   html, body, #root {

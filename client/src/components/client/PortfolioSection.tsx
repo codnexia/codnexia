@@ -38,9 +38,7 @@ export function PortfolioSection({ sectionRef }: PortfolioSectionProps) {
       .then((data) => {
         if (data && data.length > 0) setProjects(data as PortfolioProject[]);
       })
-      .catch(() => {
-        // API unavailable — keep fallback data
-      });
+      .catch(() => {});
   }, []);
 
   const featured = projects.find((p) => p.featured) || projects[0];
@@ -66,7 +64,7 @@ export function PortfolioSection({ sectionRef }: PortfolioSectionProps) {
 
       {/* Featured Project */}
       <SectionReveal>
-        <Card hoverable className="mb-3.5 p-0! overflow-hidden">
+        <Card hoverable className="mb-8 p-0! overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Image / Placeholder */}
             <div className="p-4 md:p-6 lg:p-8">
@@ -134,7 +132,7 @@ export function PortfolioSection({ sectionRef }: PortfolioSectionProps) {
 
       {/* Project Grid (3 columns) */}
       {gridItems.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {gridItems.map((p, i) => (
             <SectionReveal key={p.id} style={{ transitionDelay: `${i * 0.06}s` }}>
               <Card hoverable className="h-full">
@@ -211,7 +209,7 @@ export function PortfolioSection({ sectionRef }: PortfolioSectionProps) {
 
       {/* Wide Cards Row (2 columns) */}
       {wideItems.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {wideItems.map((p, i) => (
             <SectionReveal key={p.id} style={{ transitionDelay: `${i * 0.06}s` }}>
               <Card hoverable className="h-full">
@@ -286,7 +284,7 @@ export function PortfolioSection({ sectionRef }: PortfolioSectionProps) {
 
       {/* CTA */}
       <SectionReveal>
-        <div className="text-center mt-8">
+        <div className="text-center mt-16">
           <p className="text-secondary text-sm mb-4">
             Interested in working together? Let's build something great.
           </p>

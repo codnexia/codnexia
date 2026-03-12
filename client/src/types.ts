@@ -212,7 +212,9 @@ export interface Testimonial {
   id: string;
   author: string;
   company: string;
+  role: string;
   content: string;
+  rating: number;
   published: boolean;
   updated: string;
 }
@@ -221,7 +223,9 @@ export interface TestimonialResponse {
   id: string;
   author: string;
   company: string;
+  role: string;
   content: string;
+  rating: number;
   published: boolean;
   updatedAt: string;
 }

@@ -23,7 +23,7 @@ export function MobileSidebar({
       className="fixed inset-x-0 top-16 bottom-0 flex flex-col z-999 items-center pt-12 gap-2 md:hidden bg-bg"
       aria-label="Mobile navigation"
     >
-      {SECTIONS.map((s) => (
+      {SECTIONS.filter((s) => s.nav).map((s) => (
         <button
           key={s.id}
           onClick={() => handleNav(s.id)}

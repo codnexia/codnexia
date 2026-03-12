@@ -1,5 +1,5 @@
 // DTO for creating a new testimonial
-import { IsString, IsOptional, IsBoolean, MinLength, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsInt, Min, Max, MinLength, MaxLength } from 'class-validator';
 
 export class CreateTestimonialDto {
   @IsString()
@@ -12,10 +12,21 @@ export class CreateTestimonialDto {
   @MaxLength(255)
   company: string;
 
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  role?: string;
+
   @IsString()
   @MinLength(10)
   @MaxLength(2000)
   content: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(5)
+  rating?: number;
 
   @IsOptional()
   @IsBoolean()

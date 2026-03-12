@@ -218,7 +218,7 @@ export async function getTestimonials(page = 1, limit = 20) {
   return { ...res, data: res.data.map(mapTestimonial) };
 }
 
-export async function createTestimonial(data: { author: string; company: string; content: string; published?: boolean }) {
+export async function createTestimonial(data: { author: string; company: string; role?: string; content: string; rating?: number; published?: boolean }) {
   const item = await apiFetch<TestimonialResponse>('/testimonials', {
     method: 'POST',
     body: JSON.stringify(data),
@@ -226,7 +226,7 @@ export async function createTestimonial(data: { author: string; company: string;
   return mapTestimonial(item);
 }
 
-export async function updateTestimonial(id: string, data: { author?: string; company?: string; content?: string; published?: boolean }) {
+export async function updateTestimonial(id: string, data: { author?: string; company?: string; role?: string; content?: string; rating?: number; published?: boolean }) {
   const item = await apiFetch<TestimonialResponse>(`/testimonials/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(data),
@@ -328,7 +328,9 @@ function mapTestimonial(item: TestimonialResponse) {
     id: item.id,
     author: item.author,
     company: item.company,
+    role: item.role ?? '',
     content: item.content,
+    rating: item.rating ?? 5,
     published: item.published,
     updated: timeAgo(item.updatedAt),
   };

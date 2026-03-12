@@ -7,9 +7,9 @@ import { AboutSection } from "./AboutSection";
 import { ProcessSection } from "./ProcessSection";
 import { ServicesSection } from "./ServicesSection";
 import { PortfolioSection } from "./PortfolioSection";
+import { TestimonialsSection } from "./TestimonialsSection";
 import { ContactSection } from "./ContactSection";
 import { ClientFooter } from "./ClientFooter";
-import { TestimonialPopup } from "./TestimonialPopup";
 
 // Generate or retrieve a unique session ID for analytics tracking
 function getSessionId(): string {
@@ -95,9 +95,9 @@ export function ClientSite() {
       <ProcessSection sectionRef={setSectionRef("how")} />
       <ServicesSection sectionRef={setSectionRef("services")} />
       <PortfolioSection sectionRef={setSectionRef("portfolio")} />
+      <TestimonialsSection sectionRef={setSectionRef("testimonials")} />
       <ContactSection sectionRef={setSectionRef("contact")} />
       <ClientFooter />
-      <TestimonialPopup />
     </div>
   );
 }

@@ -50,7 +50,9 @@ export class TestimonialService {
       .values({
         author: dto.author,
         company: dto.company,
+        role: dto.role ?? '',
         content: dto.content,
+        rating: dto.rating ?? 5,
         published: dto.published ?? false,
       })
       .returning();

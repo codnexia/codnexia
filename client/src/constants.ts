@@ -1,12 +1,12 @@
 import type { ToastType } from "./types";
 
 export const SECTIONS = [
-  { id: "hero", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "how", label: "Process" },
-  { id: "services", label: "Services" },
-  { id: "portfolio", label: "Portfolio" },
-  { id: "contact", label: "Contact" },
+  { id: "hero", label: "Home", nav: false },
+  { id: "about", label: "About", nav: true },
+  { id: "how", label: "Process", nav: true },
+  { id: "services", label: "Services", nav: true },
+  { id: "portfolio", label: "Portfolio", nav: true },
+  { id: "contact", label: "Contact", nav: true },
 ];
 
 export const TOAST_BORDER: Record<ToastType, string> = {
