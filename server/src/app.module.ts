@@ -16,6 +16,7 @@ import { MailModule } from './mail/mail.module';
 import { TestimonialModule } from './testimonial/testimonial.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { HealthModule } from './health/health.module';
+import { CareerModule } from './career/career.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { HealthModule } from './health/health.module';
     TestimonialModule,
     PortfolioModule,
     HealthModule,
+    CareerModule,
   ],
   controllers: [AppController],
   providers: [

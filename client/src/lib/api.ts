@@ -12,6 +12,7 @@ import type {
   TestimonialResponse,
   PortfolioResponse,
   InviteTokenResponse,
+  CareerApplicationResponse,
   PaginatedResponse,
 } from '../types';
 
@@ -290,6 +291,45 @@ export async function uploadPortfolioImage(id: string, file: File) {
 export async function removePortfolioImage(id: string) {
   const item = await apiFetch<PortfolioResponse>(`/portfolios/${id}/image`, { method: 'DELETE' });
   return mapPortfolio(item);
+}
+
+// ── Career Applications ──
+
+export async function submitCareerApplication(data: {
+  firstName: string; lastName: string; email: string; phone: string;
+  countryCode?: string; country: string; city?: string; nationality?: string;
+  linkedin?: string; github?: string; portfolio?: string; website?: string;
+  currentRole: string; company?: string; experience: string; noticePeriod?: string;
+  employmentType: string; workMode: string; salaryExpectation?: string; salaryCurrency?: string;
+  primaryStack: string[]; otherSkills?: string; proficiency?: string;
+  languages?: string; certifications?: string;
+  degree: string; field?: string; university?: string; gradYear?: string;
+  position: string; coverLetter: string; heardFrom?: string; availability?: string;
+  callDate?: string; callTime?: string; timezone?: string; callTopics?: string[];
+}) {
+  return apiFetch<CareerApplicationResponse>('/careers', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function getCareerApplications(page = 1, limit = 20) {
+  return apiFetch<PaginatedResponse<CareerApplicationResponse>>(`/careers?page=${page}&limit=${limit}`);
+}
+
+export async function getCareerApplication(id: string) {
+  return apiFetch<CareerApplicationResponse>(`/careers/${id}`);
+}
+
+export async function updateCareerStatus(id: string, status: string) {
+  return apiFetch<CareerApplicationResponse>(`/careers/${id}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  });
+}
+
+export async function deleteCareerApplication(id: string) {
+  return apiFetch<{ success: boolean }>(`/careers/${id}`, { method: 'DELETE' });
 }
 
 // ── Response Mappers ──

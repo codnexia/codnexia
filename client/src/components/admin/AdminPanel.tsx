@@ -9,6 +9,7 @@ import { AdminVisitors } from "./AdminVisitors";
 import { AdminSettings } from "./AdminSettings";
 import { AdminTestimonials } from "./AdminTestimonials";
 import { AdminPortfolio } from "./AdminPortfolio";
+import { AdminCareers } from "./AdminCareers";
 
 export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
   const toast = useToast();
@@ -50,6 +51,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
     { id: "media", icon: "\u25C8", label: "Media" },
     { id: "testimonials", icon: "\u275D", label: "Testimonials" },
     { id: "portfolio", icon: "\u25C6", label: "Portfolio" },
+    { id: "careers", icon: "\u2605", label: "Careers" },
     { id: "visitors", icon: "\u25C9", label: "Visitors" },
     { id: "settings", icon: "\u2699", label: "Settings" },
   ];
@@ -167,6 +169,7 @@ export function AdminPanel({ onLogout, onBack }: AdminPanelProps) {
           {tab === "media" && <AdminMedia />}
           {tab === "testimonials" && <AdminTestimonials />}
           {tab === "portfolio" && <AdminPortfolio />}
+          {tab === "careers" && <AdminCareers />}
           {tab === "visitors" && <AdminVisitors />}
           {tab === "settings" && <AdminSettings onLogout={onLogout} />}
         </div>

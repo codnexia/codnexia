@@ -13,8 +13,11 @@ const AdminPanel = lazy(() =>
 const AdminSignup = lazy(() =>
   import("./components/admin/AdminSignup").then(m => ({ default: m.AdminSignup }))
 );
+const CareersPage = lazy(() =>
+  import("./components/client/CareersPage").then(m => ({ default: m.CareersPage }))
+);
 
-const KNOWN_PATHS = ["/", "/admin-dashboard"];
+const KNOWN_PATHS = ["/", "/admin-dashboard", "/careers"];
 
 function getInviteToken(): string | null {
   const params = new URLSearchParams(window.location.search);
@@ -27,6 +30,10 @@ function getInitialView(): ViewState {
   if (path === "/admin-dashboard") {
     if (getInviteToken()) return "signup";
     return isAuthenticated() ? "admin" : "login";
+  }
+
+  if (path === "/careers") {
+    return "careers";
   }
 
   if (path === "/" || KNOWN_PATHS.includes(path)) {
@@ -87,6 +94,8 @@ export default function App() {
         if (path === "/admin-dashboard") {
           if (getInviteToken()) setView("signup");
           else setView(isAuthenticated() ? "admin" : "login");
+        } else if (path === "/careers") {
+          setView("careers");
         } else {
           setView("client");
         }
@@ -102,6 +111,7 @@ export default function App() {
   const goToAdminLogin = () => { clearAuth(); navigate("/admin-dashboard"); setView("login"); };
   const goToAdmin = () => { setView("admin"); };
   const goToLoginFromSignup = () => { navigate("/admin-dashboard"); setView("login"); };
+  const goToCareers = () => { navigate("/careers"); setView("careers"); };
 
   if (is404) {
     return (
@@ -115,7 +125,7 @@ export default function App() {
     <ToastProvider>
       <div className="font-sans w-full h-screen flex flex-col bg-bg text-main overflow-hidden">
         <div className="flex-1 overflow-hidden">
-          {view === "client" && <ClientSite />}
+          {view === "client" && <ClientSite onOpenCareers={goToCareers} />}
           <Suspense fallback={<LoadingFallback />}>
             {view === "login" && <AdminLogin onLogin={goToAdmin} onBack={goToClient} />}
             {view === "signup" && (
@@ -126,6 +136,7 @@ export default function App() {
               />
             )}
             {view === "admin" && <AdminPanel onLogout={goToAdminLogin} onBack={goToClient} />}
+            {view === "careers" && <CareersPage onBack={goToClient} />}
           </Suspense>
         </div>
       </div>

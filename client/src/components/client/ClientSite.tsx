@@ -8,6 +8,7 @@ import { ProcessSection } from "./ProcessSection";
 import { ServicesSection } from "./ServicesSection";
 import { PortfolioSection } from "./PortfolioSection";
 import { TestimonialsSection } from "./TestimonialsSection";
+import { CareersSection } from "./CareersSection";
 import { ContactSection } from "./ContactSection";
 import { ClientFooter } from "./ClientFooter";
 
@@ -29,7 +30,11 @@ function getDeviceType(): string {
   return "Desktop";
 }
 
-export function ClientSite() {
+interface ClientSiteProps {
+  onOpenCareers?: () => void;
+}
+
+export function ClientSite({ onOpenCareers }: ClientSiteProps = {}) {
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState("hero");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -96,6 +101,7 @@ export function ClientSite() {
       <ServicesSection sectionRef={setSectionRef("services")} />
       <PortfolioSection sectionRef={setSectionRef("portfolio")} />
       <TestimonialsSection sectionRef={setSectionRef("testimonials")} />
+      <CareersSection sectionRef={setSectionRef("careers")} onOpenCareers={onOpenCareers || (() => {})} />
       <ContactSection sectionRef={setSectionRef("contact")} />
       <ClientFooter />
     </div>

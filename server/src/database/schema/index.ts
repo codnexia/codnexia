@@ -7,3 +7,4 @@ export { pageViews } from './page-views';
 export { testimonials } from './testimonials';
 export { portfolios } from './portfolios';
 export { inviteTokens } from './invite-tokens';
+export { careerApplications } from './career-applications';

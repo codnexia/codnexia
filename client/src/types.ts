@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export type ToastType = "success" | "error" | "info" | "warning";
 export type ToastFn = (msg: string, type?: ToastType) => void;
-export type ViewState = "client" | "login" | "signup" | "admin";
+export type ViewState = "client" | "login" | "signup" | "admin" | "careers";
 
 export interface Toast {
   id: number;
@@ -266,6 +266,51 @@ export interface PortfolioResponse {
   sortOrder: number;
   updatedAt: string;
 }
+
+export interface CareerApplication {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  countryCode: string;
+  country: string;
+  city: string;
+  nationality: string;
+  linkedin: string;
+  github: string;
+  portfolio: string;
+  website: string;
+  currentRole: string;
+  company: string;
+  experience: string;
+  noticePeriod: string;
+  employmentType: string;
+  workMode: string;
+  salaryExpectation: string;
+  salaryCurrency: string;
+  primaryStack: string[];
+  otherSkills: string;
+  proficiency: string;
+  languages: string;
+  certifications: string;
+  degree: string;
+  field: string;
+  university: string;
+  gradYear: string;
+  position: string;
+  coverLetter: string;
+  heardFrom: string;
+  availability: string;
+  callDate: string;
+  callTime: string;
+  timezone: string;
+  callTopics: string[];
+  status: string;
+  createdAt: string;
+}
+
+export interface CareerApplicationResponse extends CareerApplication {}
 
 export interface InviteTokenResponse {
   id: string;

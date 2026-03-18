@@ -8,6 +8,13 @@
       "when": 1772707500706,
       "tag": "0000_spooky_plazm",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773864141060,
+      "tag": "0001_normal_eternals",
+      "breakpoints": true
     }
   ]
 }
