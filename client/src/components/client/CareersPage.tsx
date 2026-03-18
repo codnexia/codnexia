@@ -1,7 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
+import type { JobPosition } from "../../types";
 import { useToast } from "../../context/ToastContext";
-import { submitCareerApplication } from "../../lib/api";
+import { submitCareerApplication, getOpenJobPositions } from "../../lib/api";
 import { Btn } from "../ui/Btn";
 import { Card } from "../ui/Card";
 import { Pill } from "../ui/Pill";
@@ -194,6 +195,9 @@ function ChipGroup({ options, selected, onToggle, multi = true, error, color = "
 
 export function CareersPage({ onBack }: CareersPageProps) {
   const toast = useToast();
+  const [showForm, setShowForm] = useState(false);
+  const [openPositions, setOpenPositions] = useState<JobPosition[]>([]);
+  const [positionsLoading, setPositionsLoading] = useState(true);
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -201,6 +205,13 @@ export function CareersPage({ onBack }: CareersPageProps) {
   const [data, setData] = useState(INITIAL_DATA);
   const contentRef = useRef<HTMLDivElement>(null);
   const availableDates = generateDates();
+
+  useEffect(() => {
+    getOpenJobPositions()
+      .then(setOpenPositions)
+      .catch(() => {})
+      .finally(() => setPositionsLoading(false));
+  }, []);
 
   const up = (field: string, value: string | string[]) => setData(d => ({ ...d, [field]: value }));
   const toggleArr = (field: "primaryStack" | "callTopics", val: string) =>
@@ -272,6 +283,109 @@ export function CareersPage({ onBack }: CareersPageProps) {
       setSubmitting(false);
     }
   };
+
+  // ── Intro Screen ──
+  if (!showForm && !submitted) {
+    return (
+      <div className="h-full overflow-auto bg-bg">
+        {/* Header */}
+        <header className="sticky top-0 z-50 px-4 md:px-10 h-16 flex items-center justify-between border-b border-border bg-surface">
+          <div className="flex items-center gap-3.5">
+            <button
+              onClick={onBack}
+              className="py-1.75 px-4 rounded-lg bg-card border border-border text-secondary text-[13px] font-semibold cursor-pointer font-sans flex items-center gap-1.5 transition-all duration-200 hover:border-accent/27 hover:text-accent"
+            >
+              &larr; Back
+            </button>
+            <div className="w-px h-6 bg-border" />
+            <div className="flex items-center gap-2">
+              <img src="/codnexiafav.png" alt="Codnexia" className="w-7 h-7" />
+              <span className="text-[15px] font-bold text-main">
+                Codnexia <span className="text-accent font-normal">Careers</span>
+              </span>
+            </div>
+          </div>
+        </header>
+
+        {/* Hero section */}
+        <div className="max-w-250 mx-auto px-4 md:px-10 py-16 md:py-22">
+          <div className="bg-card border border-border rounded-2xl p-8 md:p-14 relative overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
+            <HexGrid />
+            <div className="absolute -top-15 -right-15 w-60 h-60 bg-[radial-gradient(circle,rgba(74,159,245,0.13),transparent)] blur-[60px]" />
+            <div className="absolute -bottom-10 -left-10 w-45 h-45 bg-[radial-gradient(circle,rgba(45,212,168,0.22),transparent)] blur-[50px]" />
+
+            <div className="relative z-1">
+              <Pill color="#4A9FF5">We're Hiring</Pill>
+              <h1 className="text-3xl md:text-[42px] font-extrabold text-main mt-4 mb-3 -tracking-[1.5px] leading-tight">
+                Join the <span className="text-accent">Codnexia</span> Team
+              </h1>
+              <p className="text-[15px] text-secondary leading-[1.7] mb-8">
+                We're looking for talented engineers, designers, and problem-solvers who share our passion
+                for building world-class software from Africa. Work on cutting-edge projects with a globally distributed team.
+              </p>
+              <Btn onClick={() => setShowForm(true)}>Apply Now &rarr;</Btn>
+            </div>
+
+            <div className="relative z-1">
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { icon: "\uD83C\uDF0D", title: "Remote-First", desc: "Work from anywhere in the world" },
+                  { icon: "\uD83D\uDCC8", title: "Career Growth", desc: "Clear paths for advancement" },
+                  { icon: "\uD83E\uDD1D", title: "Great Culture", desc: "Collaborative, diverse team" },
+                  { icon: "\uD83D\uDCA1", title: "Innovation", desc: "Work on cutting-edge projects" },
+                ].map((p, i) => (
+                  <div key={i} className="p-3.5 md:p-4 rounded-xl bg-surface border border-border">
+                    <div className="text-[22px] mb-2">{p.icon}</div>
+                    <div className="text-[13px] font-bold text-main mb-0.5">{p.title}</div>
+                    <div className="text-[11px] text-muted leading-[1.5]">{p.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Open positions */}
+          <div className="mt-12">
+            <h2 className="text-xl font-bold text-main mb-6 -tracking-[0.5px]">Open Positions</h2>
+            {positionsLoading ? (
+              <div className="text-sm text-secondary py-8 text-center">Loading positions...</div>
+            ) : openPositions.length === 0 ? (
+              <Card className="p-8! text-center">
+                <div className="text-3xl mb-3 opacity-50">{"\uD83D\uDCCB"}</div>
+                <h3 className="text-base font-bold text-main mb-1">No Open Positions Right Now</h3>
+                <p className="text-sm text-secondary">
+                  We don't have any open roles at the moment, but we're always looking for great talent.
+                  Submit a general application and we'll reach out when a matching role opens up.
+                </p>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {openPositions.map(job => (
+                  <Card key={job.id} hoverable className="p-5!">
+                    <div className="text-sm font-bold text-main mb-1">{job.title}</div>
+                    {job.department && (
+                      <div className="text-[11px] text-muted mb-2">{job.department}</div>
+                    )}
+                    <div className="flex gap-2 flex-wrap">
+                      <Pill color="#2DD4A8">{job.type}</Pill>
+                      <Pill color="#4A9FF5">{job.mode}</Pill>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* CTA */}
+          <div className="mt-12 text-center p-10 rounded-2xl bg-surface border border-border">
+            <h3 className="text-lg font-bold text-main mb-2">Ready to make an impact?</h3>
+            <p className="text-sm text-secondary mb-6">Submit your application and schedule an AI screening call.</p>
+            <Btn onClick={() => setShowForm(true)}>Start Application &rarr;</Btn>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ── Success Screen ──
   if (submitted) {

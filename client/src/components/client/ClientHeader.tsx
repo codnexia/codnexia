@@ -8,9 +8,10 @@ interface ClientHeaderProps {
   headerOpacity: number;
   activeSection: string;
   scrollTo: (id: string) => void;
+  onOpenCareers?: () => void;
 }
 
-export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientHeaderProps) {
+export function ClientHeader({ headerOpacity, activeSection, scrollTo, onOpenCareers }: ClientHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Lock body scroll when mobile menu is open
@@ -78,6 +79,12 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
               {s.label}
             </button>
           ))}
+          <button
+            onClick={onOpenCareers}
+            className="px-4 py-1.5 rounded-lg border-none cursor-pointer text-[13px] font-semibold transition-all duration-250 font-sans bg-transparent text-secondary"
+          >
+            Careers
+          </button>
         </nav>
 
         {/* Desktop CTA */}
@@ -125,6 +132,7 @@ export function ClientHeader({ headerOpacity, activeSection, scrollTo }: ClientH
           activeSection={activeSection}
           scrollTo={scrollTo}
           onClose={() => setMenuOpen(false)}
+          onOpenCareers={onOpenCareers}
         />
       )}
     </>

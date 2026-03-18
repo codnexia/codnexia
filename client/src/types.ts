@@ -312,6 +312,21 @@ export interface CareerApplication {
 
 export interface CareerApplicationResponse extends CareerApplication {}
 
+export interface JobPosition {
+  id: string;
+  title: string;
+  type: string;
+  mode: string;
+  department: string | null;
+  description: string | null;
+  open: boolean;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface JobPositionResponse extends JobPosition {}
+
 export interface InviteTokenResponse {
   id: string;
   token: string;

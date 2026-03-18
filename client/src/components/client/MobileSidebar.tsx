@@ -6,12 +6,14 @@ interface MobileSidebarProps {
   activeSection: string;
   scrollTo: (id: string) => void;
   onClose: () => void;
+  onOpenCareers?: () => void;
 }
 
 export function MobileSidebar({
   activeSection,
   scrollTo,
   onClose,
+  onOpenCareers,
 }: MobileSidebarProps) {
   const handleNav = (id: string) => {
     scrollTo(id);
@@ -37,6 +39,12 @@ export function MobileSidebar({
           {s.label}
         </button>
       ))}
+      <button
+        onClick={() => { onOpenCareers?.(); onClose(); }}
+        className="px-6 py-3 rounded-lg border-none cursor-pointer text-base font-semibold transition-all duration-200 font-sans w-60 text-center bg-transparent text-secondary"
+      >
+        Careers
+      </button>
       <Btn onClick={() => handleNav("contact")} className="mt-4 px-8! py-3!">
         Start a Project
       </Btn>

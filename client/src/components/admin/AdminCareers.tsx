@@ -7,6 +7,7 @@ import { Pill } from "../ui/Pill";
 import { Card } from "../ui/Card";
 import { AdminLoadingState } from "../ui/AdminLoadingState";
 import { InlineConfirm } from "../ui/InlineConfirm";
+import { AdminJobPositions } from "./AdminJobPositions";
 
 const STATUS_COLORS: Record<string, string> = {
   new: "#4A9FF5",
@@ -20,6 +21,38 @@ const STATUS_COLORS: Record<string, string> = {
 const STATUS_OPTIONS = ["new", "reviewed", "shortlisted", "interviewed", "rejected", "hired"];
 
 export function AdminCareers() {
+  const [subTab, setSubTab] = useState<"applications" | "positions">("applications");
+
+  return (
+    <div>
+      {/* Sub-tabs */}
+      <div className="flex gap-2 mb-6">
+        {([
+          { id: "applications" as const, label: "Applications" },
+          { id: "positions" as const, label: "Open Positions" },
+        ]).map(t => (
+          <button
+            key={t.id}
+            onClick={() => setSubTab(t.id)}
+            className={clsx(
+              "py-2 px-5 rounded-lg border-none cursor-pointer text-[13px] font-semibold font-sans transition-all duration-200",
+              subTab === t.id
+                ? "bg-accent-dim text-accent"
+                : "bg-surface text-secondary",
+            )}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {subTab === "applications" && <CareerApplicationsTab />}
+      {subTab === "positions" && <AdminJobPositions />}
+    </div>
+  );
+}
+
+function CareerApplicationsTab() {
   const toast = useToast();
   const [items, setItems] = useState<CareerApplication[]>([]);
   const [loading, setLoading] = useState(true);

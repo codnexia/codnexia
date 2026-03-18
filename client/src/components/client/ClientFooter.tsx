@@ -1,4 +1,8 @@
-export function ClientFooter() {
+interface ClientFooterProps {
+  onOpenCareers?: () => void;
+}
+
+export function ClientFooter({ onOpenCareers }: ClientFooterProps = {}) {
   const footerLinks = [
     { title: "Services", items: ["Web Apps", "Mobile Apps", "SaaS", "API & Integrations"] },
     { title: "Company", items: ["About Us", "Our Process", "Careers", "Blog"] },
@@ -27,7 +31,8 @@ export function ClientFooter() {
             {col.items.map(item => (
               <div
                 key={item}
-                className="text-[13px] text-secondary py-1"
+                className={`text-[13px] text-secondary py-1 ${item === "Careers" ? "cursor-pointer hover:text-accent transition-colors duration-200" : ""}`}
+                onClick={item === "Careers" ? onOpenCareers : undefined}
               >
                 {item}
               </div>

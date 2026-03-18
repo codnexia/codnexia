@@ -13,6 +13,7 @@ import type {
   PortfolioResponse,
   InviteTokenResponse,
   CareerApplicationResponse,
+  JobPositionResponse,
   PaginatedResponse,
 } from '../types';
 
@@ -330,6 +331,40 @@ export async function updateCareerStatus(id: string, status: string) {
 
 export async function deleteCareerApplication(id: string) {
   return apiFetch<{ success: boolean }>(`/careers/${id}`, { method: 'DELETE' });
+}
+
+// ── Job Positions ──
+
+export async function getOpenJobPositions() {
+  return apiFetch<JobPositionResponse[]>('/job-positions/public');
+}
+
+export async function getJobPositions(page = 1, limit = 50) {
+  return apiFetch<PaginatedResponse<JobPositionResponse>>(`/job-positions?page=${page}&limit=${limit}`);
+}
+
+export async function createJobPosition(data: {
+  title: string; type: string; mode: string;
+  department?: string; description?: string; open?: boolean; sortOrder?: number;
+}) {
+  return apiFetch<JobPositionResponse>('/job-positions', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateJobPosition(id: string, data: {
+  title?: string; type?: string; mode?: string;
+  department?: string; description?: string; open?: boolean; sortOrder?: number;
+}) {
+  return apiFetch<JobPositionResponse>(`/job-positions/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteJobPosition(id: string) {
+  return apiFetch<{ success: boolean }>(`/job-positions/${id}`, { method: 'DELETE' });
 }
 
 // ── Response Mappers ──

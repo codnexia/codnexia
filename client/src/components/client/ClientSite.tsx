@@ -8,7 +8,6 @@ import { ProcessSection } from "./ProcessSection";
 import { ServicesSection } from "./ServicesSection";
 import { PortfolioSection } from "./PortfolioSection";
 import { TestimonialsSection } from "./TestimonialsSection";
-import { CareersSection } from "./CareersSection";
 import { ContactSection } from "./ContactSection";
 import { ClientFooter } from "./ClientFooter";
 
@@ -94,16 +93,15 @@ export function ClientSite({ onOpenCareers }: ClientSiteProps = {}) {
 
   return (
     <div ref={containerRef} className="h-full overflow-auto bg-bg relative scroll-smooth">
-      <ClientHeader headerOpacity={headerOpacity} activeSection={activeSection} scrollTo={scrollTo} />
+      <ClientHeader headerOpacity={headerOpacity} activeSection={activeSection} scrollTo={scrollTo} onOpenCareers={onOpenCareers} />
       <HeroSection sectionRef={setSectionRef("hero")} scrollTo={scrollTo} />
       <AboutSection sectionRef={setSectionRef("about")} />
       <ProcessSection sectionRef={setSectionRef("how")} />
       <ServicesSection sectionRef={setSectionRef("services")} />
       <PortfolioSection sectionRef={setSectionRef("portfolio")} />
       <TestimonialsSection sectionRef={setSectionRef("testimonials")} />
-      <CareersSection sectionRef={setSectionRef("careers")} onOpenCareers={onOpenCareers || (() => {})} />
       <ContactSection sectionRef={setSectionRef("contact")} />
-      <ClientFooter />
+      <ClientFooter onOpenCareers={onOpenCareers} />
     </div>
   );
 }
