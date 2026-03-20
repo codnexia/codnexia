@@ -28,15 +28,22 @@ export function ClientFooter({ onOpenCareers }: ClientFooterProps = {}) {
             <h4 className="text-xs font-bold text-main mb-3 uppercase tracking-[0.8px]">
               {col.title}
             </h4>
-            {col.items.map(item => (
-              <div
-                key={item}
-                className={`text-[13px] text-secondary py-1 ${item === "Careers" ? "cursor-pointer hover:text-accent transition-colors duration-200" : ""}`}
-                onClick={item === "Careers" ? onOpenCareers : undefined}
-              >
-                {item}
-              </div>
-            ))}
+            {col.items.map(item =>
+              item === "Careers" ? (
+                <button
+                  key={item}
+                  type="button"
+                  className="text-[13px] text-secondary py-1 cursor-pointer hover:text-accent transition-colors duration-200 bg-transparent border-none p-0 text-left font-inherit block"
+                  onClick={onOpenCareers}
+                >
+                  {item}
+                </button>
+              ) : (
+                <div key={item} className="text-[13px] text-secondary py-1">
+                  {item}
+                </div>
+              )
+            )}
           </div>
         ))}
       </div>

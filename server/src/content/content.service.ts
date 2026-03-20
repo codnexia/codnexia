@@ -7,6 +7,7 @@ import * as schema from '../database/schema';
 import { ActivityService } from '../activity/activity.service';
 import { CreateContentDto } from './dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
+import { stripHtmlTags } from '../common/utils/sanitize';
 
 // Default pages seeded on first load if DB is empty
 const DEFAULT_PAGES = [
@@ -74,9 +75,9 @@ export class ContentService {
     const [page] = await this.db
       .insert(schema.contentPages)
       .values({
-        name: dto.name,
+        name: stripHtmlTags(dto.name),
         status: dto.status ?? 'Draft',
-        content: dto.content ?? '',
+        content: dto.content ? stripHtmlTags(dto.content) : '',
       })
       .returning();
 
@@ -87,9 +88,13 @@ export class ContentService {
 
   // Update an existing content page by ID
   async update(id: string, dto: UpdateContentDto) {
+    const sanitized = { ...dto };
+    if (sanitized.name) sanitized.name = stripHtmlTags(sanitized.name);
+    if (sanitized.content) sanitized.content = stripHtmlTags(sanitized.content);
+
     const [page] = await this.db
       .update(schema.contentPages)
-      .set({ ...dto, updatedAt: new Date() })
+      .set({ ...sanitized, updatedAt: new Date() })
       .where(eq(schema.contentPages.id, id))
       .returning();
 

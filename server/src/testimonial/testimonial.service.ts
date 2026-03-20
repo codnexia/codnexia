@@ -7,6 +7,7 @@ import * as schema from '../database/schema';
 import { ActivityService } from '../activity/activity.service';
 import { CreateTestimonialDto } from './dto/create-testimonial.dto';
 import { UpdateTestimonialDto } from './dto/update-testimonial.dto';
+import { stripHtmlTags } from '../common/utils/sanitize';
 
 @Injectable()
 export class TestimonialService {
@@ -48,10 +49,10 @@ export class TestimonialService {
     const [testimonial] = await this.db
       .insert(schema.testimonials)
       .values({
-        author: dto.author,
-        company: dto.company,
-        role: dto.role ?? '',
-        content: dto.content,
+        author: stripHtmlTags(dto.author),
+        company: stripHtmlTags(dto.company),
+        role: dto.role ? stripHtmlTags(dto.role) : '',
+        content: stripHtmlTags(dto.content),
         rating: dto.rating ?? 5,
         published: dto.published ?? false,
       })
@@ -64,9 +65,15 @@ export class TestimonialService {
 
   // Update an existing testimonial by ID
   async update(id: string, dto: UpdateTestimonialDto) {
+    const sanitized = { ...dto };
+    if (sanitized.author) sanitized.author = stripHtmlTags(sanitized.author);
+    if (sanitized.company) sanitized.company = stripHtmlTags(sanitized.company);
+    if (sanitized.role) sanitized.role = stripHtmlTags(sanitized.role);
+    if (sanitized.content) sanitized.content = stripHtmlTags(sanitized.content);
+
     const [testimonial] = await this.db
       .update(schema.testimonials)
-      .set({ ...dto, updatedAt: new Date() })
+      .set({ ...sanitized, updatedAt: new Date() })
       .where(eq(schema.testimonials.id, id))
       .returning();
 

@@ -8,6 +8,7 @@ import { extname } from 'path';
 import { CareerService } from './career.service';
 import { CreateCareerApplicationDto } from './dto/create-career-application.dto';
 import { UpdateCareerStatusDto } from './dto/update-career-status.dto';
+import { RankingsQueryDto } from './dto/rankings-query.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ResumeParserService } from '../ai/resume-parser.service';
@@ -77,8 +78,8 @@ export class CareerController {
   // Admin only — ranked candidates with composite scores
   @UseGuards(JwtAuthGuard)
   @Get('rankings')
-  getRankings(@Query('position') position?: string) {
-    return this.careerService.getRankings(position);
+  getRankings(@Query() query: RankingsQueryDto) {
+    return this.careerService.getRankings(query.position);
   }
 
   // Admin only - view single application details

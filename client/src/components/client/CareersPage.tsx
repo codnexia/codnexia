@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 import clsx from "clsx";
 import type { JobPosition, ParsedResume } from "../../types";
 import { useToast } from "../../context/ToastContext";
@@ -67,7 +67,7 @@ const INITIAL_DATA = {
   degree: "", field: "", university: "", gradYear: "",
   position: "", coverLetter: "", heardFrom: "", availability: "",
   callDate: "", callTime: "", timezone: "", callTopics: [] as string[],
-  resumeUrl: "", resumeParsed: null as any,
+  resumeUrl: "", resumeParsed: null as ParsedResume | null,
 };
 
 function generateDates() {
@@ -92,21 +92,26 @@ function FieldInput({ label, placeholder, value, onChange, type = "text", error,
   label?: string; placeholder?: string; value: string; onChange: (v: string) => void;
   type?: string; error?: string; autoFocus?: boolean;
 }) {
+  const id = useId();
+  const errorId = `${id}-error`;
   return (
     <div className="mb-4">
-      {label && <label className="text-xs text-secondary block mb-1.5 font-semibold">{label}</label>}
+      {label && <label htmlFor={id} className="text-xs text-secondary block mb-1.5 font-semibold">{label}</label>}
       <input
+        id={id}
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
         autoFocus={autoFocus}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
         className={clsx(
           "w-full px-4 py-2.75 rounded-[10px] bg-surface border text-main text-sm font-sans outline-none transition-colors duration-200 box-border",
           error ? "border-error" : "border-border focus:border-accent/40",
         )}
       />
-      {error && <span className="text-[11px] text-error mt-1 block">{error}</span>}
+      {error && <span id={errorId} className="text-[11px] text-error mt-1 block" role="alert">{error}</span>}
     </div>
   );
 }
@@ -114,20 +119,25 @@ function FieldInput({ label, placeholder, value, onChange, type = "text", error,
 function FieldTextarea({ label, placeholder, value, onChange, error }: {
   label?: string; placeholder?: string; value: string; onChange: (v: string) => void; error?: string;
 }) {
+  const id = useId();
+  const errorId = `${id}-error`;
   return (
     <div className="mb-4">
-      {label && <label className="text-xs text-secondary block mb-1.5 font-semibold">{label}</label>}
+      {label && <label htmlFor={id} className="text-xs text-secondary block mb-1.5 font-semibold">{label}</label>}
       <textarea
+        id={id}
         placeholder={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
         rows={4}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
         className={clsx(
           "w-full px-4 py-3 rounded-[10px] bg-surface border text-main text-sm font-sans outline-none transition-colors duration-200 resize-y min-h-25 box-border",
           error ? "border-error" : "border-border focus:border-accent/40",
         )}
       />
-      {error && <span className="text-[11px] text-error mt-1 block">{error}</span>}
+      {error && <span id={errorId} className="text-[11px] text-error mt-1 block" role="alert">{error}</span>}
     </div>
   );
 }
@@ -136,12 +146,17 @@ function FieldSelect({ label, value, onChange, options, placeholder, error }: {
   label?: string; value: string; onChange: (v: string) => void;
   options: (string | { value: string; label: string })[]; placeholder?: string; error?: string;
 }) {
+  const id = useId();
+  const errorId = `${id}-error`;
   return (
     <div className="mb-4">
-      {label && <label className="text-xs text-secondary block mb-1.5 font-semibold">{label}</label>}
+      {label && <label htmlFor={id} className="text-xs text-secondary block mb-1.5 font-semibold">{label}</label>}
       <select
+        id={id}
         value={value}
         onChange={e => onChange(e.target.value)}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
         className={clsx(
           "w-full px-4 py-2.75 rounded-[10px] bg-surface border text-sm font-sans outline-none appearance-none cursor-pointer box-border",
           value ? "text-main" : "text-muted",
@@ -154,17 +169,17 @@ function FieldSelect({ label, value, onChange, options, placeholder, error }: {
           : <option key={o.value} value={o.value} className="bg-surface">{o.label}</option>
         )}
       </select>
-      {error && <span className="text-[11px] text-error mt-1 block">{error}</span>}
+      {error && <span id={errorId} className="text-[11px] text-error mt-1 block" role="alert">{error}</span>}
     </div>
   );
 }
 
-function ChipGroup({ options, selected, onToggle, multi = true, error, color = "accent" }: {
+function ChipGroup({ options, selected, onToggle, multi = true, error, color = "accent", label }: {
   options: string[]; selected: string | string[]; onToggle: (v: string) => void;
-  multi?: boolean; error?: string; color?: string;
+  multi?: boolean; error?: string; color?: string; label?: string;
 }) {
   return (
-    <div>
+    <div role={multi ? "group" : "radiogroup"} aria-label={label}>
       <div className="flex flex-wrap gap-1.5">
         {options.map(o => {
           const active = multi ? (selected as string[]).includes(o) : selected === o;
@@ -172,6 +187,7 @@ function ChipGroup({ options, selected, onToggle, multi = true, error, color = "
             <button
               key={o}
               type="button"
+              aria-pressed={active}
               onClick={() => onToggle(o)}
               className={clsx(
                 "py-1.75 px-3.75 rounded-lg text-xs font-semibold cursor-pointer font-sans transition-all duration-200 border",
@@ -242,7 +258,7 @@ export function CareersPage({ onBack }: CareersPageProps) {
       setData(d => ({
         ...d,
         resumeUrl: result.resumeUrl,
-        resumeParsed: parsed as any,
+        resumeParsed: parsed as ParsedResume,
         firstName: parsed.firstName || d.firstName,
         lastName: parsed.lastName || d.lastName,
         email: parsed.email || d.email,
@@ -665,11 +681,11 @@ export function CareersPage({ onBack }: CareersPageProps) {
               </div>
               <div className="mb-5">
                 <label className="text-xs text-secondary block mb-2.5 font-semibold">Employment Type *</label>
-                <ChipGroup options={["Full-time", "Part-time", "Contract", "Freelance", "Internship"]} selected={data.employmentType} onToggle={v => up("employmentType", v)} multi={false} error={errors.employmentType} />
+                <ChipGroup options={["Full-time", "Part-time", "Contract", "Freelance", "Internship"]} selected={data.employmentType} onToggle={v => up("employmentType", v)} multi={false} error={errors.employmentType} label="Employment Type" />
               </div>
               <div className="mb-5">
                 <label className="text-xs text-secondary block mb-2.5 font-semibold">Preferred Work Mode *</label>
-                <ChipGroup options={["Remote", "Hybrid", "On-site", "Flexible"]} selected={data.workMode} onToggle={v => up("workMode", v)} multi={false} error={errors.workMode} />
+                <ChipGroup options={["Remote", "Hybrid", "On-site", "Flexible"]} selected={data.workMode} onToggle={v => up("workMode", v)} multi={false} error={errors.workMode} label="Preferred Work Mode" />
               </div>
               <div className="grid grid-cols-[110px_1fr] gap-3.5">
                 <FieldSelect label="Currency" value={data.salaryCurrency} onChange={v => up("salaryCurrency", v)} options={[
@@ -689,7 +705,7 @@ export function CareersPage({ onBack }: CareersPageProps) {
                   Primary Tech Stack * <span className="font-normal text-muted">&mdash; select all that apply</span>
                 </label>
                 <div className="text-xs text-accent mb-2.5 font-semibold">{data.primaryStack.length} selected</div>
-                <ChipGroup options={TECH_STACKS} selected={data.primaryStack} onToggle={v => toggleArr("primaryStack", v)} error={errors.primaryStack} />
+                <ChipGroup options={TECH_STACKS} selected={data.primaryStack} onToggle={v => toggleArr("primaryStack", v)} error={errors.primaryStack} label="Primary Tech Stack" />
               </div>
               <FieldInput label="Other Skills / Tools" placeholder="e.g. Jira, Notion, Terraform, Datadog..." value={data.otherSkills} onChange={v => up("otherSkills", v)} />
               <FieldSelect label="Overall Proficiency Level" value={data.proficiency} onChange={v => up("proficiency", v)} options={[
@@ -731,7 +747,7 @@ export function CareersPage({ onBack }: CareersPageProps) {
               />
               <div className="mb-5">
                 <label className="text-xs text-secondary block mb-2.5 font-semibold">When can you start?</label>
-                <ChipGroup options={["Immediately", "In 2 weeks", "In 1 month", "In 2 months", "In 3+ months"]} selected={data.availability} onToggle={v => up("availability", v)} multi={false} />
+                <ChipGroup options={["Immediately", "In 2 weeks", "In 1 month", "In 2 months", "In 3+ months"]} selected={data.availability} onToggle={v => up("availability", v)} multi={false} label="Availability" />
               </div>
               <FieldSelect label="How did you hear about us?" value={data.heardFrom} onChange={v => up("heardFrom", v)} options={[
                 "LinkedIn", "Twitter/X", "GitHub", "Job Board (Indeed, Glassdoor)", "Referral from employee",

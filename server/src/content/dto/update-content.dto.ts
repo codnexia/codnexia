@@ -1,5 +1,5 @@
 // DTO for updating a content page (all fields optional)
-import { IsString, IsOptional, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsIn, MaxLength } from 'class-validator';
 
 export class UpdateContentDto {
   @IsOptional()
@@ -9,7 +9,7 @@ export class UpdateContentDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(50)
+  @IsIn(['Draft', 'Published'])
   status?: string;
 
   @IsOptional()

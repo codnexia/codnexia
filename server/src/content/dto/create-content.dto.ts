@@ -1,5 +1,5 @@
 // DTO for creating a new content page
-import { IsString, IsOptional, MinLength, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsIn, MinLength, MaxLength } from 'class-validator';
 
 export class CreateContentDto {
   @IsString()
@@ -9,7 +9,7 @@ export class CreateContentDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(50)
+  @IsIn(['Draft', 'Published'])
   status?: string;
 
   @IsOptional()
