@@ -15,6 +15,10 @@ import type {
   CareerApplicationResponse,
   JobPositionResponse,
   PaginatedResponse,
+  ParsedResume,
+  InterviewState,
+  AiInterview,
+  CareerApplication,
 } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || (
@@ -365,6 +369,61 @@ export async function updateJobPosition(id: string, data: {
 
 export async function deleteJobPosition(id: string) {
   return apiFetch<{ success: boolean }>(`/job-positions/${id}`, { method: 'DELETE' });
+}
+
+// ── Resume Upload ──
+
+export async function uploadResume(file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return apiFetch<{ resumeUrl: string; resumeParsed: ParsedResume }>('/careers/resume', {
+    method: 'POST',
+    body: formData,
+  });
+}
+
+// ── AI Screening ──
+
+export async function rescreenApplication(id: string) {
+  return apiFetch<{ score: number; notes: string }>(`/careers/${id}/screen`, { method: 'POST' });
+}
+
+// ── AI Interview ──
+
+export async function getInterview(token: string) {
+  return apiFetch<InterviewState>(`/interviews/${token}`);
+}
+
+export async function submitInterviewAnswer(token: string, questionIndex: number, answer: string) {
+  return apiFetch<{
+    completed: boolean;
+    nextQuestionIndex: number | null;
+    nextQuestion: { category: string; question: string } | null;
+    totalQuestions: number;
+    answeredCount: number;
+  }>(`/interviews/${token}/answer`, {
+    method: 'POST',
+    body: JSON.stringify({ questionIndex, answer }),
+  });
+}
+
+export async function createInterview(applicationId: string) {
+  return apiFetch<AiInterview>(`/interviews/create/${applicationId}`, { method: 'POST' });
+}
+
+export async function getInterviewAdmin(applicationId: string) {
+  return apiFetch<AiInterview>(`/interviews/admin/${applicationId}`);
+}
+
+export async function inviteInterview(applicationId: string) {
+  return apiFetch<{ interview: AiInterview; interviewUrl: string }>(`/careers/${applicationId}/invite-interview`, { method: 'POST' });
+}
+
+// ── Rankings ──
+
+export async function getCandidateRankings(position?: string) {
+  const params = position ? `?position=${encodeURIComponent(position)}` : '';
+  return apiFetch<CareerApplication[]>(`/careers/rankings${params}`);
 }
 
 // ── Response Mappers ──

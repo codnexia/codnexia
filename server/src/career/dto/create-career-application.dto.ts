@@ -180,4 +180,12 @@ export class CreateCareerApplicationDto {
   @IsArray()
   @IsString({ each: true })
   callTopics?: string[];
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  resumeUrl?: string;
+
+  @IsOptional()
+  resumeParsed?: Record<string, unknown>;
 }

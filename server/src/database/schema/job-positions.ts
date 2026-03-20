@@ -8,6 +8,7 @@ export const jobPositions = pgTable('job_positions', {
   mode: varchar('mode', { length: 50 }).notNull(),        // Remote, Hybrid, On-site
   department: varchar('department', { length: 100 }),      // Engineering, Design, etc.
   description: text('description'),
+  requirements: text('requirements'),        // AI screening context
   open: boolean('open').default(true).notNull(),
   sortOrder: integer('sort_order').default(0).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),

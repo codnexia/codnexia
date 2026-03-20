@@ -1,5 +1,5 @@
 // Career/job applications submitted from the public careers page
-import { pgTable, uuid, varchar, text, timestamp, jsonb, index } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, text, timestamp, jsonb, integer, index } from 'drizzle-orm/pg-core';
 
 export const careerApplications = pgTable('career_applications', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -41,6 +41,15 @@ export const careerApplications = pgTable('career_applications', {
   timezone: varchar('timezone', { length: 50 }),
   callTopics: jsonb('call_topics').$type<string[]>().default([]),
   status: varchar('status', { length: 50 }).default('new').notNull(),
+  // AI recruitment fields
+  resumeUrl: varchar('resume_url', { length: 500 }),
+  resumeParsed: jsonb('resume_parsed').$type<Record<string, unknown>>(),
+  screeningScore: integer('screening_score'),
+  screeningNotes: text('screening_notes'),
+  screeningStatus: varchar('screening_status', { length: 50 }).default('pending'),
+  interviewScore: integer('interview_score'),
+  compositeScore: integer('composite_score'),
+  finalRecommendation: varchar('final_recommendation', { length: 50 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 }, (table) => [
   index('idx_career_apps_created_at').on(table.createdAt),

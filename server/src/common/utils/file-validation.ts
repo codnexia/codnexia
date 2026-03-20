@@ -7,6 +7,7 @@ const SIGNATURES: { mime: string; bytes: number[] }[] = [
   { mime: 'image/gif', bytes: [0x47, 0x49, 0x46, 0x38] },
   { mime: 'image/webp', bytes: [0x52, 0x49, 0x46, 0x46] }, // RIFF header (WebP)
   { mime: 'application/pdf', bytes: [0x25, 0x50, 0x44, 0x46] }, // %PDF
+  { mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', bytes: [0x50, 0x4b, 0x03, 0x04] }, // PK (ZIP/DOCX)
   { mime: 'video/mp4', bytes: [] }, // MP4 uses ftyp box — checked separately
   { mime: 'video/webm', bytes: [0x1a, 0x45, 0xdf, 0xa3] }, // EBML header
 ];

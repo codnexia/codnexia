@@ -47,6 +47,7 @@ export class JobPositionService {
         mode: dto.mode,
         department: dto.department,
         description: dto.description,
+        requirements: dto.requirements,
         open: dto.open ?? true,
         sortOrder: dto.sortOrder ?? 0,
       })

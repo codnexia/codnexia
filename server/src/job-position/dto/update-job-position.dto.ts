@@ -28,6 +28,11 @@ export class UpdateJobPositionDto {
   description?: string;
 
   @IsOptional()
+  @IsString()
+  @MaxLength(10000)
+  requirements?: string;
+
+  @IsOptional()
   @IsBoolean()
   open?: boolean;
 

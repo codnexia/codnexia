@@ -9,7 +9,7 @@ import { Card } from "../ui/Card";
 import { AdminLoadingState } from "../ui/AdminLoadingState";
 import { InlineConfirm } from "../ui/InlineConfirm";
 
-const EMPTY_FORM = { title: "", type: "Full-time", mode: "Remote", department: "", description: "" };
+const EMPTY_FORM = { title: "", type: "Full-time", mode: "Remote", department: "", description: "", requirements: "" };
 
 export function AdminJobPositions() {
   const toast = useToast();
@@ -55,6 +55,7 @@ export function AdminJobPositions() {
       mode: p.mode,
       department: p.department || "",
       description: p.description || "",
+      requirements: p.requirements || "",
     });
   };
 
@@ -166,6 +167,16 @@ export function AdminJobPositions() {
                 className="w-full bg-surface border border-border rounded-md px-3 py-2 text-main text-sm font-sans outline-none focus:border-accent/40"
               />
             </div>
+          </div>
+          <div className="mb-3">
+            <label className="text-[11px] text-muted uppercase tracking-wide mb-1 block">Requirements (for AI screening)</label>
+            <textarea
+              value={newFields.requirements}
+              onChange={e => setNewFields({ ...newFields, requirements: e.target.value })}
+              placeholder="Required skills, experience level, qualifications..."
+              rows={3}
+              className="w-full bg-surface border border-border rounded-md px-3 py-2 text-main text-sm font-sans outline-none focus:border-accent/40 resize-y"
+            />
           </div>
           <div className="flex gap-2 justify-end">
             <button

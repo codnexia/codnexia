@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
-import type { JobPosition } from "../../types";
+import type { JobPosition, ParsedResume } from "../../types";
 import { useToast } from "../../context/ToastContext";
-import { submitCareerApplication, getOpenJobPositions } from "../../lib/api";
+import { submitCareerApplication, getOpenJobPositions, uploadResume } from "../../lib/api";
 import { Btn } from "../ui/Btn";
 import { Card } from "../ui/Card";
 import { Pill } from "../ui/Pill";
@@ -17,7 +17,7 @@ const STEPS = [
   { label: "Professional", icon: "\uD83D\uDCBC", desc: "Experience, role & preferences" },
   { label: "Skills & Education", icon: "\uD83C\uDFAF", desc: "Tech stack & qualifications" },
   { label: "Motivation", icon: "\uD83D\uDCDD", desc: "Why Codnexia & your story" },
-  { label: "Schedule AI Call", icon: "\uD83E\uDD16", desc: "Book your screening interview" },
+  { label: "Review & Submit", icon: "\uD83E\uDD16", desc: "Review your application" },
 ];
 
 const TECH_STACKS = [
@@ -67,6 +67,7 @@ const INITIAL_DATA = {
   degree: "", field: "", university: "", gradYear: "",
   position: "", coverLetter: "", heardFrom: "", availability: "",
   callDate: "", callTime: "", timezone: "", callTopics: [] as string[],
+  resumeUrl: "", resumeParsed: null as any,
 };
 
 function generateDates() {
@@ -203,6 +204,8 @@ export function CareersPage({ onBack }: CareersPageProps) {
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [data, setData] = useState(INITIAL_DATA);
+  const [resumeUploading, setResumeUploading] = useState(false);
+  const [resumeFile, setResumeFile] = useState<string | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const availableDates = generateDates();
 
@@ -219,6 +222,53 @@ export function CareersPage({ onBack }: CareersPageProps) {
       ...d,
       [field]: d[field].includes(val) ? d[field].filter(v => v !== val) : [...d[field], val],
     }));
+
+  const handleResumeUpload = async (file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      toast("File too large. Maximum size is 5MB.", "warning");
+      return;
+    }
+    const allowed = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    if (!allowed.includes(file.type)) {
+      toast("Only PDF and DOCX files are accepted.", "warning");
+      return;
+    }
+    setResumeUploading(true);
+    try {
+      const result = await uploadResume(file);
+      setResumeFile(file.name);
+      const parsed = result.resumeParsed || {};
+      // Auto-fill form fields from parsed resume
+      setData(d => ({
+        ...d,
+        resumeUrl: result.resumeUrl,
+        resumeParsed: parsed as any,
+        firstName: parsed.firstName || d.firstName,
+        lastName: parsed.lastName || d.lastName,
+        email: parsed.email || d.email,
+        phone: parsed.phone || d.phone,
+        country: parsed.country || d.country,
+        city: parsed.city || d.city,
+        linkedin: parsed.linkedin || d.linkedin,
+        github: parsed.github || d.github,
+        portfolio: parsed.portfolio || d.portfolio,
+        currentRole: parsed.currentRole || d.currentRole,
+        company: parsed.company || d.company,
+        experience: parsed.experience || d.experience,
+        primaryStack: parsed.primaryStack?.length ? parsed.primaryStack : d.primaryStack,
+        otherSkills: parsed.otherSkills || d.otherSkills,
+        degree: parsed.degree || d.degree,
+        field: parsed.field || d.field,
+        university: parsed.university || d.university,
+        gradYear: parsed.gradYear || d.gradYear,
+      }));
+      toast("Resume parsed! Fields have been auto-filled.", "success");
+    } catch {
+      toast("Failed to parse resume. You can still fill in the form manually.", "warning");
+    } finally {
+      setResumeUploading(false);
+    }
+  };
 
   const validateStep = () => {
     const e: Record<string, string> = {};
@@ -245,9 +295,7 @@ export function CareersPage({ onBack }: CareersPageProps) {
       if (!data.coverLetter.trim()) e.coverLetter = "Required";
     }
     if (step === 4) {
-      if (!data.callDate) e.callDate = "Pick a date";
-      if (!data.callTime) e.callTime = "Pick a time";
-      if (!data.timezone) e.timezone = "Required";
+      // Review step — no additional required fields
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -276,7 +324,7 @@ export function CareersPage({ onBack }: CareersPageProps) {
     try {
       await submitCareerApplication(data);
       setSubmitted(true);
-      toast("Application submitted! Check your email for AI call confirmation.", "success");
+      toast("Application submitted! We'll review it and get back to you.", "success");
     } catch {
       toast("Failed to submit application. Please try again.", "error");
     } finally {
@@ -379,7 +427,7 @@ export function CareersPage({ onBack }: CareersPageProps) {
           {/* CTA */}
           <div className="mt-12 text-center p-10 rounded-2xl bg-surface border border-border">
             <h3 className="text-lg font-bold text-main mb-2">Ready to make an impact?</h3>
-            <p className="text-sm text-secondary mb-6">Submit your application and schedule an AI screening call.</p>
+            <p className="text-sm text-secondary mb-6">Submit your application and get screened by our AI recruitment system.</p>
             <Btn onClick={() => setShowForm(true)}>Start Application &rarr;</Btn>
           </div>
         </div>
@@ -405,37 +453,31 @@ export function CareersPage({ onBack }: CareersPageProps) {
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-11 h-11 rounded-xl bg-grad flex items-center justify-center text-[22px]">{"\uD83E\uDD16"}</div>
                 <div>
-                  <h3 className="text-[17px] font-bold text-main">AI Screening Call Confirmed</h3>
-                  <p className="text-xs text-secondary">Your interview has been scheduled</p>
+                  <h3 className="text-[17px] font-bold text-main">What Happens Next</h3>
+                  <p className="text-xs text-secondary">Our AI recruitment pipeline is on it</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mb-5">
+              <div className="space-y-3 mb-5">
                 {[
-                  { l: "\uD83D\uDCC5 Date", v: availableDates.find(d => d.value === data.callDate)?.label || data.callDate },
-                  { l: "\uD83D\uDD50 Time", v: data.callTime },
-                  { l: "\uD83C\uDF0D Timezone", v: data.timezone },
-                  { l: "\u23F1 Duration", v: "30 minutes" },
+                  { icon: "\uD83D\uDD0D", title: "AI Screening", desc: "Your application is being screened by AI right now" },
+                  { icon: "\uD83D\uDCE7", title: "Interview Invitation", desc: "If shortlisted, you'll receive an email with your AI interview link" },
+                  { icon: "\uD83D\uDCAC", title: "AI Interview", desc: "Complete the interview at your own pace — 8 questions, no time pressure" },
+                  { icon: "\uD83C\uDFC6", title: "Results", desc: "Our team reviews AI evaluations and reaches out with next steps" },
                 ].map((item, i) => (
-                  <div key={i} className="p-3.5 rounded-[10px] bg-surface border border-border">
-                    <div className="text-[11px] text-muted font-semibold mb-1">{item.l}</div>
-                    <div className="text-[15px] text-main font-bold">{item.v}</div>
+                  <div key={i} className="flex gap-3 items-start p-3 rounded-[10px] bg-surface border border-border">
+                    <span className="text-lg">{item.icon}</span>
+                    <div>
+                      <div className="text-[13px] font-bold text-main">{item.title}</div>
+                      <div className="text-xs text-muted">{item.desc}</div>
+                    </div>
                   </div>
                 ))}
               </div>
 
-              {data.callTopics.length > 0 && (
-                <div className="mb-4">
-                  <div className="text-xs text-muted font-semibold mb-2">Topics to discuss:</div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {data.callTopics.map(t => <Pill key={t} color="#4A9FF5">{t}</Pill>)}
-                  </div>
-                </div>
-              )}
-
               <div className="p-3.5 rounded-[10px] bg-accent-dim border border-accent/13">
                 <div className="text-[13px] text-accent font-semibold">
-                  {"\uD83D\uDCE7"} Calendar invite & call link sent to <span className="font-mono">{data.email}</span>
+                  {"\uD83D\uDCE7"} Confirmation sent to <span className="font-mono">{data.email}</span>
                 </div>
                 <div className="text-xs text-secondary mt-1">Check your inbox (and spam folder) for the confirmation email.</div>
               </div>
@@ -537,6 +579,36 @@ export function CareersPage({ onBack }: CareersPageProps) {
           {/* Step 0: Personal */}
           {step === 0 && (
             <div>
+              {/* Resume Upload */}
+              <Card className="p-5! mb-6 bg-surface! border-dashed!">
+                <div className="text-center">
+                  <div className="text-2xl mb-2">{"\uD83D\uDCC4"}</div>
+                  <h4 className="text-sm font-bold text-main mb-1">Upload Resume (Optional)</h4>
+                  <p className="text-xs text-muted mb-3">Upload a PDF or DOCX to auto-fill the form</p>
+                  {resumeFile ? (
+                    <div className="text-xs text-accent font-semibold">{"\u2713"} {resumeFile}</div>
+                  ) : (
+                    <label className={clsx(
+                      "inline-block py-2.5 px-6 rounded-lg text-xs font-semibold cursor-pointer transition-all duration-200",
+                      resumeUploading
+                        ? "bg-surface text-muted border border-border"
+                        : "bg-accent-dim text-accent border border-accent/27 hover:bg-accent/20",
+                    )}>
+                      {resumeUploading ? "Parsing..." : "Choose File"}
+                      <input
+                        type="file"
+                        accept=".pdf,.docx"
+                        className="hidden"
+                        disabled={resumeUploading}
+                        onChange={e => {
+                          const f = e.target.files?.[0];
+                          if (f) handleResumeUpload(f);
+                        }}
+                      />
+                    </label>
+                  )}
+                </div>
+              </Card>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3.5">
                 <FieldInput label="First Name *" placeholder="John" value={data.firstName} onChange={v => up("firstName", v)} error={errors.firstName} autoFocus />
                 <FieldInput label="Last Name *" placeholder="Doe" value={data.lastName} onChange={v => up("lastName", v)} error={errors.lastName} />
@@ -645,7 +717,11 @@ export function CareersPage({ onBack }: CareersPageProps) {
           {/* Step 3: Motivation */}
           {step === 3 && (
             <div>
-              <FieldSelect label="Position Applying For *" value={data.position} onChange={v => up("position", v)} error={errors.position} options={POSITIONS} placeholder="Select a role" />
+              <FieldSelect label="Position Applying For *" value={data.position} onChange={v => up("position", v)} error={errors.position} options={
+                openPositions.length > 0
+                  ? [...openPositions.map(p => p.title), "Other"]
+                  : POSITIONS
+              } placeholder="Select a role" />
               <FieldTextarea
                 label="Cover Letter / Motivation *"
                 placeholder={"Tell us:\n\u2022 Why you're interested in Codnexia\n\u2022 What excites you about this role\n\u2022 A standout project you've worked on\n\u2022 What you'd bring to the team"}
@@ -664,70 +740,60 @@ export function CareersPage({ onBack }: CareersPageProps) {
             </div>
           )}
 
-          {/* Step 4: Schedule AI Call */}
+          {/* Step 4: Review & Submit */}
           {step === 4 && (
             <div>
               <Card className="bg-surface! p-6! mb-7">
                 <div className="flex gap-4 items-start">
                   <div className="w-13 h-13 rounded-[14px] bg-grad flex items-center justify-center text-[26px] shrink-0">{"\uD83E\uDD16"}</div>
                   <div>
-                    <h4 className="text-base font-bold text-main mb-1.5">What to Expect</h4>
+                    <h4 className="text-base font-bold text-main mb-1.5">AI-Powered Review Process</h4>
                     <p className="text-sm text-secondary leading-[1.8]">
-                      A 30-minute AI-powered screening call will walk you through a friendly, structured conversation about your technical skills,
-                      past projects, problem-solving approach, and what you're looking for. It's conversational &mdash; not a test.
+                      After you submit, our AI will screen your application automatically. If shortlisted,
+                      you'll receive an email invitation to complete an AI-powered interview at your convenience &mdash;
+                      no scheduling needed.
                     </p>
                   </div>
                 </div>
               </Card>
 
-              <div className="mb-6">
-                <label className="text-[13px] text-main block mb-3 font-bold">{"\uD83D\uDCC5"} Select a Date *</label>
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                  {availableDates.slice(0, 10).map(d => (
-                    <button
-                      key={d.value}
-                      onClick={() => up("callDate", d.value)}
-                      className={clsx(
-                        "p-3.5 rounded-[10px] text-center cursor-pointer text-xs font-semibold font-sans transition-all duration-200 border",
-                        data.callDate === d.value
-                          ? "border-accent/40 bg-accent-dim text-accent"
-                          : "border-border bg-surface text-secondary",
-                      )}
-                    >
-                      {d.label}
-                    </button>
-                  ))}
-                </div>
-                {errors.callDate && <span className="text-[11px] text-error mt-1.5 block">{errors.callDate}</span>}
-              </div>
+              {/* Summary */}
+              <div className="space-y-4">
+                <Card className="p-5!">
+                  <h4 className="text-xs font-bold text-main mb-3 uppercase tracking-wide">{"\uD83D\uDC64"} Personal</h4>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                    <div><span className="text-muted">Name:</span> <span className="text-main">{data.firstName} {data.lastName}</span></div>
+                    <div><span className="text-muted">Email:</span> <span className="text-main">{data.email}</span></div>
+                    <div><span className="text-muted">Phone:</span> <span className="text-main">{data.countryCode} {data.phone}</span></div>
+                    <div><span className="text-muted">Location:</span> <span className="text-main">{[data.city, data.country].filter(Boolean).join(", ")}</span></div>
+                  </div>
+                </Card>
 
-              <div className="mb-6">
-                <label className="text-[13px] text-main block mb-3 font-bold">{"\uD83D\uDD50"} Select a Time *</label>
-                <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
-                  {TIME_SLOTS.map(t => (
-                    <button
-                      key={t}
-                      onClick={() => up("callTime", t)}
-                      className={clsx(
-                        "p-2.5 rounded-lg text-center cursor-pointer text-[11px] font-semibold font-mono transition-all duration-200 border",
-                        data.callTime === t
-                          ? "border-accent/40 bg-accent-dim text-accent"
-                          : "border-border bg-surface text-secondary",
-                      )}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-                {errors.callTime && <span className="text-[11px] text-error mt-1.5 block">{errors.callTime}</span>}
-              </div>
+                <Card className="p-5!">
+                  <h4 className="text-xs font-bold text-main mb-3 uppercase tracking-wide">{"\uD83D\uDCBC"} Professional</h4>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                    <div><span className="text-muted">Role:</span> <span className="text-main">{data.currentRole}</span></div>
+                    <div><span className="text-muted">Experience:</span> <span className="text-main">{data.experience}</span></div>
+                    <div><span className="text-muted">Type:</span> <span className="text-main">{data.employmentType}</span></div>
+                    <div><span className="text-muted">Mode:</span> <span className="text-main">{data.workMode}</span></div>
+                  </div>
+                </Card>
 
-              <FieldSelect label={"\uD83C\uDF0D Your Timezone *"} value={data.timezone} onChange={v => up("timezone", v)} error={errors.timezone} options={TIMEZONES} placeholder="Select timezone" />
+                <Card className="p-5!">
+                  <h4 className="text-xs font-bold text-main mb-3 uppercase tracking-wide">{"\uD83C\uDFAF"} Skills</h4>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {data.primaryStack.map(t => <Pill key={t} color="#4A9FF5">{t}</Pill>)}
+                  </div>
+                  <div className="text-xs"><span className="text-muted">Degree:</span> <span className="text-main">{data.degree}{data.field ? ` in ${data.field}` : ''}</span></div>
+                </Card>
 
-              <div className="mt-1">
-                <label className="text-[13px] text-main block mb-2.5 font-bold">{"\uD83D\uDCAC"} Topics You'd Like to Cover</label>
-                <p className="text-xs text-muted mb-3">Select any topics you want the AI to focus on during your call.</p>
-                <ChipGroup options={CALL_TOPICS} selected={data.callTopics} onToggle={v => toggleArr("callTopics", v)} color="info" />
+                <Card className="p-5!">
+                  <h4 className="text-xs font-bold text-main mb-3 uppercase tracking-wide">{"\uD83D\uDCDD"} Application</h4>
+                  <div className="text-xs mb-1.5"><span className="text-muted">Position:</span> <span className="text-accent font-semibold">{data.position}</span></div>
+                  <div className="text-xs text-secondary leading-[1.7] bg-card p-3 rounded-lg border border-border whitespace-pre-wrap max-h-30 overflow-auto">
+                    {data.coverLetter}
+                  </div>
+                </Card>
               </div>
             </div>
           )}
@@ -751,7 +817,7 @@ export function CareersPage({ onBack }: CareersPageProps) {
             <Btn onClick={next} className="py-2.75! px-8! text-sm!">Continue &rarr;</Btn>
           ) : (
             <Btn onClick={handleSubmit} disabled={submitting} className="py-3! px-9! text-sm!">
-              {submitting ? "Submitting..." : "Submit & Schedule Call"}
+              {submitting ? "Submitting..." : "Submit Application"}
             </Btn>
           )}
         </div>

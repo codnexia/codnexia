@@ -9,3 +9,4 @@ export { portfolios } from './portfolios';
 export { inviteTokens } from './invite-tokens';
 export { careerApplications } from './career-applications';
 export { jobPositions } from './job-positions';
+export { aiInterviews } from './ai-interviews';

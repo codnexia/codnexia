@@ -18,6 +18,7 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { HealthModule } from './health/health.module';
 import { CareerModule } from './career/career.module';
 import { JobPositionModule } from './job-position/job-position.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -38,6 +39,12 @@ import { JobPositionModule } from './job-position/job-position.module';
             throw new Error('JWT_SECRET must be at least 32 characters and not a common value in production');
           }
           console.warn('WARNING: JWT_SECRET is weak. Use a strong random secret (32+ chars) in production.');
+        }
+
+        // C2a: Validate Anthropic API key
+        if (!config['ANTHROPIC_API_KEY']) {
+          if (isProd) throw new Error('Missing required env var for production: ANTHROPIC_API_KEY');
+          console.warn('WARNING: ANTHROPIC_API_KEY is not set. AI features will not work.');
         }
 
         // C2: Validate SMTP, CLIENT_URL & MAIL_TO in production
@@ -80,6 +87,7 @@ import { JobPositionModule } from './job-position/job-position.module';
     HealthModule,
     CareerModule,
     JobPositionModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [

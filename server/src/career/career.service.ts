@@ -1,10 +1,15 @@
 // Handles career application submissions - save to DB and retrieve for admin
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { desc, eq, sql } from 'drizzle-orm';
+import { desc, eq, sql, isNotNull } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 import { ActivityService } from '../activity/activity.service';
+import { ScreeningService } from '../ai/screening.service';
+import { InterviewService } from '../ai/interview.service';
+import { EvaluationService } from '../ai/evaluation.service';
+import { MailService } from '../mail/mail.service';
 import { CreateCareerApplicationDto } from './dto/create-career-application.dto';
 
 @Injectable()
@@ -14,6 +19,11 @@ export class CareerService {
   constructor(
     @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
     private readonly activityService: ActivityService,
+    private readonly screeningService: ScreeningService,
+    private readonly interviewService: InterviewService,
+    private readonly evaluationService: EvaluationService,
+    private readonly mailService: MailService,
+    private readonly config: ConfigService,
   ) {}
 
   async create(dto: CreateCareerApplicationDto) {
@@ -57,6 +67,8 @@ export class CareerService {
         callTime: dto.callTime,
         timezone: dto.timezone,
         callTopics: dto.callTopics ?? [],
+        resumeUrl: dto.resumeUrl,
+        resumeParsed: dto.resumeParsed,
       })
       .returning();
 
@@ -70,6 +82,20 @@ export class CareerService {
     } catch (e) {
       this.logger.warn(`Activity log failed: ${(e as Error).message}`);
     }
+
+    // Fire-and-forget: AI screening
+    this.screeningService.screenApplication(application.id).catch(e =>
+      this.logger.warn(`Auto-screening failed: ${(e as Error).message}`),
+    );
+
+    // Fire-and-forget: email notifications
+    this.mailService.sendApplicationReceived(
+      dto.email, dto.firstName, dto.position,
+    ).catch(e => this.logger.warn(`Candidate email failed: ${(e as Error).message}`));
+
+    this.mailService.sendAdminNewApplication(
+      `${dto.firstName} ${dto.lastName}`, dto.position,
+    ).catch(e => this.logger.warn(`Admin notification email failed: ${(e as Error).message}`));
 
     return application;
   }
@@ -115,7 +141,51 @@ export class CareerService {
       this.logger.warn(`Activity log failed: ${(e as Error).message}`);
     }
 
+    // Send status update email to candidate
+    if (updated) {
+      this.mailService.sendStatusUpdate(
+        updated.email, updated.firstName, status, updated.position,
+      ).catch(e => this.logger.warn(`Status email failed: ${(e as Error).message}`));
+    }
+
     return updated;
+  }
+
+  async rescreen(id: string) {
+    const result = await this.screeningService.screenApplication(id);
+    if (!result) throw new Error('Screening failed');
+    return result;
+  }
+
+  async inviteInterview(id: string) {
+    const application = await this.findOne(id);
+    if (!application) throw new Error('Application not found');
+
+    const interview = await this.interviewService.createInterview(id);
+    const clientUrl = this.config.get<string>('CLIENT_URL', 'http://localhost:5173');
+    const interviewUrl = `${clientUrl}/interview?token=${interview.accessToken}`;
+
+    // Send interview invitation email
+    await this.mailService.sendInterviewInvitation(
+      application.email,
+      application.firstName,
+      application.position,
+      interviewUrl,
+      interview.expiresAt,
+    );
+
+    // Update status
+    await this.db
+      .update(schema.careerApplications)
+      .set({ status: 'interviewed' })
+      .where(eq(schema.careerApplications.id, id));
+
+    return { interview, interviewUrl };
+  }
+
+  async getRankings(positionFilter?: string) {
+    const results = await this.evaluationService.getRankings(positionFilter);
+    return results;
   }
 
   async delete(id: string) {

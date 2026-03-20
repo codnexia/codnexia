@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export type ToastType = "success" | "error" | "info" | "warning";
 export type ToastFn = (msg: string, type?: ToastType) => void;
-export type ViewState = "client" | "login" | "signup" | "admin" | "careers";
+export type ViewState = "client" | "login" | "signup" | "admin" | "careers" | "interview";
 
 export interface Toast {
   id: number;
@@ -267,6 +267,28 @@ export interface PortfolioResponse {
   updatedAt: string;
 }
 
+export interface ParsedResume {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  country?: string;
+  city?: string;
+  linkedin?: string;
+  github?: string;
+  portfolio?: string;
+  currentRole?: string;
+  company?: string;
+  experience?: string;
+  primaryStack?: string[];
+  otherSkills?: string;
+  degree?: string;
+  field?: string;
+  university?: string;
+  gradYear?: string;
+  summary?: string;
+}
+
 export interface CareerApplication {
   id: string;
   firstName: string;
@@ -307,6 +329,49 @@ export interface CareerApplication {
   timezone: string;
   callTopics: string[];
   status: string;
+  // AI recruitment fields
+  resumeUrl: string | null;
+  resumeParsed: ParsedResume | null;
+  screeningScore: number | null;
+  screeningNotes: string | null;
+  screeningStatus: string | null;
+  interviewScore: number | null;
+  compositeScore: number | null;
+  finalRecommendation: string | null;
+  createdAt: string;
+}
+
+export interface InterviewQuestion {
+  index: number;
+  category: string;
+  question: string;
+  answered: boolean;
+}
+
+export interface InterviewState {
+  status: string;
+  questions: InterviewQuestion[];
+  currentQuestionIndex: number;
+  totalQuestions: number;
+  answeredCount: number;
+  expiresAt: string;
+  completedAt: string | null;
+}
+
+export interface AiInterview {
+  id: string;
+  applicationId: string;
+  accessToken: string;
+  status: string;
+  questions: { category: string; question: string }[];
+  answers: { questionIndex: number; answer: string; submittedAt: string }[];
+  currentQuestionIndex: number;
+  evaluationScore: number | null;
+  evaluationNotes: string | null;
+  evaluationRecommendation: string | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  expiresAt: string;
   createdAt: string;
 }
 
@@ -319,6 +384,7 @@ export interface JobPosition {
   mode: string;
   department: string | null;
   description: string | null;
+  requirements: string | null;
   open: boolean;
   sortOrder: number;
   createdAt: string;

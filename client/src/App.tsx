@@ -16,8 +16,11 @@ const AdminSignup = lazy(() =>
 const CareersPage = lazy(() =>
   import("./components/client/CareersPage").then(m => ({ default: m.CareersPage }))
 );
+const InterviewPage = lazy(() =>
+  import("./components/client/InterviewPage").then(m => ({ default: m.InterviewPage }))
+);
 
-const KNOWN_PATHS = ["/", "/admin-dashboard", "/careers"];
+const KNOWN_PATHS = ["/", "/admin-dashboard", "/careers", "/interview"];
 
 function getInviteToken(): string | null {
   const params = new URLSearchParams(window.location.search);
@@ -34,6 +37,10 @@ function getInitialView(): ViewState {
 
   if (path === "/careers") {
     return "careers";
+  }
+
+  if (path === "/interview") {
+    return "interview";
   }
 
   if (path === "/" || KNOWN_PATHS.includes(path)) {
@@ -96,6 +103,8 @@ export default function App() {
           else setView(isAuthenticated() ? "admin" : "login");
         } else if (path === "/careers") {
           setView("careers");
+        } else if (path === "/interview") {
+          setView("interview");
         } else {
           setView("client");
         }
@@ -137,6 +146,7 @@ export default function App() {
             )}
             {view === "admin" && <AdminPanel onLogout={goToAdminLogin} onBack={goToClient} />}
             {view === "careers" && <CareersPage onBack={goToClient} />}
+            {view === "interview" && <InterviewPage />}
           </Suspense>
         </div>
       </div>

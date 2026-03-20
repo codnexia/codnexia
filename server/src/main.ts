@@ -68,6 +68,8 @@ async function bootstrap() {
   // Ensure uploads directory exists, serve it statically
   const uploadsDir = join(process.cwd(), 'uploads');
   if (!existsSync(uploadsDir)) mkdirSync(uploadsDir);
+  const resumesDir = join(uploadsDir, 'resumes');
+  if (!existsSync(resumesDir)) mkdirSync(resumesDir);
   app.useStaticAssets(uploadsDir, { prefix: '/uploads' });
 
   await app.listen(process.env.PORT ?? 3000);
