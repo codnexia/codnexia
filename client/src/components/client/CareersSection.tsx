@@ -1,5 +1,4 @@
 import { Pill } from "../ui/Pill";
-import { Btn } from "../ui/Btn";
 import { HexGrid } from "../ui/HexGrid";
 import { SectionReveal } from "../ui/SectionReveal";
 
@@ -26,7 +25,6 @@ export function CareersSection({ sectionRef, onOpenCareers }: CareersSectionProp
               We're looking for talented engineers, designers, and problem-solvers who share our passion
               for building world-class software from Africa.
             </p>
-            <Btn onClick={onOpenCareers}>Apply Now &rarr;</Btn>
           </div>
 
           <div className="relative z-1">

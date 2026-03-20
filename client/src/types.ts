@@ -68,6 +68,7 @@ export interface CardProps {
   children: ReactNode;
   className?: string;
   hoverable?: boolean;
+  onClick?: () => void;
 }
 
 export interface SectionRevealProps {

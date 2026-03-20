@@ -387,7 +387,6 @@ export function CareersPage({ onBack }: CareersPageProps) {
                 We're looking for talented engineers, designers, and problem-solvers who share our passion
                 for building world-class software from Africa. Work on cutting-edge projects with a globally distributed team.
               </p>
-              <Btn onClick={() => setShowForm(true)}>Apply Now &rarr;</Btn>
             </div>
 
             <div className="relative z-1">
@@ -425,7 +424,15 @@ export function CareersPage({ onBack }: CareersPageProps) {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {openPositions.map(job => (
-                  <Card key={job.id} hoverable className="p-5!">
+                  <Card
+                    key={job.id}
+                    hoverable
+                    className="p-5! cursor-pointer"
+                    onClick={() => {
+                      setData(d => ({ ...d, position: job.title }));
+                      setShowForm(true);
+                    }}
+                  >
                     <div className="text-sm font-bold text-main mb-1">{job.title}</div>
                     {job.department && (
                       <div className="text-[11px] text-muted mb-2">{job.department}</div>
@@ -434,6 +441,7 @@ export function CareersPage({ onBack }: CareersPageProps) {
                       <Pill color="#2DD4A8">{job.type}</Pill>
                       <Pill color="#4A9FF5">{job.mode}</Pill>
                     </div>
+                    <div className="text-[11px] text-accent mt-3 font-medium">Apply for this role &rarr;</div>
                   </Card>
                 ))}
               </div>
@@ -441,11 +449,12 @@ export function CareersPage({ onBack }: CareersPageProps) {
           </div>
 
           {/* CTA */}
-          <div className="mt-12 text-center p-10 rounded-2xl bg-surface border border-border">
-            <h3 className="text-lg font-bold text-main mb-2">Ready to make an impact?</h3>
-            <p className="text-sm text-secondary mb-6">Submit your application and get screened by our AI recruitment system.</p>
-            <Btn onClick={() => setShowForm(true)}>Start Application &rarr;</Btn>
-          </div>
+          {openPositions.length > 0 && (
+            <div className="mt-12 text-center p-10 rounded-2xl bg-surface border border-border">
+              <h3 className="text-lg font-bold text-main mb-2">Ready to make an impact?</h3>
+              <p className="text-sm text-secondary">Browse our open positions above and click on a role to start your application.</p>
+            </div>
+          )}
         </div>
       </div>
     );
