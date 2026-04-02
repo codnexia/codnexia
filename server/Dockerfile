@@ -23,8 +23,10 @@ COPY --from=build /app/dist ./dist
 
 RUN mkdir -p uploads && chown -R appuser:appgroup /app
 
+ENV NODE_ENV=production
+
 USER appuser
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]
