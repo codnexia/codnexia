@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import clsx from "clsx";
 import type { InterviewState } from "../../types";
 import { getInterview, submitInterviewAnswer } from "../../lib/api";
 import { useToast } from "../../context/ToastContext";

@@ -4,10 +4,9 @@ import { SectionReveal } from "../ui/SectionReveal";
 
 interface CareersSectionProps {
   sectionRef: (el: HTMLElement | null) => void;
-  onOpenCareers: () => void;
 }
 
-export function CareersSection({ sectionRef, onOpenCareers }: CareersSectionProps) {
+export function CareersSection({ sectionRef }: CareersSectionProps) {
   return (
     <section ref={sectionRef} id="careers" className="py-16 md:py-22 px-4 md:px-10 max-w-250 mx-auto">
       <SectionReveal>

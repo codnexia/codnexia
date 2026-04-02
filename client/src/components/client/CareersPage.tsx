@@ -37,24 +37,6 @@ const POSITIONS = [
   "QA / Test Engineer", "Technical Lead / Architect", "Other",
 ];
 
-const TIME_SLOTS = [
-  "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-  "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM",
-  "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM",
-];
-
-const TIMEZONES = [
-  "EAT (UTC+3)", "WAT (UTC+1)", "CAT (UTC+2)", "SAST (UTC+2)",
-  "GMT (UTC+0)", "CET (UTC+1)", "EET (UTC+2)", "EST (UTC-5)",
-  "CST (UTC-6)", "PST (UTC-8)", "IST (UTC+5:30)", "SGT (UTC+8)",
-];
-
-const CALL_TOPICS = [
-  "Technical skills deep-dive", "System design discussion",
-  "Problem-solving walkthrough", "Culture & team fit",
-  "Project experience review", "Career goals & growth",
-  "Salary & compensation", "Role-specific questions",
-];
 
 const INITIAL_DATA = {
   firstName: "", lastName: "", email: "", phone: "", countryCode: "+254",
@@ -70,21 +52,6 @@ const INITIAL_DATA = {
   resumeUrl: "", resumeParsed: null as ParsedResume | null,
 };
 
-function generateDates() {
-  const dates: { value: string; label: string }[] = [];
-  const now = new Date();
-  for (let i = 1; i <= 14; i++) {
-    const d = new Date(now);
-    d.setDate(now.getDate() + i);
-    if (d.getDay() !== 0 && d.getDay() !== 6) {
-      dates.push({
-        value: d.toISOString().split("T")[0],
-        label: d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }),
-      });
-    }
-  }
-  return dates;
-}
 
 // ── Small form components ──
 
@@ -223,7 +190,6 @@ export function CareersPage({ onBack }: CareersPageProps) {
   const [resumeUploading, setResumeUploading] = useState(false);
   const [resumeFile, setResumeFile] = useState<string | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const availableDates = generateDates();
 
   useEffect(() => {
     getOpenJobPositions()
