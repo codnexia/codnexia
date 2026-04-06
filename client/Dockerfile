@@ -29,4 +29,6 @@ USER nginx
 
 EXPOSE 80
 
-CMD ["/bin/sh", "-c", "envsubst '${BACKEND_URL}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+ENV BACKEND_URL=http://localhost:3000
+
+CMD ["/bin/sh", "-c", "sed \"s|__BACKEND_URL__|${BACKEND_URL}|g\" /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
