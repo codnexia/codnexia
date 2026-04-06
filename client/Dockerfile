@@ -3,10 +3,10 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY client/package.json client/package-lock.json ./
 RUN npm ci
 
-COPY . .
+COPY client/ .
 
 ARG VITE_API_URL=/api
 ENV VITE_API_URL=$VITE_API_URL
@@ -17,7 +17,7 @@ RUN npm run build
 FROM nginx:alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf.template
+COPY client/nginx.conf /etc/nginx/conf.d/default.conf.template
 
 RUN chown -R nginx:nginx /usr/share/nginx/html && \
     chown -R nginx:nginx /var/cache/nginx && \
