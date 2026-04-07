@@ -134,6 +134,13 @@ export async function submitContact(form: {
   return apiFetch<{ success: boolean }>('/contact', { method: 'POST', body: JSON.stringify(form) });
 }
 
+export async function getContacts(page = 1, limit = 20) {
+  return apiFetch<PaginatedResponse<{
+    id: string; name: string; email: string; company?: string;
+    service?: string; budget?: string; message: string; createdAt: string;
+  }>>(`/contact?page=${page}&limit=${limit}`);
+}
+
 // ── Content Pages ──
 
 export async function getPublishedContent() {
