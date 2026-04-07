@@ -3,12 +3,15 @@ import { SECTIONS } from "../../constants";
 import { trackPageView } from "../../lib/api";
 import { ClientHeader } from "./ClientHeader";
 import { HeroSection } from "./HeroSection";
-import { AboutSection } from "./AboutSection";
-import { ProcessSection } from "./ProcessSection";
+import { TrustStripSection } from "./TrustStripSection";
 import { ServicesSection } from "./ServicesSection";
+import { ProcessSection } from "./ProcessSection";
+import { TechStackSection } from "./TechStackSection";
 import { PortfolioSection } from "./PortfolioSection";
+import { WhyCodnexiaSection } from "./WhyCodnexiaSection";
 import { TestimonialsSection } from "./TestimonialsSection";
 import { ContactSection } from "./ContactSection";
+import { FinalCtaSection } from "./FinalCtaSection";
 import { ClientFooter } from "./ClientFooter";
 
 // Generate or retrieve a unique session ID for analytics tracking
@@ -95,12 +98,15 @@ export function ClientSite({ onOpenCareers }: ClientSiteProps = {}) {
     <div ref={containerRef} className="h-full overflow-auto bg-bg relative scroll-smooth">
       <ClientHeader headerOpacity={headerOpacity} activeSection={activeSection} scrollTo={scrollTo} onOpenCareers={onOpenCareers} />
       <HeroSection sectionRef={setSectionRef("hero")} scrollTo={scrollTo} />
-      <AboutSection sectionRef={setSectionRef("about")} />
-      <ProcessSection sectionRef={setSectionRef("how")} />
+      <TrustStripSection sectionRef={setSectionRef("trust")} />
       <ServicesSection sectionRef={setSectionRef("services")} />
+      <ProcessSection sectionRef={setSectionRef("how")} />
+      <TechStackSection sectionRef={setSectionRef("tech")} />
       <PortfolioSection sectionRef={setSectionRef("portfolio")} />
+      <WhyCodnexiaSection sectionRef={setSectionRef("why")} />
       <TestimonialsSection sectionRef={setSectionRef("testimonials")} />
       <ContactSection sectionRef={setSectionRef("contact")} />
+      <FinalCtaSection sectionRef={setSectionRef("cta")} scrollTo={scrollTo} />
       <ClientFooter onOpenCareers={onOpenCareers} />
     </div>
   );

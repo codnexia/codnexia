@@ -4,8 +4,8 @@ interface ClientFooterProps {
 
 export function ClientFooter({ onOpenCareers }: ClientFooterProps = {}) {
   const footerLinks = [
-    { title: "Services", items: ["Web Apps", "Mobile Apps", "SaaS", "API & Integrations"] },
-    { title: "Company", items: ["About Us", "Our Process", "Careers", "Blog"] },
+    { title: "Services", items: ["Web Apps", "Mobile Apps", "SaaS Platforms", "APIs & Integrations", "Automation"] },
+    { title: "Company", items: ["Why Codnexia", "Our Process", "Careers", "Portfolio"] },
     { title: "Support", items: ["Contact", "Documentation", "Status", "Privacy Policy"] },
   ];
 

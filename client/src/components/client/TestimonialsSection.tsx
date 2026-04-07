@@ -90,7 +90,7 @@ export function TestimonialsSection({ sectionRef }: TestimonialsSectionProps) {
       <SectionReveal>
         <div className="mb-12">
           <h2 className="text-[28px] md:text-[40px] font-bold text-main mb-3 -tracking-[1.5px]">
-            What our clients say
+            What Clients Say
           </h2>
           <p className="text-secondary text-sm md:text-base max-w-160 leading-relaxed">
             Real feedback from teams we've partnered with to build, ship, and scale their products.

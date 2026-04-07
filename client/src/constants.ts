@@ -2,11 +2,15 @@ import type { ToastType } from "./types";
 
 export const SECTIONS = [
   { id: "hero", label: "Home", nav: false },
-  { id: "about", label: "About", nav: true },
-  { id: "how", label: "Process", nav: true },
-  { id: "services", label: "Services", nav: true },
+  { id: "trust", label: "Trust", nav: false },
+  { id: "services", label: "What We Build", nav: true },
+  { id: "how", label: "How We Build", nav: true },
+  { id: "tech", label: "Tech Stack", nav: false },
   { id: "portfolio", label: "Portfolio", nav: true },
+  { id: "why", label: "Why Codnexia", nav: true },
+  { id: "testimonials", label: "Testimonials", nav: false },
   { id: "contact", label: "Contact", nav: true },
+  { id: "cta", label: "CTA", nav: false },
 ];
 
 export const TOAST_BORDER: Record<ToastType, string> = {

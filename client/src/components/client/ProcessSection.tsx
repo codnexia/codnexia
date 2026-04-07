@@ -15,11 +15,11 @@ export function ProcessSection({ sectionRef }: ProcessSectionProps) {
     >
       <SectionReveal>
         <h2 className="text-[28px] md:text-[40px] font-bold text-main mb-12 -tracking-[1.5px]">
-          How we deliver results
+          How we build
         </h2>
       </SectionReveal>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {PROCESS_STEPS.map((s, i) => (
           <SectionReveal key={i} style={{ transitionDelay: `${i * 0.1}s` }}>
             <Card hoverable className="relative h-full p-6!">
@@ -31,7 +31,7 @@ export function ProcessSection({ sectionRef }: ProcessSectionProps) {
               </div>
               <div className="text-[15px] font-bold text-main mb-2">{s.title}</div>
               <div className="text-[13px] text-secondary leading-[1.7]">{s.desc}</div>
-              {i < 3 && (
+              {i < 4 && (
                 <div className="absolute -right-3.5 top-1/2 -translate-y-1/2 text-lg text-muted z-2 hidden lg:block">
                   &rarr;
                 </div>

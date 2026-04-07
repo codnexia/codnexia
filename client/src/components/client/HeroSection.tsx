@@ -33,25 +33,25 @@ export function HeroSection({ sectionRef, scrollTo }: HeroSectionProps) {
         <Pill color="#2DD4A8">Global Code &middot; African Excellence</Pill>
 
         <h1 className="text-[32px] md:text-[48px] lg:text-[64px] font-extrabold text-main leading-[1.05] -tracking-[1.5px] md:-tracking-[2px] lg:-tracking-[3px] mt-6.5 mb-5 mx-auto max-w-185">
-          Engineering the<br />
+          Engineering{" "}
           <span
             className="bg-clip-text text-transparent"
             style={{ backgroundImage: "linear-gradient(135deg, #2DD4A8, #4A9FF5)" }}
           >
-            Next Generation
-          </span>{" "}
-          of Software
+            Scalable Software
+          </span>
+          <br />for Global Businesses
         </h1>
 
         <p className="text-[15px] md:text-[17px] text-secondary leading-[1.7] max-w-135 mx-auto mb-10">
-          A global software development company built on African excellence. We design, build, and
-          scale impactful technology products for startups and enterprises worldwide.
+          We design, architect, and ship production-ready web applications, SaaS platforms, and APIs
+          for startups and enterprises worldwide.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-3.5 justify-center">
-          <Btn onClick={() => scrollTo("contact")}>Get a Quote &rarr;</Btn>
-          <Btn variant="ghost" onClick={() => scrollTo("services")}>
-            Our Services
+          <Btn onClick={() => scrollTo("contact")}>Start Your Project &rarr;</Btn>
+          <Btn variant="ghost" onClick={() => scrollTo("portfolio")}>
+            View Our Work
           </Btn>
         </div>
 
