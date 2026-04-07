@@ -31,4 +31,4 @@ EXPOSE 80
 
 ENV BACKEND_URL=http://localhost:3000
 
-CMD ["/bin/sh", "-c", "sed \"s|__BACKEND_URL__|${BACKEND_URL}|g\" /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["/bin/sh", "-c", "BACKEND_HOST=$(echo $BACKEND_URL | sed 's|https\\?://||' | sed 's|/.*||') && sed -e \"s|__BACKEND_URL__|${BACKEND_URL}|g\" -e \"s|__BACKEND_HOST__|${BACKEND_HOST}|g\" /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
