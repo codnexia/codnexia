@@ -1,7 +1,6 @@
 import { Card } from "../ui/Card";
 import { SectionReveal } from "../ui/SectionReveal";
 import { Pill } from "../ui/Pill";
-import { HexGrid } from "../ui/HexGrid";
 import { TECH_CATEGORIES, AUTOMATION_ITEMS, AI_ITEMS, WHY_THIS_STACK } from "../../assets/data";
 
 interface TechStackSectionProps {
