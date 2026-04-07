@@ -36,12 +36,10 @@ export class ContactService {
     try { await this.activityService.log('contact', `New contact from ${dto.name}`, '#2DD4A8'); }
     catch (e) { this.logger.warn(`Activity log failed: ${(e as Error).message}`); }
 
-    // Send email notification (non-blocking — failure should not break the response)
-    try {
-      await this.mailService.sendContactNotification(dto);
-    } catch (err) {
+    // Send email notification (fire-and-forget — failure should not break the response)
+    this.mailService.sendContactNotification(dto).catch((err) => {
       this.logger.warn(`Failed to send contact email for ${dto.name}: ${(err as Error).message}`);
-    }
+    });
 
     return contact;
   }
