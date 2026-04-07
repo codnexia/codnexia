@@ -78,43 +78,135 @@ export const HERO_METRICS = [
   { v: 99, s: "%", l: "Client Satisfaction" },
 ];
 
-// ── Client: About ──
+// ── Client: Trust Strip ──
 
-export const ABOUT_PILLARS = [
-  { icon: "\u25CE", title: "Mission", desc: "To build high-quality, scalable, and innovative software solutions that empower businesses globally while showcasing African engineering excellence.", color: "#2DD4A8" },
-  { icon: "\u25C8", title: "Vision", desc: "To become a globally trusted technology company originating from Africa, shaping the future of digital innovation and software development.", color: "#4A9FF5" },
-  { icon: "\u2726", title: "Values", desc: "Innovation First \u00B7 Engineering Excellence \u00B7 Integrity & Trust \u00B7 Global Mindset \u00B7 African Excellence", color: "#F5A623" },
+export const TRUST_BADGES = [
+  { icon: "\u2699\uFE0F", text: "Built with modern tech stack" },
+  { icon: "\uD83D\uDE80", text: "Scalable & production-ready systems" },
+  { icon: "\u2714\uFE0F", text: "Trusted engineering approach" },
+  { icon: "\uD83C\uDF0D", text: "Global clients, African excellence" },
 ];
 
-export const CORE_VALUES = ["Innovation First", "Engineering Excellence", "Integrity & Trust", "Global Mindset", "African Excellence"];
+// ── Client: Why Codnexia ──
+
+export const WHY_CODNEXIA = [
+  { icon: "\uD83C\uDF0D", title: "African Talent, Global Standards", desc: "World-class engineering rooted in Africa, delivering to clients across the globe.", color: "#2DD4A8" },
+  { icon: "\u2699\uFE0F", title: "Engineering-First Approach", desc: "We don't just code \u2014 we architect. Every system is built for performance, security, and maintainability.", color: "#4A9FF5" },
+  { icon: "\uD83D\uDE80", title: "Scalable by Design", desc: "From day one, every solution is designed to handle growth \u2014 more users, more data, more complexity.", color: "#F5A623" },
+  { icon: "\uD83E\uDD1D", title: "Long-Term Partnership", desc: "We don't disappear after deployment. We stay on to optimize, maintain, and scale alongside your business.", color: "#E84855" },
+];
+
+// ── Client: Tech Stack ──
+
+export const TECH_CATEGORIES = [
+  {
+    icon: "🧱", title: "Core Engineering", subtitle: "Our Identity",
+    description: "The foundational technologies that power every Codnexia product.",
+    color: "#2DD4A8",
+    type: "items" as const,
+    items: [
+      { area: "Frontend", tools: [
+        { name: "React", desc: "Component-driven UIs", icon: "⚛" },
+        { name: "Next.js", desc: "SSR & static generation", icon: "▲" },
+      ]},
+      { area: "Backend", tools: [
+        { name: "Node.js", desc: "Event-driven runtime", icon: "⬡" },
+        { name: "NestJS", desc: "Enterprise architecture", icon: "🐈" },
+      ]},
+      { area: "Database", tools: [
+        { name: "PostgreSQL", desc: "Relational powerhouse", icon: "🐘" },
+      ]},
+      { area: "DevOps", tools: [
+        { name: "Docker", desc: "Containerized deployments", icon: "🐳" },
+        { name: "CI/CD", desc: "Automated pipelines", icon: "🔄" },
+      ]},
+    ],
+  },
+  {
+    icon: "⚙️", title: "Backend Power & Real-Time", subtitle: "Beyond the Basics",
+    description: "Capabilities that prove we're not just basic devs.",
+    color: "#4A9FF5",
+    type: "capabilities" as const,
+    capabilities: [
+      { name: "REST API Development", desc: "Clean, versioned, documented APIs built for scale" },
+      { name: "WebSockets", desc: "Real-time communication for live dashboards, chat & collaboration" },
+      { name: "Authentication Systems", desc: "JWT tokens, HTTP-only cookies, OAuth2, role-based access" },
+      { name: "Scalable Architecture", desc: "Microservices, event-driven design, horizontal scaling" },
+    ],
+  },
+  {
+    icon: "⚡", title: "Acceleration Layer", subtitle: "Low-Code",
+    description: "Speed up delivery and MVPs without sacrificing quality.",
+    color: "#F5A623",
+    type: "items" as const,
+    items: [
+      { area: "Speed Tools", tools: [
+        { name: "Supabase", desc: "Instant backend + auth", icon: "⚡" },
+        { name: "Xano", desc: "No-code API builder", icon: "✦" },
+        { name: "Retool", desc: "Internal tool builder", icon: "🔧" },
+      ]},
+    ],
+  },
+  {
+    icon: "🚀", title: "Rapid Development", subtitle: "No-Code",
+    description: "For startups and quick launches — live in days, not months.",
+    color: "#A78BFA",
+    type: "items" as const,
+    items: [
+      { area: "Platforms", tools: [
+        { name: "Bubble", desc: "Full-stack visual dev", icon: "◉" },
+        { name: "Webflow", desc: "Visual web design", icon: "◆" },
+        { name: "FlutterFlow", desc: "Mobile app builder", icon: "📱" },
+      ]},
+    ],
+  },
+];
+
+export const AUTOMATION_ITEMS = [
+  { name: "Workflow Automation", desc: "Connect systems with Zapier, Make, and custom orchestration" },
+  { name: "Business Process Automation", desc: "Eliminate manual tasks and reduce human error at scale" },
+  { name: "API Integrations", desc: "Bridge any two systems with custom middleware and webhooks" },
+];
+
+export const AI_ITEMS = [
+  { name: "AI-Powered Chat Systems", desc: "Intelligent chatbots and conversational interfaces for customers" },
+  { name: "AI-Assisted Workflows", desc: "Smart recommendations, auto-classification, and decision support" },
+  { name: "AI-Driven Data Processing", desc: "Extract insights, summarize documents, and analyze patterns" },
+  { name: "AI Customer Interaction", desc: "Personalized experiences powered by machine learning" },
+];
+
+export const WHY_THIS_STACK = [
+  { icon: "🏗", title: "Serious Engineering", desc: "Production-grade code with clean architecture and full test coverage.", color: "#2DD4A8" },
+  { icon: "⚡", title: "Fast Delivery", desc: "Low-code and no-code layers let us ship MVPs in days, not months.", color: "#F5A623" },
+  { icon: "🤖", title: "AI-Ready", desc: "Every system we build is designed to integrate intelligent automation.", color: "#4A9FF5" },
+  { icon: "📈", title: "Scalable Partner", desc: "From startup prototype to enterprise platform — our stack grows with you.", color: "#A78BFA" },
+];
 
 // ── Client: Process ──
 
 export const PROCESS_STEPS = [
-  { step: "01", title: "Discovery & Design", desc: "Understand your vision, define scope, wireframe solutions and plan the architecture.", icon: "\uD83D\uDD0D" },
-  { step: "02", title: "Build & Develop", desc: "Agile sprints with clean, scalable code. REST APIs, WebSockets, mobile & web UIs.", icon: "\u2699\uFE0F" },
-  { step: "03", title: "Test & Integrate", desc: "Comprehensive QA, security audits, CI/CD pipelines and system integrations.", icon: "\uD83E\uDDEA" },
-  { step: "04", title: "Deploy & Scale", desc: "Containerized deployment, monitoring dashboards, and ongoing support for growth.", icon: "\uD83D\uDE80" },
+  { step: "01", title: "Discovery & Planning", desc: "We dive deep into your business, goals, and users to define a clear project scope and roadmap.", icon: "\uD83D\uDD0D" },
+  { step: "02", title: "System Architecture", desc: "We design the technical blueprint \u2014 database schemas, API contracts, infrastructure, and scalability patterns.", icon: "\uD83D\uDCD0" },
+  { step: "03", title: "Development", desc: "Agile sprints with clean, tested code. REST APIs, real-time features, responsive UIs \u2014 built to spec.", icon: "\u2699\uFE0F" },
+  { step: "04", title: "Testing & Optimization", desc: "Comprehensive QA, performance audits, security reviews, and CI/CD pipeline setup.", icon: "\uD83E\uDDEA" },
+  { step: "05", title: "Deployment & Scaling", desc: "Containerized deployment, monitoring, and ongoing support to ensure your system grows with your business.", icon: "\uD83D\uDE80" },
 ];
 
 // ── Client: Services ──
 
 export const SERVICES = [
   { icon: "\uD83C\uDF10", title: "Web Applications", desc: "Modern, responsive web apps with React, NestJS, and scalable backends. From SPAs to full-stack platforms.", tag: "Frontend + Backend" },
-  { icon: "\uD83D\uDCF1", title: "Mobile Apps", desc: "Native and cross-platform mobile apps for iOS and Android using React Native and Flutter.", tag: "iOS \u00B7 Android" },
-  { icon: "\u2601\uFE0F", title: "SaaS Products", desc: "End-to-end SaaS platforms with multi-tenancy, subscription billing, dashboards, and analytics.", tag: "Cloud" },
-  { icon: "\uD83D\uDD17", title: "API & Integrations", desc: "RESTful APIs, GraphQL, third-party integrations, webhooks, and data pipeline orchestration.", tag: "Backend" },
-  { icon: "\u26A1", title: "No-Code / Low-Code", desc: "Rapid prototyping and business automation with Bubble, Retool, and custom low-code platforms.", tag: "Rapid" },
-  { icon: "\uD83E\uDD16", title: "AI & Automation", desc: "AI-driven systems, LLM integrations, intelligent workflows, chatbots, and process automation.", tag: "AI/ML" },
-  { icon: "\uD83D\uDCD0", title: "System Design & Consulting", desc: "Architecture consulting, tech audits, infrastructure planning, and team augmentation.", tag: "Consulting" },
+  { icon: "\uD83D\uDCF1", title: "Mobile Applications", desc: "Native and cross-platform mobile apps for iOS and Android using React Native and Flutter.", tag: "iOS \u00B7 Android" },
+  { icon: "\u2601\uFE0F", title: "SaaS Platforms", desc: "End-to-end SaaS platforms with multi-tenancy, subscription billing, dashboards, and analytics.", tag: "Cloud" },
+  { icon: "\uD83D\uDD17", title: "APIs & Integrations", desc: "RESTful APIs, GraphQL, third-party integrations, webhooks, and data pipeline orchestration.", tag: "Backend" },
+  { icon: "\u26A1", title: "Automation Systems", desc: "Intelligent workflows, process automation, scheduled jobs, and event-driven architectures.", tag: "Automation" },
 ];
 
 // ── Client: Contact ──
 
 export const SERVICE_OPTIONS = [
-  "Web Application Development", "Mobile App Development", "SaaS Product Development",
-  "API & System Integrations", "No-Code / Low-Code Solutions", "AI & Automation Systems",
-  "System Design & Consulting",
+  "Web Application Development", "Mobile App Development", "SaaS Platform Development",
+  "APIs & Integrations", "Automation Systems",
 ];
 
 export const BUDGET_OPTIONS = ["< $5K", "$5K - $15K", "$15K - $50K", "$50K+", "Not sure"];
