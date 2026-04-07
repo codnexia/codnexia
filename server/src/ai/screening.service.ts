@@ -1,6 +1,6 @@
 // AI-powered screening: scores applications against job requirements
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
@@ -21,7 +21,7 @@ export class ScreeningService {
   private readonly logger = new Logger(ScreeningService.name);
 
   constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
     private readonly aiClient: AiClientService,
   ) {}
 

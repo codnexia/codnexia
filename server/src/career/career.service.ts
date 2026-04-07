@@ -1,7 +1,7 @@
 // Handles career application submissions - save to DB and retrieve for admin
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { desc, eq, sql, isNotNull } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
@@ -17,7 +17,7 @@ export class CareerService {
   private readonly logger = new Logger(CareerService.name);
 
   constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
     private readonly activityService: ActivityService,
     private readonly screeningService: ScreeningService,
     private readonly interviewService: InterviewService,

@@ -1,6 +1,6 @@
 // Composite scoring and final recommendation for candidates
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { eq, desc, isNotNull } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
@@ -10,7 +10,7 @@ export class EvaluationService {
   private readonly logger = new Logger(EvaluationService.name);
 
   constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
   ) {}
 
   async computeCompositeScore(applicationId: string) {

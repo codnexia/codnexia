@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { and, desc, eq, ne, sql } from 'drizzle-orm';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
@@ -29,7 +29,7 @@ export class AuthService {
 
   constructor(
     private readonly jwtService: JwtService,
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
     private readonly activityService: ActivityService,
   ) {}
 

@@ -1,6 +1,6 @@
 // Handles contact form submissions - save to DB and retrieve for admin
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { desc, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
@@ -13,7 +13,7 @@ export class ContactService {
   private readonly logger = new Logger(ContactService.name);
 
   constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
     private readonly activityService: ActivityService,
     private readonly mailService: MailService,
   ) {}

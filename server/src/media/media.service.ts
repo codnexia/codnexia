@@ -1,6 +1,6 @@
 // Handles media file uploads and metadata storage
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { eq, desc, sql } from 'drizzle-orm';
 
 import { promises as fs } from 'fs';
@@ -14,7 +14,7 @@ export class MediaService {
   private readonly logger = new Logger(MediaService.name);
 
   constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
     private readonly activityService: ActivityService,
   ) {}
 

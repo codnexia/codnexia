@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { asc, desc, eq, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
@@ -9,7 +9,7 @@ import { UpdateJobPositionDto } from './dto/update-job-position.dto';
 @Injectable()
 export class JobPositionService {
   constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
   ) {}
 
   // Public - get only open positions

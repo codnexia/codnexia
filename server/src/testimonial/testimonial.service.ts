@@ -1,6 +1,6 @@
 // Manages client testimonials stored in DB
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { eq, desc, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
@@ -14,7 +14,7 @@ export class TestimonialService {
   private readonly logger = new Logger(TestimonialService.name);
 
   constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
     private readonly activityService: ActivityService,
   ) {}
 

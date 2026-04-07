@@ -1,6 +1,6 @@
 // Analytics service - tracks page views and computes dashboard/visitor stats
 import { Inject, Injectable } from '@nestjs/common';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { desc, sql, gte } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
@@ -9,7 +9,7 @@ import { TrackViewDto } from './dto/track-view.dto';
 @Injectable()
 export class AnalyticsService {
   constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
   ) {}
 
   // Record a page view (called from the public client site)

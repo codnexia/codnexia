@@ -1,6 +1,6 @@
 // AI interview: generates questions, handles answers, evaluates performance
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
 import { randomBytes } from 'crypto';
 import { DRIZZLE } from '../database/database.module';
@@ -14,7 +14,7 @@ export class InterviewService {
   private readonly logger = new Logger(InterviewService.name);
 
   constructor(
-    @Inject(DRIZZLE) private db: NeonHttpDatabase<typeof schema>,
+    @Inject(DRIZZLE) private db: NodePgDatabase<typeof schema>,
     private readonly aiClient: AiClientService,
     private readonly evaluationService: EvaluationService,
     private readonly mailService: MailService,
