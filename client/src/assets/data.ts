@@ -29,7 +29,7 @@ export const INITIAL_PAGES: ContentPage[] = [
   { id: "2", name: "About Codnexia", status: "Published", updated: "1 hour ago", content: "Codnexia Software is a global software development company..." },
   { id: "3", name: "Our Process", status: "Draft", updated: "3 hours ago", content: "Discovery, Build, Test, Deploy" },
   { id: "4", name: "Services", status: "Published", updated: "1 day ago", content: "Web Apps, Mobile, SaaS, APIs, AI" },
-  { id: "5", name: "Contact Info", status: "Published", updated: "2 days ago", content: "info@codnexia.com" },
+  { id: "5", name: "Contact Info", status: "Published", updated: "2 days ago", content: "info@codnexia.uk" },
 ];
 
 // ── Admin Media ──
@@ -120,10 +120,10 @@ export const SERVICE_OPTIONS = [
 export const BUDGET_OPTIONS = ["< $5K", "$5K - $15K", "$15K - $50K", "$50K+", "Not sure"];
 
 export const CONTACT_INFO = [
-  { icon: "\u2709", label: "Email", value: "info@codnexia.com", sub: "We respond within 24 hours" },
-  { icon: "\u25CE", label: "Website", value: "www.codnexia.com", sub: "Visit our portfolio & blog" },
+  { icon: "\u2709", label: "Email", value: "info@codnexia.uk", sub: "We respond within 24 hours" },
+  { icon: "\u25CE", label: "Website", value: "codnexia.uk", sub: "Visit our portfolio & blog" },
   { icon: "\u25C8", label: "Location", value: "Africa", sub: "Serving clients globally" },
-  { icon: "\u23F1", label: "Availability", value: "Mon - Fri", sub: "9:00 AM - 6:00 PM EAT" },
+  { icon: "\u23F1", label: "Availability", value: "Mon - Fri", sub: "7:00 AM - 8:00 PM EAT" },
 ];
 
 export const SOCIAL_LINKS = [
