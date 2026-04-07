@@ -41,9 +41,8 @@ import { AiModule } from './ai/ai.module';
           console.warn('WARNING: JWT_SECRET is weak. Use a strong random secret (32+ chars) in production.');
         }
 
-        // C2a: Validate Anthropic API key
+        // C2a: Validate Anthropic API key (optional — AI features disabled without it)
         if (!config['ANTHROPIC_API_KEY']) {
-          if (isProd) throw new Error('Missing required env var for production: ANTHROPIC_API_KEY');
           console.warn('WARNING: ANTHROPIC_API_KEY is not set. AI features will not work.');
         }
 
