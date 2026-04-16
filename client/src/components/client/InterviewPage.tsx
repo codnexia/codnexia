@@ -84,7 +84,7 @@ export function InterviewPage() {
           textareaRef.current?.focus();
         }, 800);
       }
-    } catch (e) {
+    } catch {
       toast("Failed to submit answer. Please try again.", "error");
     } finally {
       setSubmitting(false);

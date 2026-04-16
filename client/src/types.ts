@@ -376,7 +376,7 @@ export interface AiInterview {
   createdAt: string;
 }
 
-export interface CareerApplicationResponse extends CareerApplication {}
+export type CareerApplicationResponse = CareerApplication;
 
 export interface JobPosition {
   id: string;
@@ -392,7 +392,7 @@ export interface JobPosition {
   updatedAt: string;
 }
 
-export interface JobPositionResponse extends JobPosition {}
+export type JobPositionResponse = JobPosition;
 
 export interface InviteTokenResponse {
   id: string;
